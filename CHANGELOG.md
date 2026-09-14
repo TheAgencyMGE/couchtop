@@ -2,6 +2,14 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.3.1-beta.1] - 2026-09-14
+
+### Fixed
+
+- **Web:** the toolbar no longer runs off both edges of the screen. The address box now stretches to fill the space between the buttons at any resolution.
+- **Internet tile:** the globe's orbit ring no longer gets clipped at the tile edge.
+- **Getting back to Windows:** going to the normal desktop no longer means digging into Power. There is now an always-visible **Desktop** button on the home menu, a **Windows Desktop** entry in the Couchtop Menu, and the Quick Menu's **Windows Desktop** button in every mode. Couchtop keeps running; click it on the taskbar or use the Quick Menu hotkey to come back.
+
 ## [0.3.0-beta.1] - 2026-09-14
 
 ### Added
@@ -50,6 +58,7 @@ First public, very early beta.
 - In shell mode there is no system tray; use **Quick Menu › Windows Desktop** when you need Explorer.
 - Wii Remote pointing requires an IR sensor bar.
 
+[0.3.1-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.3.1-beta.1
 [0.3.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.3.0-beta.1
 [0.2.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.2.0-beta.1
 [0.1.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.1.0-beta.1

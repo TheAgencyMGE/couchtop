@@ -59,6 +59,7 @@ public sealed class UserSettings
     public bool RunStartupAppsInShell { get; set; } = true;
     public ShellBootstrapMode ShellBootstrap { get; set; } = ShellBootstrapMode.Resilient;
     public bool WelcomeShown { get; set; }
+    public bool DesktopHintShown { get; set; }
 
     /// <summary>Clamps out-of-range values so a hand-edited or damaged file cannot break the UI.</summary>
     public UserSettings Normalize()

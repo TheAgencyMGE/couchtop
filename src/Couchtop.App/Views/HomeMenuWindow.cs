@@ -108,7 +108,7 @@ public sealed class HomeMenuWindow : Window
             _center.Children.Add(current);
         }
         var row2 = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 16, 0, 0) };
-        if (host.IsShellSession) row2.Children.Add(ViewKit.Pill("Windows Desktop", OpenWindowsDesktop, 380));
+        row2.Children.Add(ViewKit.Pill("Windows Desktop", OpenWindowsDesktop, 380));
         row2.Children.Add(ViewKit.Pill("Settings", () => OpenInMain(() => new SettingsView(_host, _main)), 300));
         row2.Children.Add(ViewKit.Pill("Power", () => OpenInMain(() => new PowerView(_host, _main)), 300));
         _center.Children.Add(row2);
@@ -316,15 +316,8 @@ public sealed class HomeMenuWindow : Window
 
     private void OpenWindowsDesktop()
     {
-        try
-        {
-            if (!NativeMethods.IsExplorerShellRunning()) new ExplorerController().StartExplorer();
-        }
-        catch (Exception ex)
-        {
-            Core.Diagnostics.Log.Warn("Could not start Explorer", ex);
-        }
         CloseMenu();
+        _main.ShowWindowsDesktop();
     }
 
     private void OpenInMain(Func<FrameworkElement> view)

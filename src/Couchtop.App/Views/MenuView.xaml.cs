@@ -59,6 +59,7 @@ public partial class MenuView : UserControl, IScreenView
         PrevArrow.Click += (_, _) => GoToPage(_page - 1);
         NextArrow.Click += (_, _) => GoToPage(_page + 1);
         OptionsButton.Click += (_, _) => ShowOptions();
+        DesktopButton.Click += (_, _) => _window.ShowWindowsDesktop();
         BoardButton.Click += (_, _) => _window.Navigate(new MessageBoardView(_host, _window), BoardButton.TranslatePoint(new Point(83, 83), _window.RootGrid));
         DoneButton.Click += (_, _) => SetEditMode(false);
         AddButton.Click += (_, _) => _ = ChannelDialogs.AddChannelAsync(_window, _host, null);
@@ -404,8 +405,8 @@ public partial class MenuView : UserControl, IScreenView
             stack.Children.Add(ViewKit.Text("Couchtop Menu", 52, FontWeights.ExtraBold, align: TextAlignment.Center));
             foreach (var (label, key) in new[]
                      {
-                         ("Settings", "settings"), ("Customize Channels", "customize"), ("Shell Mode & Safety", "shell"),
-                         ("Message Board", "board"), ("Power", "power"), ("Back", ""),
+                         ("Windows Desktop", "desktop"), ("Settings", "settings"), ("Customize Channels", "customize"),
+                         ("Shell Mode & Safety", "shell"), ("Message Board", "board"), ("Power", "power"), ("Back", ""),
                      })
             {
                 var button = ViewKit.Pill(label, () => close(key), 620);
@@ -418,6 +419,7 @@ public partial class MenuView : UserControl, IScreenView
 
         switch (result as string)
         {
+            case "desktop": _window.ShowWindowsDesktop(); break;
             case "settings": _window.Navigate(new SettingsView(_host, _window)); break;
             case "customize": SetEditMode(true); break;
             case "shell":

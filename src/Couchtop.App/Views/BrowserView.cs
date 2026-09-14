@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using Couchtop.Core.Diagnostics;
@@ -52,12 +54,26 @@ public sealed class BrowserView : UserControl, IScreenView, IDisposable
         toolbar.SetResourceReference(Border.BackgroundProperty, "BarBrush");
         toolbar.SetResourceReference(Border.BorderBrushProperty, "BarLineBrush");
         Grid.SetRow(toolbar, 1);
-        var bar = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(10, 8, 10, 12) };
-        bar.Children.Add(ViewKit.Pill("Back", () => { if (_web?.CanGoBack == true) _web.GoBack(); }, 140, "SmallPill"));
-        bar.Children.Add(ViewKit.Pill("Forward", () => { if (_web?.CanGoForward == true) _web.GoForward(); }, 160, "SmallPill"));
-        bar.Children.Add(ViewKit.Pill("Reload", () => _web?.Reload(), 150, "SmallPill"));
-        bar.Children.Add(ViewKit.Pill("Home", GoHomePage, 140, "SmallPill"));
-        _address = new TextBox { Width = 820, FontSize = 26, MinHeight = 64, Margin = new Thickness(12, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center };
+        // Buttons are docked to both ends and the address box takes whatever width is left, so nothing is ever
+        // pushed off screen. The whole bar is laid out on a 1920-wide design canvas and scaled to the window.
+        var bar = new DockPanel { LastChildFill = true, Margin = new Thickness(24, 8, 24, 12) };
+        var navButtons = new StackPanel { Orientation = Orientation.Horizontal };
+        navButtons.Children.Add(ViewKit.Pill("Back", () => { if (_web?.CanGoBack == true) _web.GoBack(); }, 130, "SmallPill"));
+        navButtons.Children.Add(ViewKit.Pill("Forward", () => { if (_web?.CanGoForward == true) _web.GoForward(); }, 150, "SmallPill"));
+        navButtons.Children.Add(ViewKit.Pill("Reload", () => _web?.Reload(), 140, "SmallPill"));
+        navButtons.Children.Add(ViewKit.Pill("Home", GoHomePage, 130, "SmallPill"));
+        DockPanel.SetDock(navButtons, Dock.Left);
+        bar.Children.Add(navButtons);
+
+        var actionButtons = new StackPanel { Orientation = Orientation.Horizontal };
+        actionButtons.Children.Add(ViewKit.Pill("Go", () => Go(_address.Text), 100, "SmallPill"));
+        actionButtons.Children.Add(ViewKit.Pill("−", () => Zoom(-0.1), 72, "SmallPill"));
+        actionButtons.Children.Add(ViewKit.Pill("+", () => Zoom(0.1), 72, "SmallPill"));
+        actionButtons.Children.Add(ViewKit.Pill("Menu", window.ReturnToMenu, 170, "SmallPill"));
+        DockPanel.SetDock(actionButtons, Dock.Right);
+        bar.Children.Add(actionButtons);
+
+        _address = new TextBox { MinWidth = 240, FontSize = 26, MinHeight = 64, Margin = new Thickness(12, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center };
         _address.KeyDown += (_, e) =>
         {
             if (e.Key != Key.Enter) return;
@@ -65,18 +81,17 @@ public sealed class BrowserView : UserControl, IScreenView, IDisposable
             e.Handled = true;
         };
         bar.Children.Add(_address);
-        bar.Children.Add(ViewKit.Pill("Go", () => Go(_address.Text), 110, "SmallPill"));
-        bar.Children.Add(ViewKit.Pill("−", () => Zoom(-0.1), 80, "SmallPill"));
-        bar.Children.Add(ViewKit.Pill("+", () => Zoom(0.1), 80, "SmallPill"));
-        bar.Children.Add(ViewKit.Pill("Menu", window.ReturnToMenu, 200, "SmallPill"));
-        _toolbarContent = bar;
-        toolbar.Child = bar;
+
+        var barStage = new Grid { Width = 1920, HorizontalAlignment = HorizontalAlignment.Left, Children = { bar } };
+        _toolbarContent = barStage;
+        toolbar.Child = barStage;
         root.Children.Add(toolbar);
 
         Content = root;
         SizeChanged += (_, _) =>
         {
-            var scale = Math.Clamp(ActualWidth / 1920.0, 0.55, 2.5);
+            if (ActualWidth <= 0) return;
+            var scale = ActualWidth / 1920.0;
             _toolbarContent.LayoutTransform = new ScaleTransform(scale, scale);
         };
     }
@@ -142,6 +157,41 @@ public sealed class BrowserView : UserControl, IScreenView, IDisposable
         else target = string.Format(_host.Settings.Current.SearchUrl, Uri.EscapeDataString(input));
         _web.CoreWebView2.Navigate(target);
         _web.Focus();
+    }
+
+    /// <summary>
+    /// Snapshot mode: WebView2 draws in its own native window, which RenderTargetBitmap cannot see, so the page's
+    /// own preview capture is composed over the WPF render of the screen.
+    /// </summary>
+    public async Task SaveSnapshotAsync(string path, FrameworkElement root)
+    {
+        var width = (int)Math.Round(root.ActualWidth);
+        var height = (int)Math.Round(root.ActualHeight);
+        var frame = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        frame.Render(root);
+
+        BitmapSource? page = null;
+        if (_web?.CoreWebView2 is { } core)
+        {
+            using var stream = new MemoryStream();
+            await core.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, stream);
+            stream.Position = 0;
+            page = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
+        }
+
+        var visual = new DrawingVisual();
+        using (var dc = visual.RenderOpen())
+        {
+            dc.DrawImage(frame, new Rect(0, 0, width, height));
+            if (page is not null)
+                dc.DrawImage(page, new Rect(_webHost.TranslatePoint(new Point(0, 0), root), new Size(_webHost.ActualWidth, _webHost.ActualHeight)));
+        }
+        var output = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        output.Render(visual);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(output));
+        await using var file = File.Create(path);
+        encoder.Save(file);
     }
 
     private void Zoom(double delta)

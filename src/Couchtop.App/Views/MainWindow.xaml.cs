@@ -346,6 +346,45 @@ public partial class MainWindow : Window
         { IsBackground = true, Name = "Activation listener" }.Start();
     }
 
+    /// <summary>
+    /// Jumps to the normal Windows desktop without closing Couchtop. In shell mode Explorer is started first.
+    /// Couchtop stays on the taskbar, and the Quick Menu hotkey brings it back.
+    /// </summary>
+    public async void ShowWindowsDesktop()
+    {
+        if (_host.Options.IsSnapshot) return;
+        var settings = _host.Settings.Current;
+        if (!settings.DesktopHintShown)
+        {
+            settings.DesktopHintShown = true;
+            _host.SaveSettings();
+            await ShowDialogAsync(
+                "Couchtop keeps running in the background.\n\nTo come back, click Couchtop on the taskbar or press " + settings.HomeMenuHotkey + " and choose Menu.",
+                "Go to Desktop");
+        }
+
+        if (_host.IsShellSession && !NativeMethods.IsExplorerShellRunning())
+        {
+            try { new ExplorerController().StartExplorer(); }
+            catch (Exception ex) { Log.Warn("Could not start Explorer", ex); }
+        }
+
+        WindowState = WindowState.Minimized;
+        try
+        {
+            // Minimize everything else too, so the user lands on the actual desktop rather than another app.
+            if (NativeMethods.IsExplorerShellRunning() && Type.GetTypeFromProgID("Shell.Application") is { } shellType &&
+                Activator.CreateInstance(shellType) is { } shell)
+            {
+                shellType.InvokeMember("MinimizeAll", System.Reflection.BindingFlags.InvokeMethod, null, shell, null);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warn("Could not minimize other windows", ex);
+        }
+    }
+
     public void BringToFront()
     {
         if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
@@ -929,6 +968,8 @@ public partial class MainWindow : Window
 
             await HomeMenuWindow.RenderSnapshotAsync(_host, this, Path.Combine(dir, "11-home-menu.png"));
 
+            await SaveWebSnapshotAsync(dir, "web");
+
             ApplyTheme("Night");
             await Task.Delay(1200);
             Save(dir, "12-night");
@@ -981,6 +1022,8 @@ public partial class MainWindow : Window
                 GoHome();
                 await Task.Delay(500);
 
+                await SaveWebSnapshotAsync(dir, $"theme-{theme.Id}-8-web");
+
                 await HomeMenuWindow.RenderSnapshotAsync(_host, this, Path.Combine(dir, $"theme-{theme.Id}-5-quick.png"));
             }
         }
@@ -989,6 +1032,24 @@ public partial class MainWindow : Window
             Log.Error("Snapshot rendering failed", ex);
         }
         _host.Exit(0);
+    }
+
+    private async Task SaveWebSnapshotAsync(string dir, string name)
+    {
+        var web = new BrowserView(_host, this);
+        Navigate(web);
+        await Task.Delay(5000);
+        try
+        {
+            await web.SaveSnapshotAsync(Path.Combine(dir, name + ".png"), RootGrid);
+            Log.Info("Snapshot saved: " + name);
+        }
+        catch (Exception ex)
+        {
+            Log.Warn("Web snapshot failed", ex);
+        }
+        GoHome();
+        await Task.Delay(500);
     }
 
     private void Save(string dir, string name)

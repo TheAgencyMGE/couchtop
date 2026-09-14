@@ -103,6 +103,16 @@
                         <Path Width="64" Height="64" Stretch="Uniform" Fill="{DynamicResource AccentBrush}"
                               Data="M 4,0 H 26 A 4,4 0 0 1 30,4 V 22 A 4,4 0 0 1 26,26 H 4 A 4,4 0 0 1 0,22 V 4 A 4,4 0 0 1 4,0 Z M 38,0 H 60 A 4,4 0 0 1 64,4 V 22 A 4,4 0 0 1 60,26 H 38 A 4,4 0 0 1 34,22 V 4 A 4,4 0 0 1 38,0 Z M 4,34 H 26 A 4,4 0 0 1 30,38 V 56 A 4,4 0 0 1 26,60 H 4 A 4,4 0 0 1 0,56 V 38 A 4,4 0 0 1 4,34 Z M 38,34 H 60 A 4,4 0 0 1 64,38 V 56 A 4,4 0 0 1 60,60 H 38 A 4,4 0 0 1 34,56 V 38 A 4,4 0 0 1 38,34 Z" />
                     </Button>
+                    <!-- Always-visible way back to the normal Windows desktop. -->
+                    <Button x:Name="DesktopButton" Style="{StaticResource PillButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="276,134,0,0"
+                            MinWidth="0" MinHeight="0" Height="98" Padding="30,0,36,0" ToolTip="Go to the Windows desktop (Couchtop keeps running)">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Width="44" Height="36" Stretch="Uniform" Stroke="{DynamicResource AccentBrush}" StrokeThickness="6" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  VerticalAlignment="Center" Margin="0,2,16,0"
+                                  Data="M 4,4 L 76,4 L 76,52 L 4,52 Z M 26,66 L 54,66 M 40,52 L 40,66" />
+                            <TextBlock Text="Desktop" FontSize="34" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                     <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,82,0">
                         <Button x:Name="BoardButton" Style="{StaticResource RoundButton}" Width="166" Height="166">
                             <Path Data="M 4,6 L 60,6 L 60,46 L 4,46 Z M 4,6 L 32,30 L 60,6" Stroke="{DynamicResource AccentBrush}" StrokeThickness="5" StrokeLineJoin="Round" Width="70" Height="52" Stretch="Uniform" />

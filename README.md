@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.3.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.3.1-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -161,6 +161,7 @@ before shell mode can be re-enabled.
 | Back | right-click / X1 | Esc | B | B or 2 |
 | Change page | arrows / wheel | Page Up / Down | LB / RB | − / + |
 | Quick Menu | — | `Ctrl+Alt+Home` (configurable) | Guide or Back+Start | HOME |
+| Windows desktop | **Desktop** button on the menu | Quick Menu › Windows Desktop | Quick Menu › Windows Desktop | Quick Menu › Windows Desktop |
 | Emergency exit | — | `Ctrl+Alt+Shift+F12` | — | — |
 
 **Wii Remote pairing:** open Windows *Settings › Bluetooth & devices › Add device › Bluetooth* and press **1+2**
