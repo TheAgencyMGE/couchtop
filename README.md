@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.1.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.2.0-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -101,7 +101,23 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 
 ## Install
 
-1. Download `Couchtop-0.1.0-beta.1-win-x64.zip` from [Releases](https://github.com/TheAgencyMGE/couchtop/releases) and extract it anywhere.
+There are two downloads on [Releases](https://github.com/TheAgencyMGE/couchtop/releases). Both are self-contained.
+
+| Download | Use it when |
+|---|---|
+| `Couchtop-<version>-win-x64.zip` | You want Start menu shortcuts, start at sign-in, or shell mode. Run `Couchtop.Setup.exe`. |
+| `Couchtop-<version>-win-x64-portable.zip` | You just want to try it, or carry it on a USB drive. Nothing is installed. |
+
+### Portable
+
+Extract the portable zip anywhere and run **`Couchtop.exe`**. The `portable.txt` file next to it tells Couchtop to keep
+your channels, settings, cache and logs in a `Data` folder beside the exe, so nothing is written to `%LOCALAPPDATA%`
+and no shortcuts or registry entries are created. Shell mode is blocked in portable copies. To remove it, close Couchtop
+and delete the folder. To update, copy the new files over the old ones and keep your `Data` folder.
+
+### Installed
+
+1. Download `Couchtop-<version>-win-x64.zip` and extract it anywhere.
 2. Run **`Couchtop.Setup.exe`** and click **Install**.
 
 Setup installs **per user, without administrator rights**:
@@ -267,6 +283,8 @@ Only then does it remove, in order:
 
 Silent: `Couchtop.Setup.exe --uninstall --quiet [--purge]`
 
+**Portable version:** close Couchtop and delete its folder. It never changes shell settings, so there is nothing else to undo.
+
 ---
 
 ## Build from source
@@ -287,13 +305,13 @@ Run straight from the build output (launcher mode, nothing is installed):
 src/Couchtop.App/bin/Release/net10.0-windows/Couchtop.exe
 ```
 
-Create the distributable, self-contained package (runs the tests first):
+Create the self-contained installer and portable packages in `artifacts/` (runs the tests first):
 
 ```bash
 powershell -ExecutionPolicy Bypass -File build/publish.ps1
 ```
 
-Pushing a tag like `v0.1.0-beta.1` runs the release workflow, which builds, tests, packages and publishes a GitHub pre-release.
+Pushing a tag like `v0.2.0-beta.1` runs the release workflow, which builds, tests, packages and publishes a GitHub pre-release.
 
 **Trailer:** the video in `docs/media` is made with [Remotion](https://www.remotion.dev) from the `video/` project:
 

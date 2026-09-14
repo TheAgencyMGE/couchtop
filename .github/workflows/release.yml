@@ -43,5 +43,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $zip = Get-ChildItem artifacts -Filter *.zip | Select-Object -First 1
-          gh release create "${{ github.ref_name }}" $zip.FullName --prerelease --title "Couchtop ${{ github.ref_name }}" --notes-file .github/RELEASE_NOTES.md
+          $zips = @(Get-ChildItem artifacts -Filter *.zip | ForEach-Object FullName)
+          if ($zips.Count -ne 2) { throw "Expected installer and portable zips, found $($zips.Count)" }
+          gh release create "${{ github.ref_name }}" @zips --prerelease --title "Couchtop ${{ github.ref_name }}" --notes-file .github/RELEASE_NOTES.md

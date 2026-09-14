@@ -2,11 +2,13 @@ namespace Couchtop.Core.Storage;
 
 /// <summary>
 /// All per-user file locations. Everything lives under %LOCALAPPDATA%\Couchtop (local only).
-/// COUCHTOP_DATA_DIR overrides the root, which tests and VM experiments use.
+/// A portable copy (portable.txt next to the exe) keeps everything in a Data folder beside the exe instead.
+/// COUCHTOP_DATA_DIR overrides both, which tests and VM experiments use.
 /// </summary>
 public sealed class AppPaths
 {
     public const string DataDirEnvironmentVariable = "COUCHTOP_DATA_DIR";
+    public const string PortableDataFolderName = "Data";
 
     public AppPaths(string dataRoot)
     {
@@ -26,10 +28,13 @@ public sealed class AppPaths
     public string WebViewDataDirectory => Path.Combine(DataRoot, "browser");
     public string SafetyTestDirectory => Path.Combine(DataRoot, "safety-test");
 
-    public static AppPaths ForCurrentUser()
+    public static AppPaths ForCurrentUser() =>
+        Resolve(Environment.GetEnvironmentVariable(DataDirEnvironmentVariable), InstallLayout.Current);
+
+    public static AppPaths Resolve(string? overrideRoot, InstallLayout layout)
     {
-        var overrideRoot = Environment.GetEnvironmentVariable(DataDirEnvironmentVariable);
         if (!string.IsNullOrWhiteSpace(overrideRoot)) return new AppPaths(overrideRoot);
+        if (layout.IsPortable) return new AppPaths(Path.Combine(layout.Directory, PortableDataFolderName));
         return new AppPaths(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Couchtop"));
     }
 
@@ -54,6 +59,7 @@ public sealed class InstallLayout
     public const string RecoveryExeName = "Couchtop.Recovery.exe";
     public const string SetupExeName = "Couchtop.Setup.exe";
     public const string RecoveryScriptName = "Recover-Explorer.cmd";
+    public const string PortableMarkerName = "portable.txt";
 
     public InstallLayout(string directory)
     {
@@ -66,6 +72,11 @@ public sealed class InstallLayout
     public string RecoveryPath => Path.Combine(Directory, RecoveryExeName);
     public string SetupPath => Path.Combine(Directory, SetupExeName);
     public string RecoveryScriptPath => Path.Combine(Directory, RecoveryScriptName);
+
+    public string PortableMarkerPath => Path.Combine(Directory, PortableMarkerName);
+
+    /// <summary>True for the portable package: settings and channels stay beside the exe and shell mode is unavailable.</summary>
+    public bool IsPortable => File.Exists(PortableMarkerPath);
 
     public static InstallLayout Current => new(AppContext.BaseDirectory);
 

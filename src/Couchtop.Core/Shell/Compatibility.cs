@@ -243,6 +243,10 @@ public sealed class CompatibilityChecker
         Add("drive", "Install drive", drive is DriveType.Fixed ? CheckSeverity.Pass : CheckSeverity.Blocking,
             drive is DriveType.Fixed ? "Installed on a local fixed drive." : $"Couchtop is on a {drive?.ToString() ?? "unknown"} drive that may be unavailable at sign-in.");
 
+        var portable = _probe.FileExists(_layout.PortableMarkerPath);
+        Add("portable", "Installed copy", portable ? CheckSeverity.Blocking : CheckSeverity.Pass,
+            portable ? "This is the portable version. Install Couchtop with Setup to use shell mode." : "Not a portable copy.");
+
         var installed = _layout.IsInStandardInstallLocation();
         Add("location", "Install location", installed ? CheckSeverity.Pass : CheckSeverity.Warning,
             installed ? _layout.Directory : $"Running from '{_layout.Directory}'. Install Couchtop with Setup so the shell path stays stable.");

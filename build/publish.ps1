@@ -51,6 +51,25 @@ try {
     if (Test-Path $zip) { Remove-Item $zip -Force }
     Compress-Archive -Path "$out\*" -DestinationPath $zip -CompressionLevel Optimal
     Write-Host "Package ready: $zip"
+
+    # Portable package: same files minus Setup, plus the marker that keeps data in .\Data beside the exe.
+    $portableName = "$name-portable"
+    $portableOut = Join-Path $root "artifacts\$portableName"
+    if (Test-Path $portableOut) { Remove-Item $portableOut -Recurse -Force }
+    Copy-Item $out $portableOut -Recurse
+    Get-ChildItem $portableOut -Filter 'Couchtop.Setup*' | Remove-Item -Force
+    Set-Content -LiteralPath (Join-Path $portableOut 'portable.txt') -Encoding utf8 -Value @(
+        'Couchtop portable',
+        '',
+        'This file makes Couchtop keep its channels, settings and logs in the Data folder next to Couchtop.exe.',
+        'Delete it to use %LOCALAPPDATA%\Couchtop instead. Shell mode is only available in the installed version.'
+    )
+    if (Test-Path (Join-Path $portableOut 'Couchtop.Setup.exe')) { throw 'Portable package must not contain Setup' }
+
+    $portableZip = Join-Path $root "artifacts\$portableName.zip"
+    if (Test-Path $portableZip) { Remove-Item $portableZip -Force }
+    Compress-Archive -Path "$portableOut\*" -DestinationPath $portableZip -CompressionLevel Optimal
+    Write-Host "Portable package ready: $portableZip"
 }
 finally {
     Pop-Location

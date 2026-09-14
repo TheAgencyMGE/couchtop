@@ -221,6 +221,15 @@ public class EditionAndCompatibilityTests
         Assert.False(report.HasBlocking, string.Join("; ", report.Items.Where(i => i.Severity == CheckSeverity.Blocking).Select(i => i.Detail)));
     }
 
+    [Fact]
+    public void Portable_copy_blocks_shell_mode()
+    {
+        var (probe, checker) = Setup();
+        probe.Files.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Couchtop", InstallLayout.PortableMarkerName));
+        var report = checker.Run();
+        Assert.Contains(report.Items, i => i.Id == "portable" && i.Severity == CheckSeverity.Blocking);
+    }
+
     [Theory]
     [InlineData("policy")]
     [InlineData("safemode")]

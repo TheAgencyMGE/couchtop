@@ -9,6 +9,22 @@ namespace Couchtop.Tests;
 public class StorageTests
 {
     [Fact]
+    public void Portable_marker_keeps_data_beside_the_exe()
+    {
+        using var tmp = new TempDir();
+        var layout = new InstallLayout(tmp.Path);
+        Assert.False(layout.IsPortable);
+        Assert.NotEqual(Path.Combine(tmp.Path, AppPaths.PortableDataFolderName), AppPaths.Resolve(null, layout).DataRoot);
+
+        File.WriteAllText(layout.PortableMarkerPath, "portable");
+        Assert.True(layout.IsPortable);
+        Assert.Equal(Path.Combine(tmp.Path, AppPaths.PortableDataFolderName), AppPaths.Resolve(null, layout).DataRoot);
+
+        var custom = Path.Combine(tmp.Path, "custom");
+        Assert.Equal(custom, AppPaths.Resolve(custom, layout).DataRoot);
+    }
+
+    [Fact]
     public void Settings_round_trip_persists_values()
     {
         using var tmp = new TempDir();

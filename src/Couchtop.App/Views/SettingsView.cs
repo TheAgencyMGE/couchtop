@@ -477,6 +477,6 @@ public sealed class SettingsView : UserControl, IScreenView
         Info($"Couchtop {version}\nA playful, console-style desktop for Windows.", "TextBrush", 34);
         Info("Privacy: Couchtop has no telemetry, no accounts and no cloud. Settings and channels stay in your Windows profile. The Web uses Microsoft Edge WebView2, which follows your Windows and Edge privacy settings.");
         Info("Fonts: M PLUS Rounded 1c (SIL Open Font License 1.1). All artwork, the pointer and every sound are original and made for this project.\nCouchtop is an independent fan project and is not affiliated with or endorsed by Nintendo.");
-        Info($"Install folder: {_host.Install.Directory}\nData folder: {_host.Paths.DataRoot}");
+        Info($"{(_host.Install.IsPortable ? "Portable folder" : "Install folder")}: {_host.Install.Directory}\nData folder: {_host.Paths.DataRoot}");
     }
 }

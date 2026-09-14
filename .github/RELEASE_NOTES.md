@@ -1,11 +1,13 @@
 > **Very early beta.** Expect rough edges. Try shell mode in a virtual machine before using it on your main PC.
 
-### Install
+### Which download?
 
-1. Download the **Couchtop zip** from the **Assets** section below and extract it.
-2. Run `Couchtop.Setup.exe`. It installs just for you and needs no administrator rights.
+| Download | For |
+|---|---|
+| `Couchtop-…-win-x64.zip` | **Install.** Extract it and run `Couchtop.Setup.exe`. It installs just for you, with no administrator rights. Needed for shell mode. |
+| `Couchtop-…-win-x64-portable.zip` | **Portable.** Extract it anywhere, even a USB drive, and run `Couchtop.exe`. Nothing is installed; your channels and settings stay in the `Data` folder next to it. |
 
-The package is self-contained, so no .NET install is needed.
+Both are self-contained, so no .NET install is needed. Removing the portable version is just deleting its folder.
 
 ### "Windows protected your PC"?
 
