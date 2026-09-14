@@ -11,8 +11,8 @@
             </TransformGroup>
         </Grid.RenderTransform>
 
-        <Border x:Name="Glow" CornerRadius="34" Margin="-10" BorderThickness="10" BorderBrush="{DynamicResource AccentGlowBrush}" Opacity="0" IsHitTestVisible="False" />
-        <Border x:Name="Frame" CornerRadius="26" BorderThickness="4" BorderBrush="{DynamicResource TileBorderBrush}" Background="{DynamicResource TileBackgroundBrush}">
+        <Border x:Name="Glow" CornerRadius="{DynamicResource TileGlowCornerRadius}" Margin="-10" BorderThickness="10" BorderBrush="{DynamicResource TileGlowBrush}" Opacity="0" IsHitTestVisible="False" />
+        <Border x:Name="Frame" CornerRadius="{DynamicResource TileCornerRadius}" BorderThickness="{DynamicResource TileBorderThickness}" BorderBrush="{DynamicResource TileBorderBrush}" Background="{DynamicResource TileBackgroundBrush}">
             <Grid x:Name="Screen" Margin="6">
                 <ContentControl x:Name="ArtHost" Focusable="False" IsTabStop="False" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                 <Border x:Name="Shine" IsHitTestVisible="False" Opacity="0">
@@ -27,13 +27,16 @@
                         <TranslateTransform x:Name="ShineShift" X="-500" />
                     </Border.RenderTransform>
                 </Border>
-                <Border x:Name="Gloss" IsHitTestVisible="False" VerticalAlignment="Top" Height="74" CornerRadius="20,20,90,90" Margin="2,0,2,0" Background="{DynamicResource GlossBrush}" Opacity="0.5" />
+                <Border x:Name="Gloss" IsHitTestVisible="False" VerticalAlignment="Top" Height="74" CornerRadius="{DynamicResource TileGlossCornerRadius}" Margin="2,0,2,0" Background="{DynamicResource GlossBrush}" Opacity="{DynamicResource TileGlossOpacity}" />
             </Grid>
         </Border>
 
+        <!-- Theme ornament drawn over the frame (outlines, corner cuts, tags). Empty for most themes. -->
+        <ContentControl x:Name="Decor" Content="decor" ContentTemplate="{DynamicResource TileDecorTemplate}" IsHitTestVisible="False" Focusable="False" IsTabStop="False" />
+
         <Border x:Name="EditBadge" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-16,-16,0"
-                Width="58" Height="58" CornerRadius="29" Background="{DynamicResource AccentBrush}" BorderBrush="White" BorderThickness="4" IsHitTestVisible="False">
-            <Path Data="M4,24 L20,8 L26,14 L10,30 L2,32 Z M22,6 L25,3 Q27,1 29,3 L31,5 Q33,7 31,9 L28,12 Z" Fill="White" Stretch="Uniform" Margin="13" />
+                Width="58" Height="58" CornerRadius="29" Background="{DynamicResource AccentBrush}" BorderBrush="{DynamicResource BadgeRimBrush}" BorderThickness="4" IsHitTestVisible="False">
+            <Path Data="M4,24 L20,8 L26,14 L10,30 L2,32 Z M22,6 L25,3 Q27,1 29,3 L31,5 Q33,7 31,9 L28,12 Z" Fill="{DynamicResource BadgeRimBrush}" Stretch="Uniform" Margin="13" />
         </Border>
     </Grid>
 </UserControl>

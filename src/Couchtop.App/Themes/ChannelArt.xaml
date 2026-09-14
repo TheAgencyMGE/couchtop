@@ -7,7 +7,7 @@
     -->
 
     <Style x:Key="ArtLabel" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
+        <Setter Property="FontFamily" Value="{DynamicResource AppFont}" />
         <Setter Property="FontSize" Value="44" />
         <Setter Property="FontWeight" Value="ExtraBold" />
         <Setter Property="Foreground" Value="White" />

@@ -17,7 +17,7 @@ public sealed class UserSettings
     public int SchemaVersion { get; set; } = CurrentSchemaVersion;
 
     // Look & feel
-    public string Theme { get; set; } = "Classic";
+    public string Theme { get; set; } = ThemeCatalog.DefaultId;
     public bool UseSystemCursor { get; set; }
     public bool ReduceMotion { get; set; }
     public bool Clock24Hour { get; set; }
@@ -66,7 +66,7 @@ public sealed class UserSettings
         EffectsVolume = Clamp01(EffectsVolume);
         AmbienceVolume = Clamp01(AmbienceVolume);
         PointerSpeed = double.IsFinite(PointerSpeed) ? Math.Clamp(PointerSpeed, 0.25, 3.0) : 1.0;
-        if (Theme is not ("Classic" or "Night")) Theme = "Classic";
+        Theme = ThemeCatalog.Normalize(Theme);
         if (!Enum.IsDefined(ShellBootstrap)) ShellBootstrap = ShellBootstrapMode.Resilient;
         HomeMenuHotkey = string.IsNullOrWhiteSpace(HomeMenuHotkey) ? "Ctrl+Alt+Home" : HomeMenuHotkey.Trim();
         SearchUrl = string.IsNullOrWhiteSpace(SearchUrl) || !SearchUrl.Contains("{0}") ? "https://duckduckgo.com/?q={0}" : SearchUrl;

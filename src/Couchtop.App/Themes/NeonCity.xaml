@@ -1,0 +1,384 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:c="clr-namespace:Couchtop.App.Controls">
+    <!--
+        Neon City: a gritty future-city HUD. Near-black steel, hazard yellow as the signal color, hot red for
+        rims and warnings, cyan for focus. Hard edges with cut corners, wide technical type, scanlines, a sweeping
+        scan beam, flickering glitch blocks and a skyline glow. All artwork and text are original.
+    -->
+
+    <FontFamily x:Key="AppFont">Bahnschrift, Segoe UI</FontFamily>
+    <CornerRadius x:Key="PillCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="PillGlowCornerRadius">4</CornerRadius>
+    <CornerRadius x:Key="PillGlossCornerRadius">0</CornerRadius>
+    <CornerRadius x:Key="RoundCornerRadius">6</CornerRadius>
+    <CornerRadius x:Key="TileCornerRadius">0</CornerRadius>
+    <CornerRadius x:Key="TileGlowCornerRadius">0</CornerRadius>
+    <CornerRadius x:Key="TileGlossCornerRadius">0</CornerRadius>
+    <CornerRadius x:Key="PanelCornerRadius">3</CornerRadius>
+    <CornerRadius x:Key="CardCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="ItemCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="InputCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="TrackCornerRadius">0</CornerRadius>
+    <Thickness x:Key="PillBorderThickness">3</Thickness>
+    <Thickness x:Key="RoundBorderThickness">3</Thickness>
+    <Thickness x:Key="TileBorderThickness">0</Thickness>
+    <Thickness x:Key="PanelBorderThickness">2</Thickness>
+    <sys:Double x:Key="TileClipRadius">0</sys:Double>
+    <sys:Double x:Key="TileChamfer">26</sys:Double>
+    <sys:Double x:Key="TileGlossOpacity">0</sys:Double>
+    <Color x:Key="CardMixColor">#0A0B10</Color>
+    <sys:Double x:Key="CardMixTop">0.84</sys:Double>
+    <sys:Double x:Key="CardMixBottom">0.7</sys:Double>
+    <Color x:Key="BarShadowColor">#FF003C</Color>
+    <sys:Double x:Key="BarShadowOpacity">0.55</sys:Double>
+
+    <Color x:Key="AccentColor">#FCEE0A</Color>
+    <Color x:Key="AccentDeepColor">#00F0FF</Color>
+    <Color x:Key="TileBorderColor">#5A1422</Color>
+    <Color x:Key="ButtonBorderColor">#7A1A2A</Color>
+    <Color x:Key="ButtonTextColor">#FCEE0A</Color>
+
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#040406" Offset="0" />
+        <GradientStop Color="#0A0810" Offset="0.55" />
+        <GradientStop Color="#1A060C" Offset="1" />
+    </LinearGradientBrush>
+    <DrawingBrush x:Key="StripeBrush" TileMode="Tile" Viewport="0,0,1,4" ViewportUnits="Absolute" Viewbox="0,0,1,4" ViewboxUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="#0C00F0FF" Geometry="M0,0 H1 V1 H0 Z" />
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#FCEE0A" />
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#00F0FF" />
+    <SolidColorBrush x:Key="AccentGlowBrush" Color="#6600F0FF" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#2B2805" />
+    <SolidColorBrush x:Key="TileGlowBrush" Color="#00000000" />
+    <SolidColorBrush x:Key="BadgeRimBrush" Color="#050507" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#ECE8D8" />
+    <SolidColorBrush x:Key="TileTextBrush" Color="#ECE8D8" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#6FA3AA" />
+    <SolidColorBrush x:Key="ClockBrush" Color="#FCEE0A" />
+    <SolidColorBrush x:Key="InverseTextBrush" Color="#ECE8D8" />
+
+    <SolidColorBrush x:Key="TileBorderBrush" Color="#5A1422" />
+    <SolidColorBrush x:Key="BubbleBorderBrush" Color="#FCEE0A" />
+    <LinearGradientBrush x:Key="TileBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#101118" Offset="0" />
+        <GradientStop Color="#0B0B10" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="EmptyTileBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#B3060609" Offset="0" />
+        <GradientStop Color="#B30A0A0F" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="EmptyTileBorderBrush" Color="#1E2027" />
+    <SolidColorBrush x:Key="GlossBrush" Color="#00FFFFFF" />
+
+    <LinearGradientBrush x:Key="BarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#0E0E14" Offset="0" />
+        <GradientStop Color="#08080C" Offset="0.5" />
+        <GradientStop Color="#120509" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BarLineBrush" Color="#FCEE0A" />
+
+    <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F20F1016" Offset="0" />
+        <GradientStop Color="#F2090A0E" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#8A1C2E" />
+    <SolidColorBrush x:Key="CardBrush" Color="#0E0F15" />
+
+    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#16171F" Offset="0" />
+        <GradientStop Color="#0C0D12" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#8A1C2E" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#FCEE0A" />
+    <SolidColorBrush x:Key="TrackBrush" Color="#22242C" />
+    <SolidColorBrush x:Key="ScrollTrackBrush" Color="#14FFFFFF" />
+    <SolidColorBrush x:Key="ScrimBrush" Color="#CC000000" />
+
+    <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F2101118" Offset="0" />
+        <GradientStop Color="#F2070709" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#27F59A" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#FF003C" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#FCEE0A" />
+
+    <LinearGradientBrush x:Key="PointerFillBrush" StartPoint="0,0" EndPoint="0.4,1">
+        <GradientStop Color="#23242E" Offset="0" />
+        <GradientStop Color="#0A0A0F" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PointerOutlineBrush" Color="#FCEE0A" />
+    <SolidColorBrush x:Key="PointerShadowBrush" Color="#FF003C" />
+    <SolidColorBrush x:Key="PointerCuffBrush" Color="#00F0FF" />
+    <RadialGradientBrush x:Key="SplashGlowBrush">
+        <GradientStop Color="#55FF003C" Offset="0" />
+        <GradientStop Color="#00FF003C" Offset="1" />
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="QuickScrimBrush" Color="#D9030305" />
+    <LinearGradientBrush x:Key="QuickTopBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F512131A" Offset="0" />
+        <GradientStop Color="#F507070A" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="QuickTopLineBrush" Color="#FCEE0A" />
+    <LinearGradientBrush x:Key="QuickBottomBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F50A0A0E" Offset="0" />
+        <GradientStop Color="#F5180509" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="QuickTextBrush" Color="#ECE8D8" />
+
+    <!-- Cut-corner outline, hazard tab and HUD ticks drawn over every tile. -->
+    <DataTemplate x:Key="TileDecorTemplate">
+        <Canvas Width="372" Height="222" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Path x:Name="Halo" Data="M 26,0 L 372,0 L 372,196 L 346,222 L 0,222 L 0,26 Z" Stroke="#3300F0FF" StrokeThickness="16" StrokeLineJoin="Miter" Opacity="0" />
+            <Path x:Name="Edge" Data="M 26,1.5 L 370.5,1.5 L 370.5,196 L 346,220.5 L 1.5,220.5 L 1.5,26 Z" Stroke="#5A1422" StrokeThickness="3" StrokeLineJoin="Miter" />
+            <Path x:Name="Cut" Data="M 0,26 L 26,0 L 44,0 L 0,44 Z" Fill="#FCEE0A" />
+            <Rectangle Canvas.Left="14" Canvas.Top="210" Width="84" Height="6" Fill="#FF003C" />
+            <Rectangle Canvas.Left="104" Canvas.Top="210" Width="12" Height="6" Fill="#FF003C" />
+            <Rectangle Canvas.Left="364" Canvas.Top="34" Width="4" Height="22" Fill="#9900F0FF" />
+            <Rectangle Canvas.Left="364" Canvas.Top="62" Width="4" Height="8" Fill="#9900F0FF" />
+        </Canvas>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsHighlighted, RelativeSource={RelativeSource AncestorType={x:Type c:ChannelTile}}}" Value="True">
+                <Setter TargetName="Halo" Property="Opacity" Value="1" />
+                <Setter TargetName="Edge" Property="Stroke" Value="#00F0FF" />
+                <Setter TargetName="Cut" Property="Fill" Value="#00F0FF" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DrawingBrush x:Key="NeonGridBrush" TileMode="Tile" Viewport="0,0,64,64" ViewportUnits="Absolute" Viewbox="0,0,64,64" ViewboxUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="#0D00F0FF" Geometry="M0,0 H64 V1 H0 Z M0,0 H1 V64 H0 Z" />
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="HazardBrush" TileMode="Tile" Viewport="0,0,28,28" ViewportUnits="Absolute" Viewbox="0,0,28,28" ViewboxUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#FCEE0A" Geometry="M0,0 H28 V28 H0 Z" />
+                <GeometryDrawing Brush="#050507" Geometry="M0,14 L14,0 L28,0 L0,28 Z M14,28 L28,14 L28,28 Z" />
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <DataTemplate x:Key="BackgroundDecorTemplate">
+        <Grid ClipToBounds="True">
+            <Rectangle Fill="{StaticResource NeonGridBrush}" />
+            <Viewbox Stretch="UniformToFill">
+                <Canvas Width="1920" Height="1080">
+                    <!-- Red city glow on the horizon -->
+                    <Rectangle Canvas.Top="560" Width="1920" Height="420">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#00FF003C" Offset="0" />
+                                <GradientStop Color="#40FF003C" Offset="0.62" />
+                                <GradientStop Color="#1AFF003C" Offset="1" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Ellipse Canvas.Left="360" Canvas.Top="520" Width="1200" Height="520">
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#2600F0FF" Offset="0" />
+                                <GradientStop Color="#0000F0FF" Offset="1" />
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Skyline -->
+                    <Path Fill="#07070B" Data="M 0,1080 L 0,700 L 48,700 L 48,640 L 96,640 L 96,590 L 140,590 L 140,720 L 196,720 L 196,560 L 214,540 L 250,540 L 250,760 L 320,760 L 320,680 L 380,680 L 380,1080 Z M 1520,1080 L 1520,690 L 1580,690 L 1580,610 L 1612,610 L 1612,520 L 1640,500 L 1680,500 L 1680,650 L 1740,650 L 1740,580 L 1800,580 L 1800,700 L 1850,700 L 1850,630 L 1920,630 L 1920,1080 Z" />
+                    <Path Stroke="#40FF003C" StrokeThickness="2" Data="M 0,700 L 48,700 L 48,640 L 96,640 L 96,590 L 140,590 L 140,720 L 196,720 L 196,560 L 214,540 L 250,540 L 250,760 L 320,760 L 320,680 L 380,680 M 1520,690 L 1580,690 L 1580,610 L 1612,610 L 1612,520 L 1640,500 L 1680,500 L 1680,650 L 1740,650 L 1740,580 L 1800,580 L 1800,700 L 1850,700 L 1850,630 L 1920,630" />
+                    <Rectangle Canvas.Left="60" Canvas.Top="660" Width="10" Height="6" Fill="#FCEE0A" />
+                    <Rectangle Canvas.Left="108" Canvas.Top="610" Width="10" Height="6" Fill="#00F0FF" c:IdleAnim.Kind="Flicker" />
+                    <Rectangle Canvas.Left="210" Canvas.Top="580" Width="10" Height="6" Fill="#FCEE0A" />
+                    <Rectangle Canvas.Left="226" Canvas.Top="620" Width="10" Height="6" Fill="#FF003C" />
+                    <Rectangle Canvas.Left="1624" Canvas.Top="560" Width="10" Height="6" Fill="#00F0FF" />
+                    <Rectangle Canvas.Left="1650" Canvas.Top="530" Width="10" Height="6" Fill="#FCEE0A" c:IdleAnim.Kind="Flicker" />
+                    <Rectangle Canvas.Left="1760" Canvas.Top="600" Width="10" Height="6" Fill="#FF003C" />
+                    <Rectangle Canvas.Left="1870" Canvas.Top="660" Width="10" Height="6" Fill="#00F0FF" />
+                    <!-- A neon sign on the right tower -->
+                    <Border Canvas.Left="1606" Canvas.Top="380" Width="96" Height="36" BorderBrush="#FF2A6D" BorderThickness="3" c:IdleAnim.Kind="Flicker">
+                        <TextBlock Text="OPEN" FontFamily="Bahnschrift" FontWeight="SemiBold" FontSize="22" Foreground="#FF2A6D" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- HUD frame -->
+                    <Path Stroke="#FCEE0A" StrokeThickness="4" Data="M 22,96 L 22,22 L 96,22 M 1824,22 L 1898,22 L 1898,96" />
+                    <Rectangle Canvas.Left="118" Canvas.Top="16" Width="220" Height="14" Fill="{StaticResource HazardBrush}" />
+                    <TextBlock Canvas.Left="360" Canvas.Top="10" Text="COUCHTOP//OS  ·  LINK STABLE  ·  NODE 04" FontFamily="Bahnschrift" FontSize="20" Foreground="#9900F0FF" />
+                    <TextBlock Canvas.Left="1400" Canvas.Top="10" Text="SIG ▮▮▮▮▯   0x3F2A:C7" FontFamily="Bahnschrift" FontSize="20" Foreground="#99FF003C" />
+                    <Canvas Canvas.Left="1846" Canvas.Top="120">
+                        <Rectangle Width="4" Height="60" Fill="#80FCEE0A" />
+                        <Rectangle Canvas.Left="8" Width="2" Height="60" Fill="#80FCEE0A" />
+                        <Rectangle Canvas.Left="14" Width="6" Height="60" Fill="#80FCEE0A" />
+                        <Rectangle Canvas.Left="24" Width="2" Height="60" Fill="#80FCEE0A" />
+                        <Rectangle Canvas.Left="30" Width="3" Height="60" Fill="#80FCEE0A" />
+                        <Rectangle Canvas.Left="38" Width="6" Height="60" Fill="#80FCEE0A" />
+                    </Canvas>
+                    <TextBlock Canvas.Left="44" Canvas.Top="560" Text="NET_ACCESS // GRANTED" FontFamily="Bahnschrift" FontSize="22" Foreground="#6600F0FF">
+                        <TextBlock.RenderTransform><RotateTransform Angle="-90" /></TextBlock.RenderTransform>
+                    </TextBlock>
+
+                    <!-- Glitch blocks -->
+                    <Rectangle Canvas.Left="1784" Canvas.Top="330" Width="110" Height="8" Fill="#FF003C" c:IdleAnim.Kind="Flicker" />
+                    <Rectangle Canvas.Left="1810" Canvas.Top="344" Width="44" Height="4" Fill="#00F0FF" c:IdleAnim.Kind="Flicker" />
+                    <Rectangle Canvas.Left="30" Canvas.Top="300" Width="70" Height="6" Fill="#FCEE0A" c:IdleAnim.Kind="Flicker" />
+
+                    <!-- Scan beam -->
+                    <Canvas Canvas.Top="-80" c:IdleAnim.Kind="Scan" c:IdleAnim.Distance="1240" c:IdleAnim.Duration="9">
+                        <Rectangle Width="1920" Height="70">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#0000F0FF" Offset="0" />
+                                    <GradientStop Color="#1400F0FF" Offset="1" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Canvas.Top="70" Width="1920" Height="2" Fill="#4D00F0FF" />
+                    </Canvas>
+                </Canvas>
+            </Viewbox>
+        </Grid>
+    </DataTemplate>
+
+    <!-- ============================================================ built-in channel art -->
+    <Style x:Key="NeonArtLabel" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Bahnschrift" />
+        <Setter Property="FontSize" Value="42" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style x:Key="NeonArtSerial" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Bahnschrift" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Foreground" Value="#7A9EA4" />
+    </Style>
+    <LinearGradientBrush x:Key="NeonArtBack" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#12131B" Offset="0" />
+        <GradientStop Color="#0A0A0F" Offset="0.6" />
+        <GradientStop Color="#1A070D" Offset="1" />
+    </LinearGradientBrush>
+
+    <DataTemplate x:Key="Art.files">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Canvas Canvas.Left="196" Canvas.Top="64" c:IdleAnim.Kind="Bob">
+                    <Path Data="M 0,14 L 64,14 L 80,32 L 176,32 L 176,132 L 0,132 Z" Stroke="#3300F0FF" StrokeThickness="14" StrokeLineJoin="Miter" />
+                    <Path Data="M 0,14 L 64,14 L 80,32 L 176,32 L 176,132 L 0,132 Z" Stroke="#00F0FF" StrokeThickness="4" StrokeLineJoin="Miter" Fill="#1400F0FF" />
+                    <Path Data="M 22,62 L 150,62 M 22,84 L 124,84 M 22,106 L 96,106" Stroke="#9900F0FF" StrokeThickness="4" />
+                    <Rectangle Canvas.Left="140" Canvas.Top="98" Width="18" Height="18" Fill="#FCEE0A" />
+                </Canvas>
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="FILES" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="21" Canvas.Top="18" Text="FILES" Style="{StaticResource NeonArtLabel}" Foreground="#9900F0FF" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="FILES" Style="{StaticResource NeonArtLabel}" Foreground="#FCEE0A" />
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.01 // LOCAL DRIVES" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.photos">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Canvas Canvas.Left="196" Canvas.Top="58">
+                    <Rectangle Width="176" Height="128" Stroke="#33FF2A6D" StrokeThickness="14" />
+                    <Rectangle Width="176" Height="128" Stroke="#FF2A6D" StrokeThickness="4" Fill="#14FF2A6D" />
+                    <Path Data="M 12,116 L 62,58 L 98,96 L 124,72 L 164,116" Stroke="#FF2A6D" StrokeThickness="4" StrokeLineJoin="Miter" />
+                    <Ellipse Canvas.Left="124" Canvas.Top="20" Width="26" Height="26" Stroke="#FCEE0A" StrokeThickness="4" c:IdleAnim.Kind="Pulse" />
+                    <Path Data="M -12,-12 L 14,-12 M -12,-12 L -12,14 M 188,140 L 162,140 M 188,140 L 188,114" Stroke="#00F0FF" StrokeThickness="3" />
+                </Canvas>
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="PHOTOS" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="21" Canvas.Top="18" Text="PHOTOS" Style="{StaticResource NeonArtLabel}" Foreground="#9900F0FF" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="PHOTOS" Style="{StaticResource NeonArtLabel}" Foreground="#FCEE0A" />
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.02 // IMAGE CACHE" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.browser">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Canvas Canvas.Left="220" Canvas.Top="40">
+                    <Ellipse Width="150" Height="150" Stroke="#33FCEE0A" StrokeThickness="14" />
+                    <Ellipse Width="150" Height="150" Stroke="#FCEE0A" StrokeThickness="4" Fill="#0FFCEE0A" />
+                    <Ellipse Canvas.Left="40" Width="70" Height="150" Stroke="#B3FCEE0A" StrokeThickness="3" />
+                    <Rectangle Canvas.Left="73" Width="4" Height="150" Fill="#B3FCEE0A" />
+                    <Path Data="M 6,50 L 144,50 M 0,75 L 150,75 M 6,100 L 144,100" Stroke="#B3FCEE0A" StrokeThickness="3" />
+                    <Ellipse Canvas.Left="118" Canvas.Top="18" Width="14" Height="14" Fill="#00F0FF" c:IdleAnim.Kind="Pulse" />
+                    <Path Data="M 125,25 L 176,-6" Stroke="#8000F0FF" StrokeThickness="2" />
+                </Canvas>
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="NET" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="21" Canvas.Top="18" Text="NET" Style="{StaticResource NeonArtLabel}" Foreground="#9900F0FF" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="NET" Style="{StaticResource NeonArtLabel}" Foreground="#FCEE0A" />
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.03 // UPLINK" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.customize">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Path Data="M 196,90 L 374,90 M 196,130 L 374,130 M 196,170 L 374,170" Stroke="#262833" StrokeThickness="8" />
+                <Path Data="M 196,90 L 300,90" Stroke="#00F0FF" StrokeThickness="8" />
+                <Path Data="M 196,130 L 250,130" Stroke="#FF2A6D" StrokeThickness="8" />
+                <Path Data="M 196,170 L 336,170" Stroke="#FCEE0A" StrokeThickness="8" />
+                <Rectangle Canvas.Left="292" Canvas.Top="74" Width="16" Height="32" Fill="#0A0A0F" Stroke="#00F0FF" StrokeThickness="3" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="36" c:IdleAnim.Duration="2.6" />
+                <Rectangle Canvas.Left="242" Canvas.Top="114" Width="16" Height="32" Fill="#0A0A0F" Stroke="#FF2A6D" StrokeThickness="3" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="48" c:IdleAnim.Duration="3.3" />
+                <Rectangle Canvas.Left="328" Canvas.Top="154" Width="16" Height="32" Fill="#0A0A0F" Stroke="#FCEE0A" StrokeThickness="3" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-40" c:IdleAnim.Duration="2.9" />
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="MODS" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="21" Canvas.Top="18" Text="MODS" Style="{StaticResource NeonArtLabel}" Foreground="#9900F0FF" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="MODS" Style="{StaticResource NeonArtLabel}" Foreground="#FCEE0A" />
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.04 // CUSTOMIZE" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.settings">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Grid Canvas.Left="222" Canvas.Top="42" Width="150" Height="150" c:IdleAnim.Kind="Spin">
+                    <Rectangle Width="26" Fill="#FCEE0A" />
+                    <Rectangle Width="26" Fill="#FCEE0A" RenderTransformOrigin="0.5,0.5"><Rectangle.RenderTransform><RotateTransform Angle="45" /></Rectangle.RenderTransform></Rectangle>
+                    <Rectangle Width="26" Fill="#FCEE0A" RenderTransformOrigin="0.5,0.5"><Rectangle.RenderTransform><RotateTransform Angle="90" /></Rectangle.RenderTransform></Rectangle>
+                    <Rectangle Width="26" Fill="#FCEE0A" RenderTransformOrigin="0.5,0.5"><Rectangle.RenderTransform><RotateTransform Angle="135" /></Rectangle.RenderTransform></Rectangle>
+                    <Ellipse Width="118" Height="118" Fill="#FCEE0A" />
+                    <Ellipse Width="104" Height="104" Fill="#0C0C11" />
+                    <Ellipse Width="46" Height="46" Stroke="#00F0FF" StrokeThickness="5" />
+                </Grid>
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="SYSTEM" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="21" Canvas.Top="18" Text="SYSTEM" Style="{StaticResource NeonArtLabel}" Foreground="#9900F0FF" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="SYSTEM" Style="{StaticResource NeonArtLabel}" Foreground="#FCEE0A" />
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.05 // CONFIG" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.power">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Grid Canvas.Left="222" Canvas.Top="42" Width="150" Height="150" c:IdleAnim.Kind="Pulse">
+                    <Path Data="M52,40 A40,40 0 1 0 98,40" Stroke="#40FF003C" StrokeThickness="30" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat" />
+                    <Path Data="M52,40 A40,40 0 1 0 98,40" Stroke="#FF003C" StrokeThickness="12" StrokeStartLineCap="Square" StrokeEndLineCap="Square" />
+                    <Path Data="M75,22 L75,72" Stroke="#FF003C" StrokeThickness="12" StrokeStartLineCap="Square" StrokeEndLineCap="Square" />
+                </Grid>
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="POWER" Style="{StaticResource NeonArtLabel}" Foreground="#00F0FF" Opacity="0.6" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="POWER" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.06 // CORE" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+</ResourceDictionary>

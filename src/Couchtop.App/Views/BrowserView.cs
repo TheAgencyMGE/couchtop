@@ -161,24 +161,36 @@ public sealed class BrowserView : UserControl, IScreenView, IDisposable
             tiles.Append($"<a class=\"tile\" href=\"{url}\"><span class=\"badge\">{letter}</span><span class=\"name\">{title}</span></a>");
         }
         var search = WebUtility.HtmlEncode(_host.Settings.Current.SearchUrl.Replace("{0}", ""));
+
+        // The start page follows the active theme.
+        var fallback = Color.FromRgb(0x55, 0x63, 0x6B);
+        string C(string key) => ThemeManager.Css(ThemeManager.ColorOf(key, fallback));
+        var (bgTop, bgBottom) = ThemeManager.Ends("BackgroundBrush", Colors.White);
+        var (buttonTop, buttonBottom) = ThemeManager.Ends("ButtonBrush", Colors.White);
+        var (tileTop, tileBottom) = ThemeManager.Ends("PanelBrush", Colors.White);
+        var radius = Application.Current.TryFindResource("PillCornerRadius") is CornerRadius r ? Math.Min(40, r.TopLeft) : 40;
+        var fontSource = (Application.Current.TryFindResource("AppFont") as FontFamily)?.Source ?? "";
+        var font = fontSource.Contains("Rounded Mplus", StringComparison.OrdinalIgnoreCase)
+            ? "\"M PLUS Rounded 1c\",\"Segoe UI\""
+            : string.Join(",", fontSource.Split(',').Select(f => $"\"{f.Trim()}\""));
         return $$"""
             <!doctype html><html><head><meta charset="utf-8"><title>Web</title>
             <style>
-            html,body{margin:0;height:100%;font-family:"M PLUS Rounded 1c","Segoe UI",sans-serif;color:#55636b;
-              background:repeating-linear-gradient(180deg,rgba(90,106,115,.05) 0 1px,transparent 1px 7px),linear-gradient(#fff,#e6ecef)}
+            html,body{margin:0;min-height:100%;font-family:{{font}},sans-serif;color:{{C("TextBrush")}};
+              background:linear-gradient({{ThemeManager.Css(bgTop)}},{{ThemeManager.Css(bgBottom)}}) fixed}
             main{max-width:1100px;margin:0 auto;padding:6vh 32px}
-            h1{font-size:64px;margin:0 0 8px;color:#35b4e5;font-weight:800}
-            p{font-size:22px;margin:0 0 36px;color:#8a969c}
+            h1{font-size:64px;margin:0 0 8px;color:{{C("AccentBrush")}};font-weight:800}
+            p{font-size:22px;margin:0 0 36px;color:{{C("SubtleTextBrush")}}}
             form{display:flex;gap:16px;margin-bottom:48px}
-            input{flex:1;font-size:28px;padding:18px 28px;border-radius:40px;border:4px solid #bcc5cb;outline:none;font-family:inherit;color:#55636b}
-            input:focus{border-color:#35b4e5}
-            button{font-size:28px;font-weight:700;padding:0 40px;border-radius:40px;border:4px solid #bcc5cb;background:linear-gradient(#fff,#e2e8ec);color:#5a6870;font-family:inherit;cursor:pointer}
-            button:hover{border-color:#35b4e5;color:#1a9ad3}
+            input{flex:1;font-size:28px;padding:18px 28px;border-radius:{{radius}}px;border:4px solid {{C("ButtonBorderBrush")}};outline:none;font-family:inherit;color:{{C("TextBrush")}};background:{{C("CardBrush")}}}
+            input:focus{border-color:{{C("AccentBrush")}}}
+            button{font-size:28px;font-weight:700;padding:0 40px;border-radius:{{radius}}px;border:4px solid {{C("ButtonBorderBrush")}};background:linear-gradient({{ThemeManager.Css(buttonTop)}},{{ThemeManager.Css(buttonBottom)}});color:{{C("ButtonTextBrush")}};font-family:inherit;cursor:pointer}
+            button:hover{border-color:{{C("AccentBrush")}};color:{{C("AccentDeepBrush")}}}
             .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:24px}
-            .tile{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 16px;border-radius:28px;border:4px solid #c4ccd1;
-              background:linear-gradient(#fff,#eef1f3);text-decoration:none;color:#55636b;font-size:24px;font-weight:700;transition:transform .15s,border-color .15s}
-            .tile:hover{transform:scale(1.05);border-color:#35b4e5;box-shadow:0 0 0 6px rgba(79,208,255,.35)}
-            .badge{width:80px;height:80px;border-radius:24px;background:#35b4e5;color:#fff;font-size:44px;display:flex;align-items:center;justify-content:center}
+            .tile{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 16px;border-radius:{{Math.Min(28, radius)}}px;border:4px solid {{C("PanelBorderBrush")}};
+              background:linear-gradient({{ThemeManager.Css(tileTop)}},{{ThemeManager.Css(tileBottom)}});text-decoration:none;color:{{C("TextBrush")}};font-size:24px;font-weight:700;transition:transform .15s,border-color .15s}
+            .tile:hover{transform:scale(1.05);border-color:{{C("AccentBrush")}};box-shadow:0 0 0 6px {{C("AccentGlowBrush")}}}
+            .badge{width:80px;height:80px;border-radius:{{Math.Min(24, radius)}}px;background:{{C("AccentBrush")}};color:{{C("BadgeRimBrush")}};font-size:44px;display:flex;align-items:center;justify-content:center}
             </style></head><body><main>
             <h1>Internet</h1><p>Search the web or pick a favorite.</p>
             <form action="{{search}}" method="get" onsubmit="event.preventDefault();location.href='{{search}}'+encodeURIComponent(document.getElementById('q').value)">

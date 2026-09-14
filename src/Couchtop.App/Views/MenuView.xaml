@@ -84,7 +84,7 @@
                 <Path Fill="{DynamicResource BarBrush}"
                       Data="M -1200,800 L -1200,78 L 0,78 C 120,70 250,66 330,100 C 380,122 440,125 520,125 L 1400,125 C 1480,125 1540,122 1590,100 C 1670,66 1800,70 1920,78 L 3120,78 L 3120,800 Z">
                     <Path.Effect>
-                        <DropShadowEffect BlurRadius="26" ShadowDepth="0" Opacity="0.18" Color="#3C6E86" />
+                        <DropShadowEffect BlurRadius="26" ShadowDepth="0" Opacity="{DynamicResource BarShadowOpacity}" Color="{DynamicResource BarShadowColor}" />
                     </Path.Effect>
                 </Path>
                 <Path Stroke="{DynamicResource BarLineBrush}" StrokeThickness="5"
@@ -107,15 +107,15 @@
                         <Button x:Name="BoardButton" Style="{StaticResource RoundButton}" Width="166" Height="166">
                             <Path Data="M 4,6 L 60,6 L 60,46 L 4,46 Z M 4,6 L 32,30 L 60,6" Stroke="{DynamicResource AccentBrush}" StrokeThickness="5" StrokeLineJoin="Round" Width="70" Height="52" Stretch="Uniform" />
                         </Button>
-                        <Border x:Name="Badge" Visibility="Collapsed" MinWidth="52" Height="52" CornerRadius="26" Padding="12,0" Background="{DynamicResource AccentBrush}" BorderBrush="White" BorderThickness="4"
+                        <Border x:Name="Badge" Visibility="Collapsed" MinWidth="52" Height="52" CornerRadius="26" Padding="12,0" Background="{DynamicResource AccentBrush}" BorderBrush="{DynamicResource BadgeRimBrush}" BorderThickness="4"
                                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-6,-6,0" IsHitTestVisible="False">
-                            <TextBlock x:Name="BadgeText" Foreground="White" FontSize="24" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock x:Name="BadgeText" Foreground="{DynamicResource BadgeRimBrush}" FontSize="24" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </Grid>
                 </Grid>
             </Canvas>
 
-            <Border x:Name="EditBanner" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0" Style="{StaticResource AppPanel}" CornerRadius="40" Padding="36,2,10,2" Opacity="0" IsHitTestVisible="False">
+            <Border x:Name="EditBanner" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0" Style="{StaticResource AppPanel}" CornerRadius="{DynamicResource CardCornerRadius}" Padding="36,2,10,2" Opacity="0" IsHitTestVisible="False">
                 <Border.RenderTransform>
                     <TranslateTransform x:Name="BannerShift" Y="-160" />
                 </Border.RenderTransform>

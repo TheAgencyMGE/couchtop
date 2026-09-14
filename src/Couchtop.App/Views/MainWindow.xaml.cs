@@ -17,6 +17,7 @@ using Couchtop.Core.Diagnostics;
 using Couchtop.Core.Native;
 using Couchtop.Core.Platform;
 using Couchtop.Core.Safety;
+using Couchtop.Core.Settings;
 
 namespace Couchtop.App.Views;
 
@@ -268,6 +269,28 @@ public partial class MainWindow : Window
         var active = IsActive && WindowState != WindowState.Minimized && !_sessionLocked && !_splashActive && !_host.IsExiting;
         Menu.SetActive(active && CurrentView == Menu);
         _host.Audio.SetAmbience(active && CurrentView is IScreenView { PlaysAmbience: true });
+        SetDecorRunning(active && !Anim.Reduced);
+    }
+
+    private bool _decorRunning;
+
+    private void SetDecorRunning(bool run)
+    {
+        if (_decorRunning == run) return;
+        _decorRunning = run;
+        if (run) IdleAnim.Start(ThemeDecor, 0);
+        else IdleAnim.Stop(ThemeDecor);
+    }
+
+    /// <summary>Switches the whole app to a theme: styles update live, tiles and scenery are rebuilt for the new look.</summary>
+    public void ApplyTheme(string theme)
+    {
+        SetDecorRunning(false);
+        ThemeManager.Apply(theme);
+        Menu.RebuildPages();
+        RebuildBackdrops();
+        // The scenery template is re-created on the next layout pass; start its animations after that.
+        Dispatcher.BeginInvoke(UpdateActivity, DispatcherPriority.Loaded);
     }
 
     private void OnClosing(object? sender, CancelEventArgs e)
@@ -906,9 +929,60 @@ public partial class MainWindow : Window
 
             await HomeMenuWindow.RenderSnapshotAsync(_host, this, Path.Combine(dir, "11-home-menu.png"));
 
-            ThemeManager.Apply("Night");
+            ApplyTheme("Night");
             await Task.Delay(1200);
             Save(dir, "12-night");
+
+            // One set of renders per extra theme, for reviewing every look side by side.
+            foreach (var theme in ThemeCatalog.All.Where(t => t.Id is not ("Classic" or "Night")))
+            {
+                _host.Settings.Current.Theme = theme.Id; // in memory only, so Settings shows the right choice
+                ApplyTheme(theme.Id);
+                await Task.Delay(1500);
+                _pointerInside = true;
+                _useSystemCursor = false;
+                UpdatePointerVisibility();
+                Menu.SnapshotHover(hover);
+                await Task.Delay(900);
+                Save(dir, $"theme-{theme.Id}-1-menu");
+                _pointerInside = false;
+                UpdatePointerVisibility();
+                Menu.SnapshotHover(-1);
+
+                if (app is not null)
+                {
+                    Navigate(new ChannelPreviewView(_host, this, app));
+                    await Task.Delay(1600);
+                    Save(dir, $"theme-{theme.Id}-2-preview");
+                    GoHome();
+                }
+
+                var themedSettings = new SettingsView(_host, this);
+                Navigate(themedSettings);
+                await Task.Delay(1000);
+                Save(dir, $"theme-{theme.Id}-3-settings");
+                GoHome();
+
+                Navigate(new PowerView(_host, this));
+                await Task.Delay(1000);
+                Save(dir, $"theme-{theme.Id}-4-power");
+                GoHome();
+                await Task.Delay(500);
+
+                Menu.SetEditMode(true);
+                await Task.Delay(1200);
+                Save(dir, $"theme-{theme.Id}-6-customize");
+                Menu.SetEditMode(false);
+                await Task.Delay(600);
+
+                Navigate(new FilesView(_host, this));
+                await Task.Delay(2000);
+                Save(dir, $"theme-{theme.Id}-7-files");
+                GoHome();
+                await Task.Delay(500);
+
+                await HomeMenuWindow.RenderSnapshotAsync(_host, this, Path.Combine(dir, $"theme-{theme.Id}-5-quick.png"));
+            }
         }
         catch (Exception ex)
         {

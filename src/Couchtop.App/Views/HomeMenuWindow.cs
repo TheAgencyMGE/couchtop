@@ -64,20 +64,24 @@ public sealed class HomeMenuWindow : Window
         }
 
         var root = new Grid { ClipToBounds = true };
-        _scrim = new Rectangle { Fill = new SolidColorBrush(Color.FromArgb(0xA8, 0x08, 0x10, 0x16)), Opacity = 0 };
+        _scrim = new Rectangle { Opacity = 0 };
+        _scrim.SetResourceReference(Shape.FillProperty, "QuickScrimBrush");
         root.Children.Add(_scrim);
         var stage = new Grid { Width = 1920, Height = 1080 };
 
         // Top bar
         var top = new Canvas { Height = 160, VerticalAlignment = VerticalAlignment.Top, RenderTransform = _topShift };
-        var topFill = new Rectangle { Width = 4400, Height = 160, Fill = new LinearGradientBrush(Color.FromArgb(0xF2, 0x3B, 0xB4, 0xEA), Color.FromArgb(0xF2, 0x1C, 0x7E, 0xBC), 90) };
+        var topFill = new Rectangle { Width = 4400, Height = 160 };
+        topFill.SetResourceReference(Shape.FillProperty, "QuickTopBrush");
         Canvas.SetLeft(topFill, -1240);
         top.Children.Add(topFill);
-        var topLine = new Rectangle { Width = 4400, Height = 6, Fill = new SolidColorBrush(Color.FromArgb(0xE0, 0xFF, 0xFF, 0xFF)) };
+        var topLine = new Rectangle { Width = 4400, Height = 6 };
+        topLine.SetResourceReference(Shape.FillProperty, "QuickTopLineBrush");
         Canvas.SetLeft(topLine, -1240);
         Canvas.SetTop(topLine, 160);
         top.Children.Add(topLine);
-        var title = new TextBlock { Text = "Quick Menu", FontSize = 68, FontWeight = FontWeights.ExtraBold, Foreground = Brushes.White };
+        var title = new TextBlock { Text = "Quick Menu", FontSize = 68, FontWeight = FontWeights.ExtraBold };
+        title.SetResourceReference(TextBlock.ForegroundProperty, "QuickTextBrush");
         Canvas.SetLeft(title, 80);
         Canvas.SetTop(title, 36);
         top.Children.Add(title);
@@ -124,14 +128,16 @@ public sealed class HomeMenuWindow : Window
 
         // Bottom bar
         var bottom = new Canvas { Height = 210, VerticalAlignment = VerticalAlignment.Bottom, RenderTransform = _bottomShift };
-        var bottomFill = new Rectangle { Width = 4400, Height = 600, Fill = new SolidColorBrush(Color.FromArgb(0xEB, 0x1A, 0x22, 0x28)) };
+        var bottomFill = new Rectangle { Width = 4400, Height = 600 };
+        bottomFill.SetResourceReference(Shape.FillProperty, "QuickBottomBrush");
         Canvas.SetLeft(bottomFill, -1240);
         bottom.Children.Add(bottomFill);
         var bottomLine = new Rectangle { Width = 4400, Height = 5 };
         bottomLine.SetResourceReference(Shape.FillProperty, "AccentBrush");
         Canvas.SetLeft(bottomLine, -1240);
         bottom.Children.Add(bottomLine);
-        var volumeLabel = new TextBlock { Text = "Volume", FontSize = 34, FontWeight = FontWeights.Bold, Foreground = Brushes.White };
+        var volumeLabel = new TextBlock { Text = "Volume", FontSize = 34, FontWeight = FontWeights.Bold };
+        volumeLabel.SetResourceReference(TextBlock.ForegroundProperty, "QuickTextBrush");
         Canvas.SetLeft(volumeLabel, 110);
         Canvas.SetTop(volumeLabel, 36);
         bottom.Children.Add(volumeLabel);
@@ -141,11 +147,13 @@ public sealed class HomeMenuWindow : Window
         Canvas.SetLeft(volume, 100);
         Canvas.SetTop(volume, 96);
         bottom.Children.Add(volume);
-        _controllers = new TextBlock { FontSize = 30, FontWeight = FontWeights.Bold, Foreground = Brushes.White, Opacity = 0.9 };
+        _controllers = new TextBlock { FontSize = 30, FontWeight = FontWeights.Bold, Opacity = 0.9 };
+        _controllers.SetResourceReference(TextBlock.ForegroundProperty, "QuickTextBrush");
         Canvas.SetLeft(_controllers, 800);
         Canvas.SetTop(_controllers, 70);
         bottom.Children.Add(_controllers);
-        _clock = new TextBlock { FontSize = 72, FontWeight = FontWeights.Medium, Foreground = Brushes.White, TextAlignment = TextAlignment.Right, Width = 520 };
+        _clock = new TextBlock { FontSize = 72, FontWeight = FontWeights.Medium, TextAlignment = TextAlignment.Right, Width = 520 };
+        _clock.SetResourceReference(TextBlock.ForegroundProperty, "QuickTextBrush");
         Canvas.SetLeft(_clock, 1920 - 90 - 520);
         Canvas.SetTop(_clock, 48);
         bottom.Children.Add(_clock);

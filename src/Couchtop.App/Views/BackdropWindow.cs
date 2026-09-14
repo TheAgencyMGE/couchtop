@@ -37,6 +37,9 @@ public sealed class BackdropWindow : Window
         var stripes = new Rectangle();
         stripes.SetResourceReference(Shape.FillProperty, "StripeBrush");
         grid.Children.Add(stripes);
+        var decor = new ContentControl { Content = "decor", Focusable = false, IsTabStop = false, IsHitTestVisible = false };
+        decor.SetResourceReference(ContentControl.ContentTemplateProperty, "BackgroundDecorTemplate");
+        grid.Children.Add(decor);
 
         var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
         var mark = ViewKit.Text("Couchtop", 140, FontWeights.ExtraBold, "ClockBrush", wrap: false);

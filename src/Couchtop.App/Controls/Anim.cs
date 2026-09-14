@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -37,7 +38,8 @@ public static class Anim
 }
 
 /// <summary>
-/// Declarative idle animations for channel artwork (Kind = Spin, SpinReverse, Bob, Sway, Pulse, Drift, Twinkle).
+/// Declarative idle animations for channel artwork (Kind = Spin, SpinReverse, Bob, Sway, Pulse, Drift, Twinkle)
+/// and theme backdrops (Rise, Fall, Float, Scan, Breathe, Flicker; tuned with Distance and Duration).
 /// They only run for tiles on the visible page while the menu is in front, keeping idle CPU near zero.
 /// </summary>
 public static class IdleAnim
@@ -50,8 +52,13 @@ public static class IdleAnim
 
     public static string? GetKind(DependencyObject d) => (string?)d.GetValue(KindProperty);
     public static void SetKind(DependencyObject d, string? value) => d.SetValue(KindProperty, value);
+    public static readonly DependencyProperty DurationProperty =
+        DependencyProperty.RegisterAttached("Duration", typeof(double), typeof(IdleAnim), new PropertyMetadata(20.0));
+
     public static double GetDistance(DependencyObject d) => (double)d.GetValue(DistanceProperty);
     public static void SetDistance(DependencyObject d, double value) => d.SetValue(DistanceProperty, value);
+    public static double GetDuration(DependencyObject d) => (double)d.GetValue(DurationProperty);
+    public static void SetDuration(DependencyObject d, double value) => d.SetValue(DurationProperty, value);
 
     public static void Start(DependencyObject root, double phaseSeconds)
     {
@@ -85,6 +92,33 @@ public static class IdleAnim
                 case "Twinkle":
                     element.BeginAnimation(UIElement.OpacityProperty, Loop(0.15, 1, 0.9, true, Anim.EaseInOut, begin));
                     break;
+                // Theme backdrops: slow, sparse loops that start and end off-screen so the restart is invisible.
+                case "Rise":
+                    CacheForScenery(element);
+                    translate.BeginAnimation(TranslateTransform.YProperty, Travel(element, up: true, begin));
+                    translate.BeginAnimation(TranslateTransform.XProperty, Loop(-14, 14, 3.1, true, Anim.EaseInOut, begin, SceneryFps));
+                    break;
+                case "Fall":
+                    CacheForScenery(element);
+                    translate.BeginAnimation(TranslateTransform.YProperty, Travel(element, up: false, begin));
+                    translate.BeginAnimation(TranslateTransform.XProperty, Loop(-40, 40, 2.8, true, Anim.EaseInOut, begin, SceneryFps));
+                    rotate.BeginAnimation(RotateTransform.AngleProperty, Loop(-50, 50, 2.1, true, Anim.EaseInOut, begin, SceneryFps));
+                    break;
+                case "Float":
+                    CacheForScenery(element);
+                    translate.BeginAnimation(TranslateTransform.XProperty, Loop(0, GetDistance(element), GetDuration(element), true, Anim.EaseInOut, begin, SceneryFps));
+                    break;
+                case "Scan":
+                    CacheForScenery(element);
+                    translate.BeginAnimation(TranslateTransform.YProperty, Loop(0, GetDistance(element), GetDuration(element), false, null, begin, SceneryFps));
+                    break;
+                case "Breathe":
+                    CacheForScenery(element);
+                    element.BeginAnimation(UIElement.OpacityProperty, Loop(0.45, 1, GetDuration(element), true, Anim.EaseInOut, begin, SceneryFps));
+                    break;
+                case "Flicker":
+                    element.BeginAnimation(UIElement.OpacityProperty, FlickerLoop(begin));
+                    break;
             }
         }
     }
@@ -107,7 +141,19 @@ public static class IdleAnim
         }
     }
 
-    private static DoubleAnimation Loop(double from, double to, double seconds, bool autoReverse, IEasingFunction? ease, TimeSpan begin)
+    /// <summary>Scenery drifts slowly across large areas, so a lower frame rate is invisible and saves render work.</summary>
+    private const int SceneryFps = 24;
+
+    /// <summary>
+    /// Moving scenery is rendered once into a GPU texture and then only re-composited each frame,
+    /// instead of re-rasterizing big gradients and paths 24 times a second.
+    /// </summary>
+    private static void CacheForScenery(UIElement element)
+    {
+        if (element.CacheMode is null) element.CacheMode = new BitmapCache { SnapsToDevicePixels = false };
+    }
+
+    private static DoubleAnimation Loop(double from, double to, double seconds, bool autoReverse, IEasingFunction? ease, TimeSpan begin, int fps = 30)
     {
         var a = new DoubleAnimation(from, to, TimeSpan.FromSeconds(seconds))
         {
@@ -117,6 +163,44 @@ public static class IdleAnim
             BeginTime = begin,
         };
         // Ambient loops are slow and subtle; 30 FPS halves render work while the menu idles.
+        Timeline.SetDesiredFrameRate(a, fps);
+        a.Freeze();
+        return a;
+    }
+
+    /// <summary>
+    /// Seamless vertical loop for an element placed on a canvas of height Distance: it leaves one edge, re-enters
+    /// from the opposite edge while fully off-screen, and arrives back where it was placed. Static renders (and
+    /// reduced motion) therefore show every element at its designed position.
+    /// </summary>
+    private static DoubleAnimationUsingKeyFrames Travel(UIElement element, bool up, TimeSpan begin)
+    {
+        var canvasHeight = GetDistance(element);
+        var top = Canvas.GetTop(element);
+        if (double.IsNaN(top)) top = 0;
+        var height = element is FrameworkElement { Height: > 0 and var h } ? h : Math.Max(1, element.RenderSize.Height);
+        var duration = Math.Max(1, GetDuration(element));
+        var speed = (canvasHeight + height) / duration;
+        var exit = up ? -(top + height) : canvasHeight - top;
+        var reenter = up ? canvasHeight - top : -(top + height);
+        var t1 = TimeSpan.FromSeconds(Math.Abs(exit) / speed);
+
+        var a = new DoubleAnimationUsingKeyFrames { Duration = TimeSpan.FromSeconds(duration), RepeatBehavior = RepeatBehavior.Forever, BeginTime = begin };
+        a.KeyFrames.Add(new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.Zero)));
+        a.KeyFrames.Add(new LinearDoubleKeyFrame(exit, KeyTime.FromTimeSpan(t1)));
+        a.KeyFrames.Add(new DiscreteDoubleKeyFrame(reenter, KeyTime.FromTimeSpan(t1 + TimeSpan.FromMilliseconds(1))));
+        a.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(duration))));
+        Timeline.SetDesiredFrameRate(a, SceneryFps);
+        a.Freeze();
+        return a;
+    }
+
+    /// <summary>A neon sign that mostly stays lit, with an occasional stutter.</summary>
+    private static DoubleAnimationUsingKeyFrames FlickerLoop(TimeSpan begin)
+    {
+        var a = new DoubleAnimationUsingKeyFrames { Duration = TimeSpan.FromSeconds(7), RepeatBehavior = RepeatBehavior.Forever, BeginTime = begin };
+        foreach (var (t, v) in new[] { (0.0, 1.0), (4.6, 1.0), (4.66, 0.25), (4.72, 1.0), (4.8, 0.4), (4.95, 1.0), (7.0, 1.0) })
+            a.KeyFrames.Add(new DiscreteDoubleKeyFrame(v, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(t))));
         Timeline.SetDesiredFrameRate(a, 30);
         a.Freeze();
         return a;

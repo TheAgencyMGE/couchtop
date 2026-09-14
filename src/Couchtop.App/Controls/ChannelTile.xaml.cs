@@ -10,6 +10,9 @@ namespace Couchtop.App.Controls;
 
 public partial class ChannelTile : UserControl
 {
+    public static readonly DependencyProperty IsHighlightedProperty =
+        DependencyProperty.Register(nameof(IsHighlighted), typeof(bool), typeof(ChannelTile), new PropertyMetadata(false));
+
     private bool _highlighted;
 
     public ChannelTile()
@@ -21,10 +24,39 @@ public partial class ChannelTile : UserControl
     public int Slot { get; set; }
     public Channel? Channel { get; private set; }
 
+    /// <summary>Lets theme ornaments (TileDecorTemplate) react to the pointer.</summary>
+    public bool IsHighlighted
+    {
+        get => (bool)GetValue(IsHighlightedProperty);
+        private set => SetValue(IsHighlightedProperty, value);
+    }
+
     private void UpdateClip()
     {
         if (Screen.ActualWidth <= 0) return;
-        Screen.Clip = new RectangleGeometry(new Rect(0, 0, Screen.ActualWidth, Screen.ActualHeight), 20, 20);
+        var chamfer = ThemeManager.Number("TileChamfer", 0);
+        if (chamfer > 0)
+        {
+            Frame.Clip = Chamfer(Frame.ActualWidth, Frame.ActualHeight, chamfer);
+            Screen.Clip = Chamfer(Screen.ActualWidth, Screen.ActualHeight, Math.Max(0, chamfer - 2.5));
+            return;
+        }
+        var radius = ThemeManager.Number("TileClipRadius", 20);
+        Frame.Clip = null;
+        Screen.Clip = new RectangleGeometry(new Rect(0, 0, Screen.ActualWidth, Screen.ActualHeight), radius, radius);
+    }
+
+    /// <summary>Rectangle with the top-left and bottom-right corners cut at 45°.</summary>
+    private static Geometry Chamfer(double w, double h, double c)
+    {
+        var geometry = new StreamGeometry();
+        using (var ctx = geometry.Open())
+        {
+            ctx.BeginFigure(new Point(c, 0), true, true);
+            ctx.PolyLineTo(new[] { new Point(w, 0), new Point(w, h - c), new Point(w - c, h), new Point(0, h), new Point(0, c) }, true, false);
+        }
+        geometry.Freeze();
+        return geometry;
     }
 
     public void SetChannel(Channel? channel, AppHost host, bool editMode)
@@ -59,6 +91,7 @@ public partial class ChannelTile : UserControl
     {
         if (_highlighted == on) return;
         _highlighted = on;
+        IsHighlighted = on;
         Anim.To(RootScale, ScaleTransform.ScaleXProperty, on ? 1.06 : 1, on ? 240 : 160, on ? Anim.Springy : Anim.EaseOut);
         Anim.To(RootScale, ScaleTransform.ScaleYProperty, on ? 1.06 : 1, on ? 240 : 160, on ? Anim.Springy : Anim.EaseOut);
         Anim.To(RootLift, TranslateTransform.YProperty, on ? -5 : 0, 180, Anim.EaseOut);
@@ -199,10 +232,12 @@ public static class ChannelArtFactory
         if (tint) root.Background = CardBackground(result.Dominant);
     }
 
+    /// <summary>Tints an app card with the icon's dominant color, blended toward the theme's card color.</summary>
     public static Brush CardBackground(Color seed)
     {
-        var top = Mix(seed, Colors.White, 0.86);
-        var bottom = Mix(seed, Colors.White, 0.62);
+        var mix = ThemeManager.ColorOf("CardMixColor", Colors.White);
+        var top = Mix(seed, mix, ThemeManager.Number("CardMixTop", 0.86));
+        var bottom = Mix(seed, mix, ThemeManager.Number("CardMixBottom", 0.62));
         var brush = new LinearGradientBrush(top, bottom, 90);
         brush.Freeze();
         return brush;

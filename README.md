@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.2.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.3.0-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -62,6 +62,14 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 | ![Power](docs/screenshots/09-power.png) **Power** channel | ![Dialog](docs/screenshots/10-dialog.png) Console-style dialogs |
 | ![Files](docs/screenshots/07-files.png) **Files** channel | ![Photos](docs/screenshots/08-photos.png) **Photos** channel |
 
+### Themes
+
+| | |
+|---|---|
+| ![Sky Resort theme](docs/screenshots/13-theme-sky-resort.png) **Sky Resort**: glass, sky, sea and bubbles | ![Neon City theme](docs/screenshots/14-theme-neon-city.png) **Neon City**: black steel and neon HUD |
+| ![Midnight theme](docs/screenshots/15-theme-midnight.png) **Midnight**: sleek and dark | ![Sakura theme](docs/screenshots/16-theme-sakura.png) **Sakura**: blossoms and falling petals |
+| ![Sunset theme](docs/screenshots/17-theme-sunset.png) **Sunset**: golden hour over the water | ![Night theme](docs/screenshots/12-night.png) **Night**: the dim classic |
+
 ---
 
 ## Features
@@ -73,7 +81,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 - Curved bottom bar with a big clock (blinking colon), the date, a menu button and a **Message Board**.
 - A channel start screen with **Menu** and **Start** buttons, zoom transitions and a launch flash.
 - Original synthesized sound effects, startup jingle and a music-box menu loop. The music plays only while the menu is in front.
-- Classic and Night themes, a reduced-motion option, and a 12/24-hour clock.
+- Seven themes that restyle everything, including the pointer and scenery: Classic, Night, Sky Resort, Neon City, Midnight, Sakura and Sunset. Plus a reduced-motion option and a 12/24-hour clock.
 
 **Channels**
 - Automatically discovers Start menu programs, Microsoft Store apps, **Steam games** (all libraries, with header art), **Epic Games** titles and Windows tools.
@@ -311,7 +319,7 @@ Create the self-contained installer and portable packages in `artifacts/` (runs 
 powershell -ExecutionPolicy Bypass -File build/publish.ps1
 ```
 
-Pushing a tag like `v0.2.0-beta.1` runs the release workflow, which builds, tests, packages and publishes a GitHub pre-release.
+Pushing a tag like `v0.3.0-beta.1` runs the release workflow, which builds, tests, packages and publishes a GitHub pre-release.
 
 **Trailer:** the video in `docs/media` is made with [Remotion](https://www.remotion.dev) from the `video/` project:
 

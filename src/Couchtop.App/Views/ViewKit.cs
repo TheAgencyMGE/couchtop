@@ -45,11 +45,11 @@ public static class ViewKit
         var border = new Border
         {
             Child = child,
-            CornerRadius = new CornerRadius(34),
-            BorderThickness = new Thickness(4),
             Padding = padding ?? new Thickness(36, 26, 36, 26),
             Margin = margin ?? new Thickness(0, 0, 0, 18),
         };
+        border.SetResourceReference(Border.CornerRadiusProperty, "CardCornerRadius");
+        border.SetResourceReference(Border.BorderThicknessProperty, "PanelBorderThickness");
         border.SetResourceReference(Border.BackgroundProperty, "PanelBrush");
         border.SetResourceReference(Border.BorderBrushProperty, "PanelBorderBrush");
         return border;

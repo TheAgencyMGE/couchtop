@@ -6,17 +6,20 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="{DynamicResource BackgroundBrush}"
-        FontFamily="{StaticResource AppFont}"
+        FontFamily="{DynamicResource AppFont}"
         TextOptions.TextFormattingMode="Ideal"
         Width="1280" Height="720">
     <Grid x:Name="RootGrid" ClipToBounds="True">
         <Rectangle Fill="{DynamicResource BackgroundBrush}" />
         <Rectangle Fill="{DynamicResource StripeBrush}" />
+        <!-- Animated theme scenery (sky, city, petals...). Runs only while Couchtop is in front. -->
+        <ContentControl x:Name="ThemeDecor" Content="decor" ContentTemplate="{DynamicResource BackgroundDecorTemplate}" Focusable="False" IsTabStop="False" IsHitTestVisible="False"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
 
         <Grid x:Name="ViewLayer" />
 
         <Grid x:Name="ToastLayer" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Border x:Name="Toast" Style="{StaticResource AppPanel}" Padding="40,14" Margin="0,26,0,0" Opacity="0" CornerRadius="34">
+            <Border x:Name="Toast" Style="{StaticResource AppPanel}" Padding="40,14" Margin="0,26,0,0" Opacity="0" CornerRadius="{DynamicResource CardCornerRadius}">
                 <TextBlock x:Name="ToastText" Style="{StaticResource AppText}" FontSize="28" FontWeight="Bold" TextWrapping="NoWrap" />
             </Border>
         </Grid>
@@ -38,14 +41,7 @@
             <Rectangle Fill="{DynamicResource BackgroundBrush}" />
             <Viewbox Stretch="Uniform">
                 <Grid Width="1920" Height="1080">
-                    <Ellipse x:Name="SplashGlow" Width="1300" Height="700" Opacity="0">
-                        <Ellipse.Fill>
-                            <RadialGradientBrush>
-                                <GradientStop Color="#664FD0FF" Offset="0" />
-                                <GradientStop Color="#004FD0FF" Offset="1" />
-                            </RadialGradientBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
+                    <Ellipse x:Name="SplashGlow" Width="1300" Height="700" Opacity="0" Fill="{DynamicResource SplashGlowBrush}" />
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock x:Name="SplashTitle" Text="Couchtop" FontSize="170" FontWeight="ExtraBold" Foreground="{DynamicResource ClockBrush}" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                             <TextBlock.RenderTransform>
@@ -61,8 +57,8 @@
         <Border x:Name="FlashLayer" Background="White" Opacity="0" IsHitTestVisible="False" />
 
         <Canvas x:Name="PointerLayer" IsHitTestVisible="False">
-            <Border x:Name="Bubble" Visibility="Collapsed" CornerRadius="30" BorderThickness="4" Padding="28,10,28,12"
-                    Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource TileBorderBrush}">
+            <Border x:Name="Bubble" Visibility="Collapsed" CornerRadius="{DynamicResource ItemCornerRadius}" BorderThickness="{DynamicResource PanelBorderThickness}" Padding="28,10,28,12"
+                    Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BubbleBorderBrush}">
                 <Border.LayoutTransform>
                     <ScaleTransform x:Name="BubbleScale" />
                 </Border.LayoutTransform>

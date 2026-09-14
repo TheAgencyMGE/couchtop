@@ -1,0 +1,192 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:c="clr-namespace:Couchtop.App.Controls">
+    <!-- Sakura: warm paper, blossom branches in the corners and petals drifting down. -->
+
+    <FontFamily x:Key="AppFont">/Couchtop;component/Assets/Fonts/#Rounded Mplus 1c, Segoe UI</FontFamily>
+    <CornerRadius x:Key="PillCornerRadius">42</CornerRadius>
+    <CornerRadius x:Key="PillGlowCornerRadius">48</CornerRadius>
+    <CornerRadius x:Key="PillGlossCornerRadius">38,38,16,16</CornerRadius>
+    <CornerRadius x:Key="RoundCornerRadius">999</CornerRadius>
+    <CornerRadius x:Key="TileCornerRadius">28</CornerRadius>
+    <CornerRadius x:Key="TileGlowCornerRadius">36</CornerRadius>
+    <CornerRadius x:Key="TileGlossCornerRadius">22,22,90,90</CornerRadius>
+    <CornerRadius x:Key="PanelCornerRadius">44</CornerRadius>
+    <CornerRadius x:Key="CardCornerRadius">34</CornerRadius>
+    <CornerRadius x:Key="ItemCornerRadius">26</CornerRadius>
+    <CornerRadius x:Key="InputCornerRadius">36</CornerRadius>
+    <CornerRadius x:Key="TrackCornerRadius">9</CornerRadius>
+    <Thickness x:Key="PillBorderThickness">4</Thickness>
+    <Thickness x:Key="RoundBorderThickness">5</Thickness>
+    <Thickness x:Key="TileBorderThickness">4</Thickness>
+    <Thickness x:Key="PanelBorderThickness">4</Thickness>
+    <sys:Double x:Key="TileClipRadius">22</sys:Double>
+    <sys:Double x:Key="TileChamfer">0</sys:Double>
+    <sys:Double x:Key="TileGlossOpacity">0.45</sys:Double>
+    <Color x:Key="CardMixColor">#FFF8FA</Color>
+    <sys:Double x:Key="CardMixTop">0.86</sys:Double>
+    <sys:Double x:Key="CardMixBottom">0.64</sys:Double>
+    <Color x:Key="BarShadowColor">#C27A95</Color>
+    <sys:Double x:Key="BarShadowOpacity">0.22</sys:Double>
+
+    <Color x:Key="AccentColor">#EE6A9A</Color>
+    <Color x:Key="AccentDeepColor">#D2487D</Color>
+    <Color x:Key="TileBorderColor">#F1CAD7</Color>
+    <Color x:Key="ButtonBorderColor">#EBC0CF</Color>
+    <Color x:Key="ButtonTextColor">#7A5160</Color>
+
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFF9F6" Offset="0" />
+        <GradientStop Color="#FDEFF1" Offset="0.55" />
+        <GradientStop Color="#F8E0E7" Offset="1" />
+    </LinearGradientBrush>
+    <DrawingBrush x:Key="StripeBrush" TileMode="Tile" Viewport="0,0,1,7" ViewportUnits="Absolute" Viewbox="0,0,1,7" ViewboxUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="#0AC0708A" Geometry="M0,0 H1 V1 H0 Z" />
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#EE6A9A" />
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#D2487D" />
+    <SolidColorBrush x:Key="AccentGlowBrush" Color="#80FF9CC2" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#FCE2EC" />
+    <SolidColorBrush x:Key="TileGlowBrush" Color="#80FF9CC2" />
+    <SolidColorBrush x:Key="BadgeRimBrush" Color="#FFFFFF" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#6A4452" />
+    <SolidColorBrush x:Key="TileTextBrush" Color="#6A4452" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#A68593" />
+    <SolidColorBrush x:Key="ClockBrush" Color="#BE6A8A" />
+    <SolidColorBrush x:Key="InverseTextBrush" Color="#FFFFFF" />
+
+    <SolidColorBrush x:Key="TileBorderBrush" Color="#F1CAD7" />
+    <SolidColorBrush x:Key="BubbleBorderBrush" Color="#F1CAD7" />
+    <LinearGradientBrush x:Key="TileBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FDF0F4" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="EmptyTileBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#99F6DCE5" Offset="0" />
+        <GradientStop Color="#99FBEAF0" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="EmptyTileBorderBrush" Color="#F0D3DD" />
+    <LinearGradientBrush x:Key="GlossBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#B3FFFFFF" Offset="0" />
+        <GradientStop Color="#00FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFDFD" Offset="0" />
+        <GradientStop Color="#FDEFF3" Offset="0.5" />
+        <GradientStop Color="#F7DCE5" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BarLineBrush" Color="#F4A9C3" />
+
+    <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FDF1F5" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#F1CAD7" />
+    <SolidColorBrush x:Key="CardBrush" Color="#FFF8FA" />
+
+    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FDF1F5" Offset="0.5" />
+        <GradientStop Color="#F8E0E8" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#EBC0CF" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#7A5160" />
+    <SolidColorBrush x:Key="TrackBrush" Color="#F3D6E0" />
+    <SolidColorBrush x:Key="ScrollTrackBrush" Color="#14803048" />
+    <SolidColorBrush x:Key="ScrimBrush" Color="#664A2A36" />
+
+    <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FBE9EF" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#6DBF67" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#E2506F" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#EAA03E" />
+
+    <LinearGradientBrush x:Key="PointerFillBrush" StartPoint="0,0" EndPoint="0.4,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FFFFFF" Offset="0.45" />
+        <GradientStop Color="#FBD9E5" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PointerOutlineBrush" Color="#C9467A" />
+    <SolidColorBrush x:Key="PointerShadowBrush" Color="#6A2240" />
+    <SolidColorBrush x:Key="PointerCuffBrush" Color="#FCE6EE" />
+    <RadialGradientBrush x:Key="SplashGlowBrush">
+        <GradientStop Color="#66FF9CC2" Offset="0" />
+        <GradientStop Color="#00FF9CC2" Offset="1" />
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="QuickScrimBrush" Color="#A6200E17" />
+    <LinearGradientBrush x:Key="QuickTopBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F2F58FB5" Offset="0" />
+        <GradientStop Color="#F2D65E8E" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="QuickTopLineBrush" Color="#E6FFFFFF" />
+    <SolidColorBrush x:Key="QuickBottomBrush" Color="#EB3A2230" />
+    <SolidColorBrush x:Key="QuickTextBrush" Color="#FFFFFF" />
+
+    <DataTemplate x:Key="SakuraFlower">
+        <Canvas Width="60" Height="60">
+            <Ellipse Canvas.Left="18" Canvas.Top="2" Width="24" Height="30" Fill="#FFC9DA" Stroke="#F59BBC" StrokeThickness="1.2" RenderTransformOrigin="0.5,0.93"><Ellipse.RenderTransform><RotateTransform Angle="0" /></Ellipse.RenderTransform></Ellipse>
+            <Ellipse Canvas.Left="18" Canvas.Top="2" Width="24" Height="30" Fill="#FFD3E1" Stroke="#F59BBC" StrokeThickness="1.2" RenderTransformOrigin="0.5,0.93"><Ellipse.RenderTransform><RotateTransform Angle="72" /></Ellipse.RenderTransform></Ellipse>
+            <Ellipse Canvas.Left="18" Canvas.Top="2" Width="24" Height="30" Fill="#FFC9DA" Stroke="#F59BBC" StrokeThickness="1.2" RenderTransformOrigin="0.5,0.93"><Ellipse.RenderTransform><RotateTransform Angle="144" /></Ellipse.RenderTransform></Ellipse>
+            <Ellipse Canvas.Left="18" Canvas.Top="2" Width="24" Height="30" Fill="#FFD3E1" Stroke="#F59BBC" StrokeThickness="1.2" RenderTransformOrigin="0.5,0.93"><Ellipse.RenderTransform><RotateTransform Angle="216" /></Ellipse.RenderTransform></Ellipse>
+            <Ellipse Canvas.Left="18" Canvas.Top="2" Width="24" Height="30" Fill="#FFC9DA" Stroke="#F59BBC" StrokeThickness="1.2" RenderTransformOrigin="0.5,0.93"><Ellipse.RenderTransform><RotateTransform Angle="288" /></Ellipse.RenderTransform></Ellipse>
+            <Ellipse Canvas.Left="23" Canvas.Top="23" Width="14" Height="14" Fill="#FFE39A" />
+            <Ellipse Canvas.Left="27" Canvas.Top="27" Width="6" Height="6" Fill="#E9A23B" />
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BackgroundDecorTemplate">
+        <Grid ClipToBounds="True">
+            <Viewbox Stretch="UniformToFill">
+                <Canvas Width="1920" Height="1080">
+                    <Ellipse Canvas.Left="460" Canvas.Top="-420" Width="1000" Height="900">
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#66FFD3E0" Offset="0" />
+                                <GradientStop Color="#00FFD3E0" Offset="1" />
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+
+                    <!-- Branch, top left -->
+                    <Path Stroke="#6E4452" StrokeThickness="16" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M -40,150 C 90,150 170,90 300,40" />
+                    <Path Stroke="#6E4452" StrokeThickness="9" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 120,128 C 150,190 140,260 110,330 M 210,88 C 260,60 330,62 400,40" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="266" Canvas.Top="10" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="360" Canvas.Top="8" Width="46" Height="46" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="84" Canvas.Top="296" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="118" Canvas.Top="200" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="20" Canvas.Top="104" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="176" Canvas.Top="58" />
+
+                    <!-- Branch, top right -->
+                    <Path Stroke="#6E4452" StrokeThickness="16" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 1960,250 C 1860,240 1790,180 1700,90" />
+                    <Path Stroke="#6E4452" StrokeThickness="9" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 1830,220 C 1820,300 1840,380 1880,440 M 1760,160 C 1700,150 1650,120 1600,60" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="1672" Canvas.Top="60" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="1580" Canvas.Top="30" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="1852" Canvas.Top="410" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="1806" Canvas.Top="300" />
+                    <ContentControl Content="f" ContentTemplate="{StaticResource SakuraFlower}" Canvas.Left="1880" Canvas.Top="200" />
+
+                    <!-- Falling petals -->
+                    <Path Canvas.Left="60" Canvas.Top="520" Width="22" Height="20" Stretch="Fill" Fill="#FFB9CF" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="18" />
+                    <Path Canvas.Left="130" Canvas.Top="760" Width="18" Height="16" Stretch="Fill" Fill="#FFC9DA" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="22" />
+                    <Path Canvas.Left="1800" Canvas.Top="600" Width="24" Height="22" Stretch="Fill" Fill="#FFB9CF" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="20" />
+                    <Path Canvas.Left="1860" Canvas.Top="880" Width="18" Height="16" Stretch="Fill" Fill="#FFD3E1" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="26" />
+                    <Path Canvas.Left="540" Canvas.Top="20" Width="20" Height="18" Stretch="Fill" Fill="#FFC9DA" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="24" />
+                    <Path Canvas.Left="1150" Canvas.Top="286" Width="18" Height="16" Stretch="Fill" Fill="#FFB9CF" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="21" />
+                    <Path Canvas.Left="920" Canvas.Top="536" Width="22" Height="20" Stretch="Fill" Fill="#FFD3E1" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="19" />
+                    <Path Canvas.Left="1420" Canvas.Top="30" Width="16" Height="14" Stretch="Fill" Fill="#FFB9CF" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="23" />
+                    <Path Canvas.Left="30" Canvas.Top="960" Width="20" Height="18" Stretch="Fill" Fill="#FFC9DA" Data="M 0,10 C 4,0 16,0 20,8 C 16,18 6,20 0,10 Z" c:IdleAnim.Kind="Fall" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="25" />
+                </Canvas>
+            </Viewbox>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="TileDecorTemplate"><Grid /></DataTemplate>
+</ResourceDictionary>

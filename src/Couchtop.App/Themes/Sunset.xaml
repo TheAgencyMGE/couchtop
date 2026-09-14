@@ -1,0 +1,204 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:c="clr-namespace:Couchtop.App.Controls">
+    <!-- Sunset: golden hour over the water. Dusky violet sky, a low sun with a shimmering reflection, palm silhouettes. -->
+
+    <FontFamily x:Key="AppFont">/Couchtop;component/Assets/Fonts/#Rounded Mplus 1c, Segoe UI</FontFamily>
+    <CornerRadius x:Key="PillCornerRadius">42</CornerRadius>
+    <CornerRadius x:Key="PillGlowCornerRadius">48</CornerRadius>
+    <CornerRadius x:Key="PillGlossCornerRadius">38,38,16,16</CornerRadius>
+    <CornerRadius x:Key="RoundCornerRadius">999</CornerRadius>
+    <CornerRadius x:Key="TileCornerRadius">26</CornerRadius>
+    <CornerRadius x:Key="TileGlowCornerRadius">34</CornerRadius>
+    <CornerRadius x:Key="TileGlossCornerRadius">20,20,90,90</CornerRadius>
+    <CornerRadius x:Key="PanelCornerRadius">44</CornerRadius>
+    <CornerRadius x:Key="CardCornerRadius">34</CornerRadius>
+    <CornerRadius x:Key="ItemCornerRadius">26</CornerRadius>
+    <CornerRadius x:Key="InputCornerRadius">36</CornerRadius>
+    <CornerRadius x:Key="TrackCornerRadius">9</CornerRadius>
+    <Thickness x:Key="PillBorderThickness">4</Thickness>
+    <Thickness x:Key="RoundBorderThickness">5</Thickness>
+    <Thickness x:Key="TileBorderThickness">4</Thickness>
+    <Thickness x:Key="PanelBorderThickness">4</Thickness>
+    <sys:Double x:Key="TileClipRadius">20</sys:Double>
+    <sys:Double x:Key="TileChamfer">0</sys:Double>
+    <sys:Double x:Key="TileGlossOpacity">0.55</sys:Double>
+    <Color x:Key="CardMixColor">#FFF8EF</Color>
+    <sys:Double x:Key="CardMixTop">0.84</sys:Double>
+    <sys:Double x:Key="CardMixBottom">0.6</sys:Double>
+    <Color x:Key="BarShadowColor">#5A2A3A</Color>
+    <sys:Double x:Key="BarShadowOpacity">0.35</sys:Double>
+
+    <Color x:Key="AccentColor">#FF7A45</Color>
+    <Color x:Key="AccentDeepColor">#E0552A</Color>
+    <Color x:Key="TileBorderColor">#F3CDAF</Color>
+    <Color x:Key="ButtonBorderColor">#EDC3A3</Color>
+    <Color x:Key="ButtonTextColor">#6B3F2E</Color>
+
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#3B2F6E" Offset="0" />
+        <GradientStop Color="#8C4B8E" Offset="0.25" />
+        <GradientStop Color="#EE6F7C" Offset="0.45" />
+        <GradientStop Color="#FFA15E" Offset="0.58" />
+        <GradientStop Color="#FFD58F" Offset="0.655" />
+        <GradientStop Color="#E88A6A" Offset="0.665" />
+        <GradientStop Color="#7A5596" Offset="0.8" />
+        <GradientStop Color="#2E2A5E" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="StripeBrush" Color="#00000000" />
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF7A45" />
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#E0552A" />
+    <SolidColorBrush x:Key="AccentGlowBrush" Color="#99FFB36B" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#FFE6D3" />
+    <SolidColorBrush x:Key="TileGlowBrush" Color="#B3FFD38F" />
+    <SolidColorBrush x:Key="BadgeRimBrush" Color="#FFFFFF" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#633A2B" />
+    <SolidColorBrush x:Key="TileTextBrush" Color="#633A2B" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#A07662" />
+    <SolidColorBrush x:Key="ClockBrush" Color="#FFE9C9" />
+    <SolidColorBrush x:Key="InverseTextBrush" Color="#FFFFFF" />
+
+    <SolidColorBrush x:Key="TileBorderBrush" Color="#FBE3CF" />
+    <SolidColorBrush x:Key="BubbleBorderBrush" Color="#F3CDAF" />
+    <LinearGradientBrush x:Key="TileBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFDF8" Offset="0" />
+        <GradientStop Color="#FFEBDA" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="EmptyTileBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#40FFF1E0" Offset="0" />
+        <GradientStop Color="#26FFF1E0" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="EmptyTileBorderBrush" Color="#66FFE6CF" />
+    <LinearGradientBrush x:Key="GlossBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#BFFFFFFF" Offset="0" />
+        <GradientStop Color="#00FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFBF5" Offset="0" />
+        <GradientStop Color="#FFEEDD" Offset="0.5" />
+        <GradientStop Color="#F9D9C0" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BarLineBrush" Color="#FFB27A" />
+
+    <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFDF9" Offset="0" />
+        <GradientStop Color="#FFF0E3" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#F3CDAF" />
+    <SolidColorBrush x:Key="CardBrush" Color="#FFF8F1" />
+
+    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FFF2E6" Offset="0.5" />
+        <GradientStop Color="#FBDFC8" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#EDC3A3" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#6B3F2E" />
+    <SolidColorBrush x:Key="TrackBrush" Color="#F4D8C4" />
+    <SolidColorBrush x:Key="ScrollTrackBrush" Color="#1A6B3F2E" />
+    <SolidColorBrush x:Key="ScrimBrush" Color="#80241632" />
+
+    <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFDF9" Offset="0" />
+        <GradientStop Color="#FDE6D3" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#63B85B" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#E04E5E" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#F29D38" />
+
+    <LinearGradientBrush x:Key="PointerFillBrush" StartPoint="0,0" EndPoint="0.4,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FFFFFF" Offset="0.45" />
+        <GradientStop Color="#FFE1C4" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PointerOutlineBrush" Color="#D9562B" />
+    <SolidColorBrush x:Key="PointerShadowBrush" Color="#3B1E3A" />
+    <SolidColorBrush x:Key="PointerCuffBrush" Color="#FFF0E0" />
+    <RadialGradientBrush x:Key="SplashGlowBrush">
+        <GradientStop Color="#80FFD38F" Offset="0" />
+        <GradientStop Color="#00FFD38F" Offset="1" />
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="QuickScrimBrush" Color="#A61A1030" />
+    <LinearGradientBrush x:Key="QuickTopBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#F2FF9A5C" Offset="0" />
+        <GradientStop Color="#F2E0603A" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="QuickTopLineBrush" Color="#E6FFF1D6" />
+    <LinearGradientBrush x:Key="QuickBottomBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#EB3E2A5C" Offset="0" />
+        <GradientStop Color="#F2201A3E" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="QuickTextBrush" Color="#FFF6EC" />
+
+    <DataTemplate x:Key="SunsetPalm">
+        <Canvas Width="300" Height="520">
+            <Path Stroke="#2A1830" StrokeThickness="18" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 150,520 C 140,420 150,300 190,170" />
+            <Canvas Canvas.Left="190" Canvas.Top="170" c:IdleAnim.Kind="Sway">
+                <Path Fill="#2A1830" Data="M 0,0 C -60,-50 -150,-40 -200,20 C -130,-10 -60,-10 0,0 Z" />
+                <Path Fill="#2A1830" Data="M 0,0 C -40,-90 -120,-110 -170,-80 C -100,-70 -50,-50 0,0 Z" />
+                <Path Fill="#2A1830" Data="M 0,0 C 30,-90 110,-110 160,-70 C 100,-60 50,-45 0,0 Z" />
+                <Path Fill="#2A1830" Data="M 0,0 C 60,-30 140,-20 180,40 C 120,10 60,5 0,0 Z" />
+                <Path Fill="#2A1830" Data="M 0,0 C 20,40 10,100 -20,140 C -10,90 -10,40 0,0 Z" />
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BackgroundDecorTemplate">
+        <Grid ClipToBounds="True">
+            <Viewbox Stretch="UniformToFill">
+                <Canvas Width="1920" Height="1080">
+                    <!-- Sun, glow and reflection -->
+                    <Ellipse Canvas.Left="360" Canvas.Top="120" Width="1200" Height="1200">
+                        <Ellipse.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#B3FFE0A0" Offset="0" />
+                                <GradientStop Color="#40FFB36B" Offset="0.35" />
+                                <GradientStop Color="#00FF8A5C" Offset="1" />
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Ellipse Canvas.Left="780" Canvas.Top="530" Width="360" Height="360" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="7">
+                        <Ellipse.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#FFF8D0" Offset="0" />
+                                <GradientStop Color="#FFC266" Offset="1" />
+                            </LinearGradientBrush>
+                        </Ellipse.Fill>
+                        <Ellipse.Clip>
+                            <RectangleGeometry Rect="0,0,360,188" />
+                        </Ellipse.Clip>
+                    </Ellipse>
+                    <Rectangle Canvas.Top="718" Width="1920" Height="3" Fill="#80FFE7B8" />
+                    <Rectangle Canvas.Left="820" Canvas.Top="734" Width="280" Height="8" RadiusX="4" RadiusY="4" Fill="#B3FFE3A8" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="2.2" />
+                    <Rectangle Canvas.Left="860" Canvas.Top="758" Width="200" Height="7" RadiusX="4" RadiusY="4" Fill="#99FFE3A8" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="2.8" />
+                    <Rectangle Canvas.Left="890" Canvas.Top="782" Width="140" Height="6" RadiusX="3" RadiusY="3" Fill="#80FFE3A8" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="3.4" />
+                    <Rectangle Canvas.Left="915" Canvas.Top="804" Width="90" Height="5" RadiusX="3" RadiusY="3" Fill="#66FFE3A8" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="2.5" />
+
+                    <!-- Long thin clouds -->
+                    <Rectangle Canvas.Left="-100" Canvas.Top="300" Width="760" Height="18" RadiusX="9" RadiusY="9" Fill="#4DFFD6B8" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="80" c:IdleAnim.Duration="40" />
+                    <Rectangle Canvas.Left="80" Canvas.Top="334" Width="420" Height="12" RadiusX="6" RadiusY="6" Fill="#33FFD6B8" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="60" c:IdleAnim.Duration="34" />
+                    <Rectangle Canvas.Left="1300" Canvas.Top="220" Width="700" Height="16" RadiusX="8" RadiusY="8" Fill="#40FFD6B8" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-70" c:IdleAnim.Duration="44" />
+                    <Rectangle Canvas.Left="1480" Canvas.Top="250" Width="380" Height="10" RadiusX="5" RadiusY="5" Fill="#2EFFD6B8" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-50" c:IdleAnim.Duration="36" />
+
+                    <!-- Birds -->
+                    <Canvas Canvas.Left="1700" Canvas.Top="120" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-120" c:IdleAnim.Duration="18">
+                        <Path Stroke="#3A2140" StrokeThickness="4" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 0,10 Q 10,0 20,10 Q 30,0 40,10" />
+                        <Path Canvas.Left="50" Canvas.Top="26" Stroke="#3A2140" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 0,8 Q 8,0 16,8 Q 24,0 32,8" />
+                    </Canvas>
+
+                    <!-- Palms -->
+                    <ContentControl Content="p" ContentTemplate="{StaticResource SunsetPalm}" Canvas.Left="-110" Canvas.Top="380" />
+                    <ContentControl Content="p" ContentTemplate="{StaticResource SunsetPalm}" Canvas.Left="1760" Canvas.Top="440">
+                        <ContentControl.RenderTransform><ScaleTransform ScaleX="-0.85" ScaleY="0.85" CenterX="150" /></ContentControl.RenderTransform>
+                    </ContentControl>
+                    <Path Fill="#2A1830" Data="M -60,1080 L -60,880 C 80,860 220,880 380,930 L 380,1080 Z M 1560,1080 C 1660,900 1820,880 1990,900 L 1990,1080 Z" />
+                </Canvas>
+            </Viewbox>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="TileDecorTemplate"><Grid /></DataTemplate>
+</ResourceDictionary>

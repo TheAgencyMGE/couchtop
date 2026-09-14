@@ -2,6 +2,20 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.3.0-beta.1] - 2026-09-14
+
+### Added
+
+- **Five new themes** in **Settings › Display › Theme**, switchable live:
+  - **Sky Resort:** glossy glass, open skies, a turquoise sea with island palms, and glass bubbles drifting up.
+  - **Neon City:** black steel, hazard yellow and cyan neon, cut-corner tiles, a scanning HUD and a flickering skyline.
+  - **Midnight:** sleek, flat and dark, with hairline borders and soft ambient glows.
+  - **Sakura:** warm paper, blossom branches and falling petals.
+  - **Sunset:** golden hour over the water with palm silhouettes.
+- Themes restyle everything: colors, fonts, corner shapes, the pointer, the Quick Menu, dialogs, the web start page and backdrops on other monitors.
+- Neon City and Midnight come with their own artwork for the built-in channels, and app tiles tint to suit each theme.
+- Animated theme scenery runs only while Couchtop is in front and turns off with **Reduce motion**.
+
 ## [0.2.0-beta.1] - 2026-09-14
 
 ### Added
@@ -36,5 +50,6 @@ First public, very early beta.
 - In shell mode there is no system tray; use **Quick Menu › Windows Desktop** when you need Explorer.
 - Wii Remote pointing requires an IR sensor bar.
 
+[0.3.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.3.0-beta.1
 [0.2.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.2.0-beta.1
 [0.1.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.1.0-beta.1

@@ -88,6 +88,26 @@ public class StorageTests
         Assert.NotEmpty(s.Bookmarks);
     }
 
+    [Theory]
+    [InlineData("SkyResort", "SkyResort")]
+    [InlineData("NeonCity", "NeonCity")]
+    [InlineData("Midnight", "Midnight")]
+    [InlineData("neoncity", "Classic")]
+    [InlineData("", "Classic")]
+    public void Theme_ids_are_validated(string stored, string expected)
+    {
+        var s = new UserSettings { Theme = stored }.Normalize();
+        Assert.Equal(expected, s.Theme);
+    }
+
+    [Fact]
+    public void Theme_catalog_has_unique_ids_and_a_valid_default()
+    {
+        Assert.True(ThemeCatalog.All.Count >= 7);
+        Assert.Equal(ThemeCatalog.All.Count, ThemeCatalog.All.Select(t => t.Id).Distinct().Count());
+        Assert.True(ThemeCatalog.IsKnown(ThemeCatalog.DefaultId));
+    }
+
     [Fact]
     public void Atomic_write_leaves_no_temp_file()
     {

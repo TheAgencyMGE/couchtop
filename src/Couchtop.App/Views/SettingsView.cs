@@ -206,7 +206,12 @@ public sealed class SettingsView : UserControl, IScreenView
     private void BuildDisplay()
     {
         Header("Display");
-        Choice("Theme", "Classic white or the dim Night look", new[] { ("Classic", "Classic"), ("Night", "Night") }, () => S.Theme, v => S.Theme = v, () => ThemeManager.Apply(S.Theme));
+        var current = ThemeCatalog.All.First(t => t.Id == S.Theme);
+        Choice("Theme", current.Description + ". Changes colors, shapes, the pointer and scenery.", ThemeCatalog.All.Select(t => (t.Name, t.Id)).ToList(), () => S.Theme, v => S.Theme = v, () =>
+        {
+            _window.ApplyTheme(S.Theme);
+            Refresh();
+        });
 
         var monitors = Monitors.Enumerate();
         var options = new List<(string, string)> { ("Automatic (primary)", "") };
@@ -218,7 +223,7 @@ public sealed class SettingsView : UserControl, IScreenView
         });
         Toggle("Backdrop on other screens", "Covers other monitors with a calm Couchtop background", () => S.BackdropOnOtherMonitors, v => S.BackdropOnOtherMonitors = v, _window.RebuildBackdrops);
         Choice("Pointer", "The hand pointer tilts as you move it", new[] { ("Hand", "hand"), ("Windows cursor", "system") }, () => S.UseSystemCursor ? "system" : "hand", v => S.UseSystemCursor = v == "system", _window.ApplyCursorMode);
-        Toggle("Reduce motion", "Turns off tile animations, wobble and zoom transitions", () => S.ReduceMotion, v => S.ReduceMotion = v, () => _window.Menu.RebuildPages());
+        Toggle("Reduce motion", "Turns off tile animations, scenery, wobble and zoom transitions", () => S.ReduceMotion, v => S.ReduceMotion = v, () => _window.ApplyTheme(S.Theme));
         Choice("Clock", null, new[] { ("12-hour", "12"), ("24-hour", "24") }, () => S.Clock24Hour ? "24" : "12", v => S.Clock24Hour = v == "24", _window.Menu.RefreshClock);
         Toggle("Startup screen", "Shows the Couchtop title for a moment when starting", () => S.ShowStartupSplash, v => S.ShowStartupSplash = v);
         Toggle("Quick launch", "Start apps right away instead of showing the channel start screen", () => S.QuickLaunch, v => S.QuickLaunch = v);
@@ -461,7 +466,7 @@ public sealed class SettingsView : UserControl, IScreenView
             foreach (var property in typeof(UserSettings).GetProperties().Where(p => p.CanWrite))
                 property.SetValue(S, property.GetValue(defaults));
             _host.SaveSettings();
-            ThemeManager.Apply(S.Theme);
+            _window.ApplyTheme(S.Theme);
             _host.Audio.ApplySettings();
             _host.ApplyStartWithWindows();
             _window.ApplyCursorMode();

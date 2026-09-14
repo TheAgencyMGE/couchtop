@@ -5,9 +5,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/Classic.xaml" />
                 <ResourceDictionary Source="Themes/AppTheme.xaml" />
                 <ResourceDictionary Source="Themes/ChannelArt.xaml" />
+                <!-- The active theme is always last so it can override styles and built-in channel art. -->
+                <ResourceDictionary Source="Themes/Classic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
