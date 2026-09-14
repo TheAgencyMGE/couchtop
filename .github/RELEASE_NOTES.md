@@ -2,14 +2,19 @@
 
 ### Install
 
-1. Download `Couchtop-<version>-win-x64.zip` below and extract it.
-2. Run `Couchtop.Setup.exe`. It installs per user and needs no administrator rights.
+1. Download the **Couchtop zip** from the **Assets** section below and extract it.
+2. Run `Couchtop.Setup.exe`. It installs just for you and needs no administrator rights.
 
 The package is self-contained, so no .NET install is needed.
+
+### "Windows protected your PC"?
+
+The beta isn't code-signed yet, so Windows SmartScreen may warn you the first time. Click **More info → Run anyway**.
+Some antivirus tools are also cautious about apps that can replace the Windows shell. Couchtop is open source; you can read every line or build it yourself.
 
 ### If anything goes wrong
 
 - `Ctrl+Alt+Shift+F12` returns to the normal Windows desktop and turns shell mode off.
 - **Start menu › Couchtop Recovery**, or `Recover-Explorer.cmd` in the install folder, restores Explorer without opening Couchtop.
 
-See [CHANGELOG.md](https://github.com/TheAgencyMGE/couchtop/blob/main/CHANGELOG.md) for what's in this build.
+[Watch the trailer](https://theagencymge.github.io/couchtop/) · [Changelog](https://github.com/TheAgencyMGE/couchtop/blob/main/CHANGELOG.md)

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Couchtop</title>
+  <meta name="description" content="Turn your Windows PC into a couch console. A playful full-screen channel menu for Windows. Very early beta." />
+  <meta property="og:title" content="Couchtop" />
+  <meta property="og:description" content="Turn your Windows PC into a couch console. Very early beta." />
+  <meta property="og:image" content="https://theagencymge.github.io/couchtop/media/social-preview.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="media/icon.png" />
+  <style>
+    :root {
+      --accent: #35b4e5;
+      --accent-deep: #1a9ad3;
+      --text: #4e5c64;
+      --subtle: #8a969c;
+      --border: #c4ccd1;
+      --panel: #ffffff;
+      --bg-top: #ffffff;
+      --bg-bottom: #e3ebef;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text: #d5dde1;
+        --subtle: #9aa7ae;
+        --border: #4b575f;
+        --panel: #2b343a;
+        --bg-top: #2b353b;
+        --bg-bottom: #12171a;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        repeating-linear-gradient(180deg, rgba(90, 106, 115, 0.05) 0 1px, transparent 1px 7px),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+      background-attachment: fixed;
+      min-height: 100vh;
+      padding: 0 20px;
+    }
+    main { max-width: 1080px; margin: 0 auto; padding: 56px 0 72px; }
+    header { text-align: center; }
+    header img { width: 96px; height: 96px; filter: drop-shadow(0 14px 24px rgba(26, 154, 211, 0.35)); }
+    h1 { font-size: clamp(44px, 8vw, 76px); margin: 12px 0 4px; font-weight: 800; letter-spacing: -0.5px; }
+    h1 span { color: var(--accent); }
+    .tagline { font-size: clamp(18px, 3vw, 24px); color: var(--subtle); margin: 0 0 18px; }
+    .beta {
+      display: inline-block; font-weight: 700; font-size: 14px; color: #fff;
+      background: linear-gradient(180deg, #5cc8f5, var(--accent)); border-radius: 999px; padding: 6px 16px;
+    }
+    .player {
+      margin: 36px 0 28px; border-radius: 26px; padding: 8px; background: var(--panel);
+      box-shadow: 0 0 0 3px var(--border), 0 30px 60px rgba(40, 80, 110, 0.22);
+    }
+    video { display: block; width: 100%; height: auto; border-radius: 20px; background: #000; }
+    .actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    .button {
+      display: inline-block; text-decoration: none; font-weight: 700; font-size: 18px; padding: 14px 30px;
+      border-radius: 999px; color: var(--text); background: var(--panel); box-shadow: 0 0 0 3px var(--border);
+    }
+    .button:hover, .button:focus-visible { box-shadow: 0 0 0 3px var(--accent), 0 0 0 8px rgba(79, 208, 255, 0.35); outline: none; }
+    .button.primary { color: #fff; background: linear-gradient(180deg, #5cc8f5, var(--accent)); box-shadow: 0 10px 24px rgba(53, 180, 229, 0.35); }
+    .note { text-align: center; color: var(--subtle); font-size: 15px; margin: 20px auto 0; max-width: 640px; line-height: 1.5; }
+    h2 { text-align: center; margin: 64px 0 22px; font-size: 30px; }
+    .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+    .shots img { width: 100%; border-radius: 16px; box-shadow: 0 0 0 3px var(--border), 0 14px 30px rgba(40, 80, 110, 0.16); display: block; }
+    footer { text-align: center; color: var(--subtle); font-size: 13px; margin-top: 56px; line-height: 1.6; }
+    footer a { color: var(--accent-deep); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img src="media/icon.png" alt="" />
+      <h1>Couch<span>top</span></h1>
+      <p class="tagline">Turn your Windows PC into a couch console.</p>
+      <span class="beta">v0.1.0 · very early beta</span>
+    </header>
+
+    <div class="player">
+      <video controls preload="metadata" poster="screenshots/01-menu.png" playsinline>
+        <source src="media/couchtop-trailer.mp4" type="video/mp4" />
+        Your browser can't play this video. <a href="media/couchtop-trailer.mp4">Download the trailer</a>.
+      </video>
+    </div>
+
+    <div class="actions">
+      <a class="button primary" href="https://github.com/TheAgencyMGE/couchtop/releases">Download the beta</a>
+      <a class="button" href="https://github.com/TheAgencyMGE/couchtop">View on GitHub</a>
+    </div>
+    <p class="note">Windows 10 1809+ or Windows 11. Installs per user, no admin needed. The beta isn't code-signed yet, so SmartScreen may ask you to click <em>More info → Run anyway</em>.</p>
+
+    <h2>Screenshots</h2>
+    <div class="shots">
+      <img src="screenshots/01-menu.png" alt="Channel menu" loading="lazy" />
+      <img src="screenshots/03-preview.png" alt="Channel start screen" loading="lazy" />
+      <img src="screenshots/02-customize.png" alt="Customize channels" loading="lazy" />
+      <img src="screenshots/11-home-menu.png" alt="Quick Menu" loading="lazy" />
+      <img src="screenshots/12-night.png" alt="Night theme" loading="lazy" />
+      <img src="screenshots/06-safety-test.png" alt="Shell Safety Test" loading="lazy" />
+    </div>
+
+    <footer>
+      Free and open source under the MIT License.<br />
+      Couchtop is an independent project and is not affiliated with or endorsed by Nintendo. "Wii Remote" is a trademark of Nintendo, mentioned only to describe controller compatibility.
+    </footer>
+  </main>
+</body>
+</html>

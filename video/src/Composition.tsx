@@ -1,4 +1,5 @@
-import { Composition } from "remotion";
+import { Composition, Still } from "remotion";
+import { SocialPreview } from "./SocialPreview";
 import { Trailer, TRAILER_DURATION } from "./Trailer";
 
 export const MyComposition = () => {
@@ -22,6 +23,7 @@ export const MyComposition = () => {
         height={1080}
         defaultProps={{ silent: true }}
       />
+      <Still id="SocialPreview" component={SocialPreview} width={1280} height={640} />
     </>
   );
 };

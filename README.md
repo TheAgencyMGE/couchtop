@@ -13,10 +13,10 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6)](#requirements)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[**Download the beta**](https://github.com/TheAgencyMGE/couchtop/releases) · [Watch the trailer](docs/media/couchtop-trailer.mp4) · [Screenshots](#screenshots) · [Recovery](#recovery-getting-back-to-explorer)
+[**Download the beta**](https://github.com/TheAgencyMGE/couchtop/releases) · [**Watch the trailer**](https://theagencymge.github.io/couchtop/) · [Screenshots](#screenshots) · [Recovery](#recovery-getting-back-to-explorer)
 
-<a href="docs/media/couchtop-trailer.mp4">
-  <img src="docs/media/couchtop-trailer.gif" width="860" alt="Couchtop trailer. Click to watch in full quality with sound." />
+<a href="https://theagencymge.github.io/couchtop/">
+  <img src="docs/media/couchtop-trailer.gif" width="860" alt="Couchtop trailer preview. Click to watch the full trailer with sound." />
 </a>
 
 <sub>Click the preview to watch the full trailer with sound.</sub>
@@ -115,6 +115,10 @@ Setup installs **per user, without administrator rights**:
 
 Options: desktop shortcut, *start at sign-in* (launcher mode on top of Explorer), and *open when finished*.
 Setup **never** turns on shell mode.
+
+> [!NOTE]
+> **"Windows protected your PC"?** The beta isn't code-signed yet, so SmartScreen may warn you the first time you run Setup. Click **More info → Run anyway**.
+> Some antivirus tools are also cautious about apps that can replace the Windows shell. Couchtop is open source; you can read every line or [build it yourself](#build-from-source).
 
 Silent install: `Couchtop.Setup.exe --install --quiet [--dir PATH] [--no-desktop-shortcut] [--start-at-sign-in] [--no-launch]`
 
