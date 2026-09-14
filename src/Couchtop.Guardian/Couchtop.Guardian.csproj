@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AssemblyName>Couchtop.Guardian</AssemblyName>
+    <RootNamespace>Couchtop.Guardian</RootNamespace>
+    <ApplicationManifest>..\..\build\common.manifest</ApplicationManifest>
+    <ApplicationIcon Condition="Exists('..\..\assets\Couchtop.ico')">..\..\assets\Couchtop.ico</ApplicationIcon>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Couchtop.Core\Couchtop.Core.csproj" />
+  </ItemGroup>
+</Project>

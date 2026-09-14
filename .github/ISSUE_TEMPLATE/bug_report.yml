@@ -1,0 +1,46 @@
+name: Bug report
+description: Something doesn't work the way it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing Couchtop! If you're stuck at a black screen, press **Ctrl+Alt+Shift+F12** or run **Couchtop Recovery** first.
+  - type: input
+    id: version
+    attributes:
+      label: Couchtop version
+      placeholder: 0.1.0-beta.1
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and edition
+      placeholder: Windows 11 Home 25H2 (build 26200)
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options:
+        - Launcher mode (Explorer running)
+        - Shell mode
+        - Setup / uninstall
+        - Recovery tool
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Attach or paste relevant lines from `%LOCALAPPDATA%\Couchtop\logs`. Please remove anything personal.
+      render: text

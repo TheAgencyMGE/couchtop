@@ -1,0 +1,17 @@
+bin/
+obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+.vs/
+*.swp
+snapshots/
+
+# Remotion video project
+video/node_modules/
+video/out/
+video/.remotion/
+video/public/shots/
+video/public/fonts/
+video/public/icon.png

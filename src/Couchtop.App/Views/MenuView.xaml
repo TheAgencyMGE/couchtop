@@ -1,0 +1,134 @@
+<UserControl x:Class="Couchtop.App.Views.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Focusable="True" FocusVisualStyle="{x:Null}" Background="Transparent">
+    <UserControl.Resources>
+        <Geometry x:Key="ArrowGeometry">M 70,10 C 77,4 90,8 90,20 L 90,100 C 90,112 77,116 70,110 L 14,70 C 4,63 4,57 14,50 Z</Geometry>
+        <Style x:Key="ArrowButton" TargetType="Button">
+            <Setter Property="Width" Value="110" />
+            <Setter Property="Height" Value="136" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <Path x:Name="ArrowGlow" Data="{StaticResource ArrowGeometry}" Stroke="{DynamicResource AccentGlowBrush}" StrokeThickness="16" StrokeLineJoin="Round" Stretch="Fill" Margin="6" Opacity="0" />
+                            <Path x:Name="Arrow" Data="{StaticResource ArrowGeometry}" Fill="{DynamicResource ButtonBrush}" Stroke="{DynamicResource ButtonBorderBrush}" StrokeThickness="6" StrokeLineJoin="Round" Stretch="Fill" Margin="12" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Arrow" Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                                <Setter TargetName="ArrowGlow" Property="Opacity" Value="1" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.12" Duration="0:0:0.18" />
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.12" Duration="0:0:0.18" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.15" />
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.15" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Viewbox Stretch="Uniform">
+        <Grid x:Name="Stage" Width="1920" Height="1080">
+            <Canvas x:Name="PageViewport" Width="1920" Height="800" VerticalAlignment="Top" HorizontalAlignment="Left" ClipToBounds="True" RenderTransformOrigin="0.5,0">
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ViewportScale" ScaleX="1" ScaleY="1" />
+                        <TranslateTransform x:Name="ViewportShift" />
+                    </TransformGroup>
+                </Canvas.RenderTransform>
+                <Canvas x:Name="PageStrip">
+                    <Canvas.RenderTransform>
+                        <TranslateTransform x:Name="StripShift" />
+                    </Canvas.RenderTransform>
+                </Canvas>
+            </Canvas>
+
+            <Button x:Name="PrevArrow" Style="{StaticResource ArrowButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,330,0,0" />
+            <Button x:Name="NextArrow" Style="{StaticResource ArrowButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,330,22,0">
+                <Button.LayoutTransform>
+                    <ScaleTransform ScaleX="-1" />
+                </Button.LayoutTransform>
+            </Button>
+
+            <Canvas x:Name="BottomBar" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="1920" Height="300">
+                <Canvas.RenderTransform>
+                    <TranslateTransform x:Name="BarShift" />
+                </Canvas.RenderTransform>
+                <Path Fill="{DynamicResource BarBrush}"
+                      Data="M -1200,800 L -1200,78 L 0,78 C 120,70 250,66 330,100 C 380,122 440,125 520,125 L 1400,125 C 1480,125 1540,122 1590,100 C 1670,66 1800,70 1920,78 L 3120,78 L 3120,800 Z">
+                    <Path.Effect>
+                        <DropShadowEffect BlurRadius="26" ShadowDepth="0" Opacity="0.18" Color="#3C6E86" />
+                    </Path.Effect>
+                </Path>
+                <Path Stroke="{DynamicResource BarLineBrush}" StrokeThickness="5"
+                      Data="M -1200,78 L 0,78 C 120,70 250,66 330,100 C 380,122 440,125 520,125 L 1400,125 C 1480,125 1540,122 1590,100 C 1670,66 1800,70 1920,78 L 3120,78" />
+
+                <Grid Width="1920" Height="300">
+                    <StackPanel x:Name="ClockPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-8,0,0">
+                        <TextBlock x:Name="AmPm" FontSize="30" FontWeight="Bold" Foreground="{DynamicResource ClockBrush}" VerticalAlignment="Top" Margin="0,38,12,0" />
+                        <TextBlock x:Name="Hours" FontSize="120" FontWeight="Medium" Foreground="{DynamicResource ClockBrush}" />
+                        <TextBlock x:Name="Colon" Text=":" FontSize="120" FontWeight="Medium" Foreground="{DynamicResource ClockBrush}" Margin="4,-10,4,0" />
+                        <TextBlock x:Name="Minutes" FontSize="120" FontWeight="Medium" Foreground="{DynamicResource ClockBrush}" />
+                    </StackPanel>
+                    <TextBlock x:Name="DateText" FontSize="44" FontWeight="Bold" Foreground="{DynamicResource SubtleTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,176,0,0" />
+
+                    <Button x:Name="OptionsButton" Style="{StaticResource RoundButton}" Width="166" Height="166" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="82,100,0,0" ToolTip="Menu">
+                        <Path Width="64" Height="64" Stretch="Uniform" Fill="{DynamicResource AccentBrush}"
+                              Data="M 4,0 H 26 A 4,4 0 0 1 30,4 V 22 A 4,4 0 0 1 26,26 H 4 A 4,4 0 0 1 0,22 V 4 A 4,4 0 0 1 4,0 Z M 38,0 H 60 A 4,4 0 0 1 64,4 V 22 A 4,4 0 0 1 60,26 H 38 A 4,4 0 0 1 34,22 V 4 A 4,4 0 0 1 38,0 Z M 4,34 H 26 A 4,4 0 0 1 30,38 V 56 A 4,4 0 0 1 26,60 H 4 A 4,4 0 0 1 0,56 V 38 A 4,4 0 0 1 4,34 Z M 38,34 H 60 A 4,4 0 0 1 64,38 V 56 A 4,4 0 0 1 60,60 H 38 A 4,4 0 0 1 34,56 V 38 A 4,4 0 0 1 38,34 Z" />
+                    </Button>
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,100,82,0">
+                        <Button x:Name="BoardButton" Style="{StaticResource RoundButton}" Width="166" Height="166">
+                            <Path Data="M 4,6 L 60,6 L 60,46 L 4,46 Z M 4,6 L 32,30 L 60,6" Stroke="{DynamicResource AccentBrush}" StrokeThickness="5" StrokeLineJoin="Round" Width="70" Height="52" Stretch="Uniform" />
+                        </Button>
+                        <Border x:Name="Badge" Visibility="Collapsed" MinWidth="52" Height="52" CornerRadius="26" Padding="12,0" Background="{DynamicResource AccentBrush}" BorderBrush="White" BorderThickness="4"
+                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-6,-6,0" IsHitTestVisible="False">
+                            <TextBlock x:Name="BadgeText" Foreground="White" FontSize="24" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Canvas>
+
+            <Border x:Name="EditBanner" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0" Style="{StaticResource AppPanel}" CornerRadius="40" Padding="36,2,10,2" Opacity="0" IsHitTestVisible="False">
+                <Border.RenderTransform>
+                    <TranslateTransform x:Name="BannerShift" Y="-160" />
+                </Border.RenderTransform>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Customize Channels" FontSize="34" FontWeight="ExtraBold" Foreground="{DynamicResource AccentDeepBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="Drag to move  ·  Click to edit" FontSize="26" Foreground="{DynamicResource SubtleTextBrush}" VerticalAlignment="Center" Margin="26,0,20,0" />
+                    <Button x:Name="AddButton" Style="{StaticResource SmallPill}" Content="Add Channel" />
+                    <Button x:Name="RescanButton" Style="{StaticResource SmallPill}" Content="Find New Apps" />
+                    <Button x:Name="DoneButton" Style="{StaticResource SmallPill}" Content="Done" />
+                </StackPanel>
+            </Border>
+
+            <Canvas x:Name="DragLayer" IsHitTestVisible="False" />
+        </Grid>
+    </Viewbox>
+</UserControl>

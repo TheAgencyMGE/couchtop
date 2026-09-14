@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Couchtop</AssemblyName>
+    <RootNamespace>Couchtop.App</RootNamespace>
+    <ApplicationManifest>..\..\build\common.manifest</ApplicationManifest>
+    <ApplicationIcon Condition="Exists('..\..\assets\Couchtop.ico')">..\..\assets\Couchtop.ico</ApplicationIcon>
+    <StartupObject>Couchtop.App.Program</StartupObject>
+    <TieredPGO>true</TieredPGO>
+    <TieredCompilationQuickStartForLoops>true</TieredCompilationQuickStartForLoops>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NAudio.Core" Version="2.2.1" />
+    <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Couchtop.Core\Couchtop.Core.csproj" />
+    <ProjectReference Include="..\Couchtop.Guardian\Couchtop.Guardian.csproj" />
+    <ProjectReference Include="..\Couchtop.Recovery\Couchtop.Recovery.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\*.ttf" />
+    <None Include="Assets\Fonts\OFL.txt" CopyToOutputDirectory="PreserveNewest" Link="licenses\M-PLUS-Rounded-1c-OFL.txt" />
+  </ItemGroup>
+  <ItemGroup Condition="Exists('..\..\assets\Couchtop.png')">
+    <Resource Include="..\..\assets\Couchtop.png" Link="Assets\Couchtop.png" />
+  </ItemGroup>
+</Project>

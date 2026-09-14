@@ -1,0 +1,16 @@
+* text=auto
+
+*.cs text diff=csharp
+*.xaml text
+*.md text
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.ts text eol=lf
+*.tsx text eol=lf
+
+*.png binary
+*.gif binary
+*.mp4 binary
+*.ico binary
+*.ttf binary
+*.wav binary

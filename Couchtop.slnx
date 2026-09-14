@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Couchtop.App/Couchtop.App.csproj" />
+    <Project Path="src/Couchtop.Core/Couchtop.Core.csproj" />
+    <Project Path="src/Couchtop.Guardian/Couchtop.Guardian.csproj" />
+    <Project Path="src/Couchtop.Recovery/Couchtop.Recovery.csproj" />
+    <Project Path="src/Couchtop.Setup/Couchtop.Setup.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Couchtop.FakeShellApp/Couchtop.FakeShellApp.csproj" />
+    <Project Path="tests/Couchtop.Tests/Couchtop.Tests.csproj" />
+  </Folder>
+</Solution>

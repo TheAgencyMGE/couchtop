@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Night: the dim slate look of the console's settings screens. -->
+    <Color x:Key="AccentColor">#3CC2F2</Color>
+    <Color x:Key="AccentDeepColor">#5ACFF7</Color>
+    <Color x:Key="TileBorderColor">#4B575F</Color>
+    <Color x:Key="ButtonBorderColor">#58656D</Color>
+    <Color x:Key="ButtonTextColor">#D5DDE1</Color>
+
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#2B353B" Offset="0" />
+        <GradientStop Color="#1C2328" Offset="0.6" />
+        <GradientStop Color="#12171A" Offset="1" />
+    </LinearGradientBrush>
+    <DrawingBrush x:Key="StripeBrush" TileMode="Tile" Viewport="0,0,1,7" ViewportUnits="Absolute" Viewbox="0,0,1,7" ViewboxUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="#0DFFFFFF" Geometry="M0,0 H1 V1 H0 Z" />
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#3CC2F2" />
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#5ACFF7" />
+    <SolidColorBrush x:Key="AccentGlowBrush" Color="#803CC2F2" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#1F4E61" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#D5DDE1" />
+    <SolidColorBrush x:Key="TileTextBrush" Color="#4A575F" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#9AA7AE" />
+    <SolidColorBrush x:Key="ClockBrush" Color="#8594A0" />
+    <SolidColorBrush x:Key="InverseTextBrush" Color="#FFFFFF" />
+
+    <SolidColorBrush x:Key="TileBorderBrush" Color="#4B575F" />
+    <LinearGradientBrush x:Key="TileBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#3C474E" Offset="0" />
+        <GradientStop Color="#2D363C" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="EmptyTileBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#20272B" Offset="0" />
+        <GradientStop Color="#283035" Offset="0.3" />
+        <GradientStop Color="#2B3338" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="EmptyTileBorderBrush" Color="#3A454C" />
+    <LinearGradientBrush x:Key="GlossBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#40FFFFFF" Offset="0" />
+        <GradientStop Color="#00FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#36424A" Offset="0" />
+        <GradientStop Color="#283138" Offset="0.5" />
+        <GradientStop Color="#1D2429" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BarLineBrush" Color="#2F8DB5" />
+
+    <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#343F46" Offset="0" />
+        <GradientStop Color="#283137" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#4B575F" />
+    <SolidColorBrush x:Key="CardBrush" Color="#2B343A" />
+
+    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#46525A" Offset="0" />
+        <GradientStop Color="#3A454C" Offset="0.5" />
+        <GradientStop Color="#2F383E" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#58656D" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#D5DDE1" />
+    <SolidColorBrush x:Key="TrackBrush" Color="#1E252A" />
+    <SolidColorBrush x:Key="ScrimBrush" Color="#99000000" />
+
+    <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#36424A" Offset="0" />
+        <GradientStop Color="#283138" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#6ECF4E" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#F06B83" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#F2B34E" />
+</ResourceDictionary>

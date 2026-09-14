@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AssemblyName>Couchtop.Recovery</AssemblyName>
+    <RootNamespace>Couchtop.Recovery</RootNamespace>
+    <ApplicationManifest>..\..\build\common.manifest</ApplicationManifest>
+    <ApplicationIcon Condition="Exists('..\..\assets\Couchtop.ico')">..\..\assets\Couchtop.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Couchtop.Core\Couchtop.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Recover-Explorer.cmd" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

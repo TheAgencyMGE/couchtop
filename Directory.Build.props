@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Pre-release: every version starts with 0 until the first stable release. -->
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>beta.1</VersionSuffix>
+    <Company>Couchtop contributors</Company>
+    <Product>Couchtop</Product>
+    <Copyright>Copyright (c) 2026 Couchtop contributors. MIT License.</Copyright>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <NoWarn>$(NoWarn);CA1416;SYSLIB1054;SYSLIB1096;CS1591</NoWarn>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

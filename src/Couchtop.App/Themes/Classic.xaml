@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Classic: bright white console menu with light grey pinstripes and sky-blue accents. -->
+    <Color x:Key="AccentColor">#35B4E5</Color>
+    <Color x:Key="AccentDeepColor">#1A9AD3</Color>
+    <Color x:Key="TileBorderColor">#C4CCD1</Color>
+    <Color x:Key="ButtonBorderColor">#BCC5CB</Color>
+    <Color x:Key="ButtonTextColor">#5A6870</Color>
+
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#F4F7F8" Offset="0.55" />
+        <GradientStop Color="#E6ECEF" Offset="1" />
+    </LinearGradientBrush>
+    <DrawingBrush x:Key="StripeBrush" TileMode="Tile" Viewport="0,0,1,7" ViewportUnits="Absolute" Viewbox="0,0,1,7" ViewboxUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <GeometryDrawing Brush="#0C5A6A73" Geometry="M0,0 H1 V1 H0 Z" />
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#35B4E5" />
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#1A9AD3" />
+    <SolidColorBrush x:Key="AccentGlowBrush" Color="#8C4FD0FF" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#DCF3FC" />
+
+    <SolidColorBrush x:Key="TextBrush" Color="#55636B" />
+    <SolidColorBrush x:Key="TileTextBrush" Color="#55636B" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#8A969C" />
+    <SolidColorBrush x:Key="ClockBrush" Color="#9AA4AA" />
+    <SolidColorBrush x:Key="InverseTextBrush" Color="#FFFFFF" />
+
+    <SolidColorBrush x:Key="TileBorderBrush" Color="#C4CCD1" />
+    <LinearGradientBrush x:Key="TileBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#EEF1F3" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="EmptyTileBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#D9E0E4" Offset="0" />
+        <GradientStop Color="#E7ECEF" Offset="0.25" />
+        <GradientStop Color="#EDF1F3" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="EmptyTileBorderBrush" Color="#CCD4D9" />
+    <LinearGradientBrush x:Key="GlossBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#B3FFFFFF" Offset="0" />
+        <GradientStop Color="#00FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FCFDFE" Offset="0" />
+        <GradientStop Color="#EDF2F5" Offset="0.5" />
+        <GradientStop Color="#DCE4E9" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BarLineBrush" Color="#9ED4EA" />
+
+    <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#EEF2F4" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#C4CCD1" />
+    <SolidColorBrush x:Key="CardBrush" Color="#F7F9FA" />
+
+    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#F1F4F6" Offset="0.5" />
+        <GradientStop Color="#E2E8EC" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#BCC5CB" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#5A6870" />
+    <SolidColorBrush x:Key="TrackBrush" Color="#D6DEE3" />
+    <SolidColorBrush x:Key="ScrimBrush" Color="#66303A40" />
+
+    <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#E9EFF2" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#5DBB3F" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#E0556F" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#E9A23B" />
+</ResourceDictionary>

@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest an idea for Couchtop
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: Describe the problem or the experience you're missing.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: How could Couchtop solve it? Mock-ups and sketches are welcome. Please don't attach copyrighted console assets.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues for a similar request.
+          required: true
