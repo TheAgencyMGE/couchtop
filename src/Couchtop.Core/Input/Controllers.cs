@@ -145,7 +145,8 @@ public enum WiimoteButtons : ushort
 
 public readonly record struct IrDot(int X, int Y, int Size);
 
-public sealed record WiimoteInput(byte ReportId, WiimoteButtons Buttons, IReadOnlyList<IrDot> Dots, int? BatteryPercent);
+/// <param name="Accel">Raw 8-bit accelerometer reading (128 = 0 g) when the report carries one.</param>
+public sealed record WiimoteInput(byte ReportId, WiimoteButtons Buttons, IReadOnlyList<IrDot> Dots, int? BatteryPercent, (int X, int Y, int Z)? Accel = null);
 
 public static class WiimoteReportParser
 {
@@ -180,7 +181,8 @@ public static class WiimoteReportParser
                 dots.AddRange(ParseBasic(report.Slice(6, 10)));
                 break;
         }
-        return new WiimoteInput(id, buttons, dots, battery);
+        (int, int, int)? accel = id is 0x31 or 0x33 or 0x35 or 0x37 && report.Length >= 6 ? (report[3], report[4], report[5]) : null;
+        return new WiimoteInput(id, buttons, dots, battery, accel);
     }
 
     public static IrDot? ParseExtended(ReadOnlySpan<byte> b)

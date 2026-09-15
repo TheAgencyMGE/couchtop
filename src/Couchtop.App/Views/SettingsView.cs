@@ -6,6 +6,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Couchtop.App.Services;
+using Couchtop.Core.Audio;
 using Couchtop.Core.Channels;
 using Couchtop.Core.Diagnostics;
 using Couchtop.Core.Discovery;
@@ -88,6 +89,9 @@ public sealed class SettingsView : UserControl, IScreenView
 
     private void Refresh() => SelectCategory(_category);
 
+    /// <summary>Visual regression renders use this to capture the lower half of a long page.</summary>
+    internal void SnapshotScrollToEnd() => _scroll.ScrollToEnd();
+
     // ---------------------------------------------------------------- row helpers
 
     private void Header(string text)
@@ -167,7 +171,7 @@ public sealed class SettingsView : UserControl, IScreenView
     private void SliderRow(string label, string? help, double min, double max, Func<double> get, Action<double> set, Func<double, string> format, bool persist = true)
     {
         var panel = new StackPanel { Orientation = Orientation.Horizontal };
-        var slider = new Slider { Minimum = min, Maximum = max, Value = Math.Clamp(get(), min, max), Width = 560, SmallChange = (max - min) / 20, LargeChange = (max - min) / 10 };
+        var slider = new Slider { Minimum = min, Maximum = max, Value = Math.Clamp(get(), min, max), Width = 500, SmallChange = (max - min) / 20, LargeChange = (max - min) / 10 };
         var value = ViewKit.Text(format(slider.Value), 30, FontWeights.Bold, wrap: false);
         value.Margin = new Thickness(30, 0, 0, 0);
         value.MinWidth = 120;
@@ -251,7 +255,121 @@ public sealed class SettingsView : UserControl, IScreenView
         if (systemVolume >= 0)
             SliderRow("Windows volume", "Master volume of the default speakers", 0, 1, () => systemVolume, v => AudioService.SetSystemVolume((float)v), Percent, persist: false);
         Buttons("Test", null, ("Play Chime", () => _host.Audio.Play(SoundEffect.Launch)), ("Play Startup", () => _host.Audio.Play(SoundEffect.Startup)));
-        Info("Every sound and the menu music are synthesized by Couchtop itself. No audio files are shipped.");
+
+        Header("Your Music & Sounds");
+        var music = S.CustomMusic;
+        var musicButtons = new List<(string, Action)> { ("Choose File…", () => _ = ChooseCustomAudioAsync(CustomAudio.MusicSlot)) };
+        if (music is not null)
+        {
+            musicButtons.Add(("Preview", () => _ = PreviewMusicAsync(music)));
+            musicButtons.Add(("Use Built-in", () => _ = ResetCustomAudioAsync(CustomAudio.MusicSlot)));
+        }
+        Buttons("Menu music", music is null ? "Built-in music box. Pick your own song to loop on the menu instead." : $"Playing your song \"{music.Name}\" on a loop while the menu is in front", musicButtons.ToArray());
+
+        foreach (var slot in CustomSoundSlots.All)
+        {
+            S.CustomSounds.TryGetValue(slot.Id, out var file);
+            var effect = Enum.Parse<SoundEffect>(slot.Id);
+            var id = slot.Id;
+            var buttons = new List<(string, Action)> { ("Choose…", () => _ = ChooseCustomAudioAsync(id)), ("Play", () => _host.Audio.Play(effect)) };
+            if (file is not null) buttons.Add(("Reset", () => _ = ResetCustomAudioAsync(id)));
+            Buttons(slot.Name + " sound", $"{slot.Description}  ·  {(file is null ? "Built-in" : "Yours: " + file.Name)}", buttons.ToArray());
+        }
+        if (S.CustomSounds.Count > 0) Buttons("Reset all sounds", "Go back to Couchtop's own sounds", ("Reset All", () => _ = ResetAllSoundsAsync()));
+        Info("Use MP3, WAV, M4A, AAC, WMA or FLAC files. Sounds longer than 5 seconds are cut short. Couchtop keeps its own copy of every file you pick, so moving or deleting the original is fine. The built-in sounds and music are synthesized by Couchtop itself.");
+    }
+
+    private async Task ChooseCustomAudioAsync(string slot)
+    {
+        var isMusic = slot == CustomAudio.MusicSlot;
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = isMusic ? "Choose your menu music" : "Choose a sound",
+            Filter = CustomAudio.FileFilter,
+            CheckFileExists = true,
+        };
+        if (dialog.ShowDialog(_window) != true) return;
+        var source = dialog.FileName;
+
+        CustomAudioFile imported;
+        try
+        {
+            imported = await Task.Run(() =>
+            {
+                CustomAudio.EnsureAcceptable(source, slot);
+                CustomAudioLoader.LoadClip(source, 1); // proves Windows can decode it before we copy it
+                return _host.AudioLibrary.Import(source, slot);
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Warn("Custom audio file rejected: " + source, ex);
+            _host.Audio.Play(SoundEffect.Error);
+            await _window.ShowDialogAsync("Couchtop couldn't use that file.\n" + CustomAudioLoader.Explain(ex), "OK");
+            return;
+        }
+
+        CustomAudioFile? old;
+        if (isMusic)
+        {
+            old = S.CustomMusic;
+            S.CustomMusic = imported;
+        }
+        else
+        {
+            S.CustomSounds.TryGetValue(slot, out old);
+            S.CustomSounds[slot] = imported;
+        }
+        _host.SaveSettings();
+        await _host.Audio.ReloadCustomAudioAsync();
+        _host.AudioLibrary.Delete(old);
+        Refresh();
+        if (isMusic) _ = PreviewMusicAsync(imported);
+        else if (Enum.TryParse<SoundEffect>(slot, out var effect)) _host.Audio.Play(effect);
+    }
+
+    private async Task PreviewMusicAsync(CustomAudioFile file)
+    {
+        if (_host.AudioLibrary.PathFor(file) is not { } path) return;
+        try
+        {
+            var clip = await Task.Run(() => CustomAudioLoader.LoadClip(path, 12));
+            _host.Audio.PlayPreview(clip);
+        }
+        catch (Exception ex)
+        {
+            Log.Warn("Could not preview custom music", ex);
+        }
+    }
+
+    private async Task ResetCustomAudioAsync(string slot)
+    {
+        CustomAudioFile? old;
+        if (slot == CustomAudio.MusicSlot)
+        {
+            old = S.CustomMusic;
+            S.CustomMusic = null;
+        }
+        else if (!S.CustomSounds.Remove(slot, out old))
+        {
+            return;
+        }
+        _host.SaveSettings();
+        await _host.Audio.ReloadCustomAudioAsync();
+        _host.AudioLibrary.Delete(old);
+        _host.Audio.Play(SoundEffect.Back);
+        Refresh();
+    }
+
+    private async Task ResetAllSoundsAsync()
+    {
+        if (await _window.ShowDialogAsync("Go back to Couchtop's own sounds?\nYour menu music stays.", "Reset", "Cancel") != "Reset") return;
+        var old = S.CustomSounds.Values.ToList();
+        S.CustomSounds.Clear();
+        _host.SaveSettings();
+        await _host.Audio.ReloadCustomAudioAsync();
+        foreach (var file in old) _host.AudioLibrary.Delete(file);
+        Refresh();
     }
 
     private void BuildControls()

@@ -2,6 +2,18 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.4.0-beta.1] - 2026-09-15
+
+### Added
+
+- **Your own music and sounds** in **Settings › Sound**:
+  - **Menu music:** pick any song to loop on the menu instead of the built-in music box.
+  - **Menu sounds:** replace the startup, point, select, back, page turn, start, Quick Menu, tick and error sounds one by one, with **Play** to hear each one and **Reset** to go back.
+  - MP3, WAV, M4A, AAC, WMA and FLAC files are supported; sounds longer than 5 seconds are cut short with a soft fade.
+  - Couchtop copies every file you pick into its own data folder, so moving or deleting the original doesn't break anything. Files you stop using are cleaned up.
+  - Files Windows can't play are refused with a plain explanation, and unused copies are never left behind.
+- **Couchtop Sports is coming soon.** A Sports channel now sits on the menu as a sneak peek at what's next: tennis, baseball, bowling, golf and boxing, built right into Couchtop, with easy controls, training challenges and games with friends. It is still being made and **isn't playable yet**; the channel opens a "coming soon" page.
+
 ## [0.3.2-beta.1] - 2026-09-14
 
 ### Fixed

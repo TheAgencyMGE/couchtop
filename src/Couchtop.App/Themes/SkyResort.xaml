@@ -541,6 +541,23 @@
         </Viewbox>
     </DataTemplate>
 
+    <DataTemplate x:Key="Art.sports">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="164" Canvas.Top="54" Width="22" Height="22" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbLime}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176" c:IdleAnim.Kind="Bob">
+                    <Path Stretch="Uniform" Stroke="#FFFFFF" StrokeThickness="7" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 40,4 A 36,36 0 1 1 39.9,4 Z M 12,16 Q 40,40 12,66 M 68,14 Q 40,40 68,66" />
+                </ContentControl>
+                <Border Canvas.Left="24" Canvas.Top="118" Background="#D9FF7A59" CornerRadius="16" Padding="14,2,14,4">
+                    <TextBlock Text="Coming soon" Style="{StaticResource SkyArtLabel}" FontSize="22" />
+                </Border>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Sports" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Sports" Style="{StaticResource SkyArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
     <DataTemplate x:Key="Art.power">
         <Viewbox Stretch="UniformToFill">
             <Canvas Width="400" Height="240" ClipToBounds="True">

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using Couchtop.App.Services;
+using Couchtop.Core.Audio;
 using Couchtop.Core.Channels;
 using Couchtop.Core.Diagnostics;
 using Couchtop.Core.Discovery;
@@ -39,7 +40,8 @@ public sealed class AppHost
         Shell = new ShellModeManager(Registry, Install, () => Compatibility.Run(), EvaluateSafetyGate);
         Discovery = DiscoveryService.CreateDefault(Paths, Settings.Current);
         Launcher = new AppLauncher(new SystemProcessStarter(), new DiscoveryChannelResolver(Discovery));
-        Audio = new AudioService(Settings.Current);
+        AudioLibrary = new CustomAudioLibrary(System.IO.Path.Combine(Paths.DataRoot, "custom-audio"));
+        Audio = new AudioService(Settings.Current, AudioLibrary);
         Icons = new IconService(Paths.IconCacheDirectory);
         Session = new SessionSentinel(Paths.SessionFile);
         IsShellSession = options.ShellSession || (!options.IsSnapshot && !NativeMethods.IsExplorerShellRunning());
@@ -60,6 +62,7 @@ public sealed class AppHost
     public DiscoveryService Discovery { get; }
     public AppLauncher Launcher { get; }
     public AudioService Audio { get; }
+    public CustomAudioLibrary AudioLibrary { get; }
     public IconService Icons { get; }
     public SessionSentinel Session { get; }
     public InputService? Input { get; set; }
@@ -87,8 +90,10 @@ public sealed class AppHost
         if (cached is null && options.IsSnapshot) cached = host.Discovery.Discover();
         if (cached is not null)
         {
-            ChannelSeeder.Apply(host.Layout.Layout, cached.Apps, host.Settings.Current.AutoAddNewApps);
+            var seed = ChannelSeeder.Apply(host.Layout.Layout, cached.Apps, host.Settings.Current.AutoAddNewApps);
             host.SaveLayout(raiseChanged: false);
+            if (seed.BuiltInsAdded > 0 && !options.IsSnapshot)
+                host.PostMessage("Coming soon: Couchtop Sports", "A Sports channel is now on your menu as a sneak peek: tennis, baseball, bowling, golf and boxing, built right into Couchtop. It's still being made and isn't playable yet.");
         }
         else if (!host.Layout.Layout.Seeded)
         {
@@ -102,6 +107,11 @@ public sealed class AppHost
             }
         }
 
+        if (!options.IsSnapshot)
+        {
+            var settings = host.Settings.Current;
+            _ = Task.Run(() => host.AudioLibrary.RemoveUnused(settings.CustomSounds.Values.Append(settings.CustomMusic).ToList()));
+        }
         _ = host.Audio.InitializeAsync();
         return host;
     }
@@ -162,7 +172,7 @@ public sealed class AppHost
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
                     var seed = ChannelSeeder.Apply(Layout.Layout, result.Apps, Settings.Current.AutoAddNewApps);
-                    SaveLayout(raiseChanged: seed.Added > 0 || seed.FirstRun);
+                    SaveLayout(raiseChanged: seed.Added > 0 || seed.FirstRun || seed.BuiltInsAdded > 0);
                     if (announce && seed.Added > 0 && !seed.FirstRun)
                         PostMessage("New channels", $"{seed.Added} newly installed app{(seed.Added == 1 ? " was" : "s were")} added to your channels.");
                 });

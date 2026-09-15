@@ -1,3 +1,4 @@
+using Couchtop.Core.Audio;
 using Couchtop.Core.Storage;
 
 namespace Couchtop.Core.Settings;
@@ -30,6 +31,12 @@ public sealed class UserSettings
     public double EffectsVolume { get; set; } = 0.7;
     public bool Ambience { get; set; } = true;
     public double AmbienceVolume { get; set; } = 0.3;
+
+    /// <summary>User's own menu music, or null for the built-in music box.</summary>
+    public CustomAudioFile? CustomMusic { get; set; }
+
+    /// <summary>User's own sounds by slot id (see <see cref="CustomSoundSlots"/>).</summary>
+    public Dictionary<string, CustomAudioFile> CustomSounds { get; set; } = new();
 
     // Displays
     public string? TargetMonitor { get; set; }
@@ -66,6 +73,10 @@ public sealed class UserSettings
     {
         EffectsVolume = Clamp01(EffectsVolume);
         AmbienceVolume = Clamp01(AmbienceVolume);
+        CustomMusic = CustomAudio.Clean(CustomMusic);
+        CustomSounds = (CustomSounds ?? new())
+            .Where(kv => CustomSoundSlots.IsKnown(kv.Key) && CustomAudio.Clean(kv.Value) is not null)
+            .ToDictionary(kv => kv.Key, kv => CustomAudio.Clean(kv.Value)!);
         PointerSpeed = double.IsFinite(PointerSpeed) ? Math.Clamp(PointerSpeed, 0.25, 3.0) : 1.0;
         Theme = ThemeCatalog.Normalize(Theme);
         if (!Enum.IsDefined(ShellBootstrap)) ShellBootstrap = ShellBootstrapMode.Resilient;

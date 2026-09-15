@@ -19,12 +19,45 @@ public sealed class ChannelLayout
 
     public List<string> DismissedSourceKeys { get; set; } = new();
     public List<string> KnownSourceKeys { get; set; } = new();
+
+    /// <summary>Built-in channels this layout has already been offered, so new ones appear once and removed ones stay removed.</summary>
+    public List<string> KnownBuiltIns { get; set; } = new();
+
     public bool Seeded { get; set; }
 }
 
 /// <summary>Pure layout operations (no I/O) so they are easy to test.</summary>
 public static class LayoutEditor
 {
+    /// <summary>
+    /// Adds built-in channels introduced after this layout was created (once each). Built-ins the user has
+    /// removed are never re-added. Returns how many channels were placed.
+    /// </summary>
+    public static int OfferNewBuiltIns(ChannelLayout layout)
+    {
+        if (!layout.Seeded) return 0;
+        layout.KnownBuiltIns ??= new();
+        if (layout.KnownBuiltIns.Count == 0) layout.KnownBuiltIns.AddRange(BuiltInChannels.Original);
+        var added = 0;
+        foreach (var id in BuiltInChannels.All)
+        {
+            if (layout.KnownBuiltIns.Contains(id)) continue;
+            layout.KnownBuiltIns.Add(id);
+            var channel = BuiltInChannels.Create(id);
+            if (Find(layout, channel.Id) is not null) continue;
+            try
+            {
+                Place(layout, channel);
+                added++;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Log.Warn("Could not add new built-in channel " + id, ex);
+            }
+        }
+        return added;
+    }
+
     public static Channel? Find(ChannelLayout layout, string? id) =>
         id is null ? null : layout.Channels.FirstOrDefault(c => c.Id == id);
 
@@ -184,7 +217,9 @@ public static class LayoutEditor
     }
 }
 
-public sealed record SeedResult(int Added, int NewlyKnown, bool FirstRun);
+/// <param name="Added">Newly installed apps placed on the menu.</param>
+/// <param name="BuiltInsAdded">New built-in channels (such as Sports) placed for an existing layout.</param>
+public sealed record SeedResult(int Added, int NewlyKnown, bool FirstRun, int BuiltInsAdded = 0);
 
 public static class ChannelSeeder
 {
@@ -197,6 +232,7 @@ public static class ChannelSeeder
         var added = 0;
         var newlyKnown = 0;
         var firstRun = !layout.Seeded;
+        var builtInsAdded = 0;
 
         if (firstRun)
         {
@@ -205,6 +241,7 @@ public static class ChannelSeeder
                 var ch = BuiltInChannels.Create(id);
                 if (Find(layout, ch.Id) is null) LayoutEditor.Place(layout, ch);
             }
+            layout.KnownBuiltIns = BuiltInChannels.All.ToList();
 
             var picks = apps
                 .Where(a => !a.ExcludeFromAutoSeed && !dismissed.Contains(a.SourceKey) && !LayoutEditor.ContainsSource(layout, a.SourceKey))
@@ -220,6 +257,7 @@ public static class ChannelSeeder
         }
         else
         {
+            builtInsAdded = LayoutEditor.OfferNewBuiltIns(layout);
             foreach (var app in apps)
             {
                 if (known.Contains(app.SourceKey)) continue;
@@ -246,7 +284,7 @@ public static class ChannelSeeder
                 newlyKnown++;
             }
         }
-        return new SeedResult(added, newlyKnown, firstRun);
+        return new SeedResult(added, newlyKnown, firstRun, builtInsAdded);
     }
 
     private static Channel? Find(ChannelLayout layout, string id) => LayoutEditor.Find(layout, id);

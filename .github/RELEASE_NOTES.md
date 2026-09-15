@@ -1,5 +1,10 @@
 > **Very early beta.** Expect rough edges. Try shell mode in a virtual machine before using it on your main PC.
 
+### New in this version
+
+- **Your own music and sounds.** In **Settings › Sound** you can replace the menu music with any song, and swap out individual menu sounds (startup, select, back, page turn and more). MP3, WAV, M4A, AAC, WMA and FLAC all work, and one button puts Couchtop's own sounds back.
+- **Couchtop Sports is coming soon.** A Sports channel appears on your menu as a sneak peek at tennis, baseball, bowling, golf and boxing. It's still being made and isn't playable yet.
+
 ### Which download?
 
 | Download | For |

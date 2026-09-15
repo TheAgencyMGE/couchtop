@@ -654,7 +654,8 @@ public partial class MainWindow : Window
             GoBack();
             e.Handled = true;
         }
-        else if (e.ChangedButton == MouseButton.Right && CurrentView is not BrowserView && !IsInsideTextBox(e.OriginalSource as DependencyObject))
+        else if (e.ChangedButton == MouseButton.Right && CurrentView is not BrowserView && CurrentView is not IScreenView { CapturesMouseButtons: true } &&
+                 !IsInsideTextBox(e.OriginalSource as DependencyObject))
         {
             GoBack();
             e.Handled = true;
@@ -935,6 +936,12 @@ public partial class MainWindow : Window
             Navigate(settings);
             await Task.Delay(1000);
             Save(dir, "04-settings");
+            settings.SelectCategory("Sound");
+            await Task.Delay(1000);
+            Save(dir, "04b-sound");
+            settings.SnapshotScrollToEnd();
+            await Task.Delay(900);
+            Save(dir, "04c-sound-custom");
             settings.SelectCategory("Shell Mode");
             await Task.Delay(1000);
             Save(dir, "05-shell-mode");
@@ -959,6 +966,8 @@ public partial class MainWindow : Window
             await Task.Delay(1000);
             Save(dir, "09-power");
             GoHome();
+
+            await SaveSportsSnapshotsAsync(dir);
 
             _ = ShowDialogAsync("Remove \"Example\" from your channels?\nThe app itself stays installed.", "Remove", "Cancel");
             await Task.Delay(900);
@@ -1022,6 +1031,12 @@ public partial class MainWindow : Window
                 GoHome();
                 await Task.Delay(500);
 
+                Navigate(new Sports.SportsComingSoonView(_host, this));
+                await Task.Delay(1200);
+                Save(dir, $"theme-{theme.Id}-9-sports");
+                GoHome();
+                await Task.Delay(500);
+
                 await SaveWebSnapshotAsync(dir, $"theme-{theme.Id}-8-web");
 
                 await HomeMenuWindow.RenderSnapshotAsync(_host, this, Path.Combine(dir, $"theme-{theme.Id}-5-quick.png"));
@@ -1032,6 +1047,54 @@ public partial class MainWindow : Window
             Log.Error("Snapshot rendering failed", ex);
         }
         _host.Exit(0);
+    }
+
+    private async Task SaveSportsSnapshotsAsync(string dir)
+    {
+        Navigate(new Sports.SportsComingSoonView(_host, this));
+        await Task.Delay(1400);
+        Save(dir, "09a-sports-coming-soon");
+        GoHome();
+
+#if DEBUG
+        // The unfinished games only exist in developer builds.
+        Navigate(new Sports.SportsHubView(_host, this));
+        await Task.Delay(1400);
+        Save(dir, "09a-sports-hub");
+        GoHome();
+
+        Navigate(new Sports.SportMenuView(_host, this, Couchtop.Core.Sports.SportKind.Bowling));
+        await Task.Delay(1200);
+        Save(dir, "09b-sports-menu");
+        GoHome();
+
+        // Computer-vs-computer demos (no records are written).
+        foreach (var sport in Enum.GetValues<Couchtop.Core.Sports.SportKind>())
+        {
+            var setup = new Couchtop.Core.Sports.SportSetup(sport, Players: 2, Humans: 0, Difficulty: 3, Seed: 7);
+            var view = Sports.SportsSession.CreateView(_host, this, setup, demo: true);
+            Navigate(view);
+            await Task.Delay(sport switch
+            {
+                Couchtop.Core.Sports.SportKind.Bowling => 3600,
+                Couchtop.Core.Sports.SportKind.Golf => 2300,
+                Couchtop.Core.Sports.SportKind.Baseball => 3000,
+                _ => 5000,
+            });
+            Save(dir, $"09c-sports-{sport.ToString().ToLowerInvariant()}");
+            GoHome();
+            await Task.Delay(400);
+        }
+
+        var results = Sports.SportsSession.CreateView(_host, this, new Couchtop.Core.Sports.SportSetup(Couchtop.Core.Sports.SportKind.Golf, Couchtop.Core.Sports.SportMode.Training, 1, 0, Seed: 3), demo: true);
+        Navigate(results);
+        await Task.Delay(1200);
+        results.ShowSnapshotResults(new Couchtop.Core.Sports.SportResult(Couchtop.Core.Sports.SportKind.Golf, Couchtop.Core.Sports.SportMode.Training, new[] { 44 }, null, "44 points", "Nearest the Pin", 44));
+        await Task.Delay(500);
+        Save(dir, "09d-sports-results");
+        GoHome();
+        await Task.Delay(400);
+#endif
     }
 
     private async Task SaveWebSnapshotAsync(string dir, string name)

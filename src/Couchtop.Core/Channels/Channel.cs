@@ -74,8 +74,12 @@ public static class BuiltInChannels
     public const string Settings = "settings";
     public const string Power = "power";
     public const string Customize = "customize";
+    public const string Sports = "sports";
 
-    public static readonly IReadOnlyList<string> All = new[] { Files, Photos, Browser, Customize, Settings, Power };
+    public static readonly IReadOnlyList<string> All = new[] { Files, Photos, Browser, Sports, Customize, Settings, Power };
+
+    /// <summary>The built-ins that existed before per-channel tracking; layouts from then already know them.</summary>
+    public static readonly IReadOnlyList<string> Original = new[] { Files, Photos, Browser, Customize, Settings, Power };
 
     public static bool IsKnown(string? id) => id is not null && All.Contains(id);
 
@@ -87,6 +91,7 @@ public static class BuiltInChannels
         Settings => "Settings",
         Power => "Power",
         Customize => "Customize",
+        Sports => "Sports",
         _ => id,
     };
 

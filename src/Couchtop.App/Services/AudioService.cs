@@ -1,6 +1,7 @@
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Couchtop.Core.Audio;
 using Couchtop.Core.Diagnostics;
 using Couchtop.Core.Settings;
 
@@ -9,24 +10,29 @@ namespace Couchtop.App.Services;
 /// <summary>
 /// Low-latency mixer for effects and the ambience loop. The output device is opened only while something is
 /// audible and closed again when idle, so Couchtop uses no audio CPU while an app is in front.
+/// Users can replace the menu music and menu sounds with their own files.
 /// </summary>
 public sealed class AudioService : IDisposable
 {
     private readonly UserSettings _settings;
+    private readonly CustomAudioLibrary? _library;
     private readonly object _gate = new();
-    private readonly WaveFormat _format = WaveFormat.CreateIeeeFloatWaveFormat(SoundSynth.Rate, 2);
+    private readonly WaveFormat _format = CustomAudioLoader.Format;
     private readonly MixingSampleProvider _mixer;
     private readonly Timer _idleTimer;
+    private readonly Dictionary<SoundEffect, float[]> _custom = new();
     private WaveOutEvent? _output;
     private SoundBank? _bank;
+    private LoopingFileSource? _customMusic;
     private AmbienceProvider? _ambience;
     private bool _ambienceWanted;
     private DateTime _lastActivity = DateTime.UtcNow;
     private readonly Dictionary<SoundEffect, DateTime> _lastPlayed = new();
 
-    public AudioService(UserSettings settings)
+    public AudioService(UserSettings settings, CustomAudioLibrary? library = null)
     {
         _settings = settings;
+        _library = library;
         _mixer = new MixingSampleProvider(_format) { ReadFully = true };
         _idleTimer = new Timer(_ => CheckIdle(), null, 2000, 2000);
     }
@@ -39,20 +45,82 @@ public sealed class AudioService : IDisposable
         {
             var bank = SoundSynth.Create();
             lock (_gate) _bank = bank;
-            if (_ambienceWanted) SetAmbience(true);
         }
         catch (Exception ex)
         {
             Log.Error("Sound synthesis failed", ex);
         }
+        LoadCustomAudio();
+        if (_ambienceWanted) SetAmbience(true);
     });
+
+    /// <summary>Re-reads the custom music and sounds from settings (after the user changed them).</summary>
+    public Task ReloadCustomAudioAsync() => Task.Run(() =>
+    {
+        LoadCustomAudio();
+        SetAmbience(_ambienceWanted);
+    });
+
+    private void LoadCustomAudio()
+    {
+        var clips = new Dictionary<SoundEffect, float[]>();
+        foreach (var (slot, file) in _settings.CustomSounds.ToArray())
+        {
+            if (!Enum.TryParse<SoundEffect>(slot, out var effect) || _library?.PathFor(file) is not { } path) continue;
+            try
+            {
+                clips[effect] = CustomAudioLoader.LoadClip(path, CustomAudio.MaxSoundSeconds);
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Could not load custom sound " + slot, ex);
+            }
+        }
+
+        LoopingFileSource? music = null;
+        if (_library?.PathFor(_settings.CustomMusic) is { } musicPath)
+        {
+            try
+            {
+                music = new LoopingFileSource(musicPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Could not load custom menu music", ex);
+            }
+        }
+
+        LoopingFileSource? old;
+        lock (_gate)
+        {
+            _custom.Clear();
+            foreach (var (effect, clip) in clips) _custom[effect] = clip;
+            old = _customMusic;
+            _customMusic = music;
+            if (_ambience is not null)
+            {
+                // The mixer finishes any read in progress before removing the input, so the old file is safe to close.
+                _mixer.RemoveMixerInput(_ambience);
+                _ambience = null;
+            }
+        }
+        old?.Dispose();
+    }
+
+    public bool HasCustomMusic
+    {
+        get
+        {
+            lock (_gate) return _customMusic is not null;
+        }
+    }
 
     public void Play(SoundEffect effect)
     {
         if (!_settings.SoundEffects) return;
         lock (_gate)
         {
-            if (_bank is null || !_bank.Effects.TryGetValue(effect, out var clip)) return;
+            if (!_custom.TryGetValue(effect, out var clip) && (_bank is null || !_bank.Effects.TryGetValue(effect, out clip))) return;
             var now = DateTime.UtcNow;
             if (_lastPlayed.TryGetValue(effect, out var last) && now - last < TimeSpan.FromMilliseconds(35)) return;
             _lastPlayed[effect] = now;
@@ -62,19 +130,32 @@ public sealed class AudioService : IDisposable
         }
     }
 
+    /// <summary>Plays a decoded clip once (previewing a chosen file), even when menu sounds are turned off.</summary>
+    public void PlayPreview(float[] clip)
+    {
+        lock (_gate)
+        {
+            if (!EnsureOutput()) return;
+            _mixer.AddMixerInput(new ClipProvider(clip, (float)Math.Max(0.35, Math.Max(_settings.EffectsVolume, _settings.AmbienceVolume)), _format));
+            _lastActivity = DateTime.UtcNow;
+        }
+    }
+
     /// <summary>Fades the menu music in or out (it plays only while the menu is in front).</summary>
     public void SetAmbience(bool active)
     {
         lock (_gate)
         {
             _ambienceWanted = active;
-            var shouldPlay = active && _settings.Ambience && _bank is { Ambience.Length: > 0 };
+            var hasMusic = _customMusic is not null || _bank is { Ambience.Length: > 0 };
+            var shouldPlay = active && _settings.Ambience && hasMusic;
             if (shouldPlay)
             {
                 if (!EnsureOutput()) return;
                 if (_ambience is null)
                 {
-                    _ambience = new AmbienceProvider(_bank!.Ambience, _format);
+                    ISampleProvider source = _customMusic is not null ? _customMusic : new LoopingBuffer(_bank!.Ambience, _format);
+                    _ambience = new AmbienceProvider(source);
                     _mixer.AddMixerInput(_ambience);
                 }
                 _ambience.TargetVolume = (float)_settings.AmbienceVolume;
@@ -182,6 +263,8 @@ public sealed class AudioService : IDisposable
         {
             _output?.Dispose();
             _output = null;
+            _customMusic?.Dispose();
+            _customMusic = null;
         }
     }
 
@@ -209,30 +292,53 @@ public sealed class AudioService : IDisposable
         }
     }
 
-    private sealed class AmbienceProvider : ISampleProvider
+    private sealed class LoopingBuffer : ISampleProvider
     {
         private readonly float[] _data;
         private int _position;
 
-        public AmbienceProvider(float[] data, WaveFormat format)
+        public LoopingBuffer(float[] data, WaveFormat format)
         {
             _data = data;
             WaveFormat = format;
         }
 
         public WaveFormat WaveFormat { get; }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                buffer[offset + i] = _data[_position];
+                _position = (_position + 1) % _data.Length;
+            }
+            return count;
+        }
+    }
+
+    private sealed class AmbienceProvider : ISampleProvider
+    {
+        private readonly ISampleProvider _source;
+
+        public AmbienceProvider(ISampleProvider source)
+        {
+            _source = source;
+        }
+
+        public WaveFormat WaveFormat => _source.WaveFormat;
         public float TargetVolume { get; set; }
         public float CurrentVolume { get; private set; }
 
         public int Read(float[] buffer, int offset, int count)
         {
+            var read = _source.Read(buffer, offset, count);
+            if (read < count) Array.Clear(buffer, offset + read, count - read);
             var step = 1f / (SoundSynth.Rate * 2 * 0.8f);
             for (var i = 0; i < count; i++)
             {
                 if (CurrentVolume < TargetVolume) CurrentVolume = Math.Min(TargetVolume, CurrentVolume + step);
                 else if (CurrentVolume > TargetVolume) CurrentVolume = Math.Max(TargetVolume, CurrentVolume - step);
-                buffer[offset + i] = _data[_position] * CurrentVolume;
-                _position = (_position + 1) % _data.Length;
+                buffer[offset + i] *= CurrentVolume;
             }
             return count;
         }

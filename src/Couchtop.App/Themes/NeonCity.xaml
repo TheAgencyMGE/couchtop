@@ -365,6 +365,29 @@
         </Viewbox>
     </DataTemplate>
 
+    <DataTemplate x:Key="Art.sports">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonArtBack}" />
+                <Rectangle Width="400" Height="240" Fill="{StaticResource NeonGridBrush}" />
+                <Canvas Canvas.Left="210" Canvas.Top="36">
+                    <Path Data="M 0,160 L 60,20 L 110,20 L 170,160 Z" Stroke="#3300F0FF" StrokeThickness="12" />
+                    <Path Data="M 0,160 L 60,20 L 110,20 L 170,160 Z M 30,90 L 140,90 M 85,20 L 85,160" Stroke="#00F0FF" StrokeThickness="3" />
+                    <Ellipse Canvas.Left="112" Canvas.Top="44" Width="36" Height="36" Stroke="#40FCEE0A" StrokeThickness="14" c:IdleAnim.Kind="Bob" />
+                    <Ellipse Canvas.Left="112" Canvas.Top="44" Width="36" Height="36" Stroke="#FCEE0A" StrokeThickness="4" Fill="#26FCEE0A" c:IdleAnim.Kind="Bob" />
+                    <Path Data="M 18,120 L 60,120" Stroke="#FF2A6D" StrokeThickness="6" c:IdleAnim.Kind="Pulse" />
+                </Canvas>
+                <TextBlock Canvas.Left="26" Canvas.Top="22" Text="ARENA" Style="{StaticResource NeonArtLabel}" Foreground="#FF003C" />
+                <TextBlock Canvas.Left="21" Canvas.Top="18" Text="ARENA" Style="{StaticResource NeonArtLabel}" Foreground="#9900F0FF" />
+                <TextBlock Canvas.Left="23" Canvas.Top="20" Text="ARENA" Style="{StaticResource NeonArtLabel}" Foreground="#FCEE0A" />
+                <Border Canvas.Left="24" Canvas.Top="84" Background="#FF003C" Padding="10,2,10,3">
+                    <TextBlock Text="COMING SOON" Style="{StaticResource NeonArtLabel}" FontSize="20" Foreground="#0A0A0F" />
+                </Border>
+                <TextBlock Canvas.Left="26" Canvas.Top="206" Text="CH.07 // WIP" Style="{StaticResource NeonArtSerial}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
     <DataTemplate x:Key="Art.power">
         <Viewbox Stretch="UniformToFill">
             <Canvas Width="400" Height="240" ClipToBounds="True">

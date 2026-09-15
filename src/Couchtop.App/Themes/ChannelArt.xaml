@@ -213,6 +213,59 @@
         </Viewbox>
     </DataTemplate>
 
+    <!-- Sports -->
+    <DataTemplate x:Key="Art.sports">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#BFE9FF" Offset="0" />
+                            <GradientStop Color="#7FD0F5" Offset="0.62" />
+                            <GradientStop Color="#7FD0F5" Offset="0.62" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Path Data="M -10,168 Q 110,138 220,152 Q 330,166 410,146 L 410,250 L -10,250 Z">
+                    <Path.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#8FDB5A" Offset="0" />
+                            <GradientStop Color="#4DB53A" Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Path Data="M 60,250 Q 170,176 300,158" Stroke="#66FFFFFF" StrokeThickness="6" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                <Ellipse Canvas.Left="330" Canvas.Top="-40" Width="110" Height="110" Fill="#40FFFFFF" />
+                <!-- bowling pin -->
+                <Grid Canvas.Left="206" Canvas.Top="40" Width="60" Height="140" c:IdleAnim.Kind="Sway">
+                    <Path Stretch="Fill" Data="M 30,0 C 42,0 44,14 40,26 C 37,34 36,40 40,50 C 52,76 58,100 50,124 C 46,136 40,140 30,140 C 20,140 14,136 10,124 C 2,100 8,76 20,50 C 24,40 23,34 20,26 C 16,14 18,0 30,0 Z" Fill="White" />
+                    <Rectangle Height="6" Width="22" Fill="#E8454A" VerticalAlignment="Top" Margin="0,34,0,0" RadiusX="3" RadiusY="3" />
+                    <Rectangle Height="6" Width="22" Fill="#E8454A" VerticalAlignment="Top" Margin="0,44,0,0" RadiusX="3" RadiusY="3" />
+                </Grid>
+                <!-- tennis ball -->
+                <Grid Canvas.Left="282" Canvas.Top="84" Width="96" Height="96" c:IdleAnim.Kind="Bob">
+                    <Ellipse>
+                        <Ellipse.Fill>
+                            <RadialGradientBrush GradientOrigin="0.35,0.3">
+                                <GradientStop Color="#F4FF8A" Offset="0" />
+                                <GradientStop Color="#C8E02A" Offset="1" />
+                            </RadialGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Path Data="M 14,20 Q 48,48 14,78 M 82,18 Q 48,48 82,80" Stroke="White" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                </Grid>
+                <Ellipse Canvas.Left="150" Canvas.Top="118" Width="34" Height="34" Fill="White" Stroke="#D8DEE2" StrokeThickness="2" c:IdleAnim.Kind="Bob" />
+                <Path Canvas.Left="178" Canvas.Top="24" Data="M10,0 L13,7 L20,10 L13,13 L10,20 L7,13 L0,10 L7,7 Z" Fill="White" c:IdleAnim.Kind="Twinkle" />
+                <Path Canvas.Left="360" Canvas.Top="40" Data="M10,0 L13,7 L20,10 L13,13 L10,20 L7,13 L0,10 L7,7 Z" Fill="White" c:IdleAnim.Kind="Twinkle" />
+                <Border Canvas.Left="24" Canvas.Top="186" Background="#F2FF6A5C" CornerRadius="16" Padding="16,2,16,5">
+                    <TextBlock Text="Coming soon" Style="{StaticResource ArtLabel}" FontSize="24" />
+                </Border>
+                <TextBlock Canvas.Left="26" Canvas.Top="23" Text="Sports" Style="{StaticResource ArtLabel}" Foreground="#2F8FC4" />
+                <TextBlock Canvas.Left="24" Canvas.Top="20" Text="Sports" Style="{StaticResource ArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
     <!-- Power -->
     <DataTemplate x:Key="Art.power">
         <Viewbox Stretch="UniformToFill">

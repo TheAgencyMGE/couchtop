@@ -39,7 +39,22 @@ public sealed class InputService : IDisposable
         _mainWindow = mainWindow;
     }
 
+    private volatile bool _gameCapture;
+
     public event Action? HomeRequested;
+
+    /// <summary>Every Wii Remote report (including accelerometer data), raised on the Bluetooth thread.</summary>
+    public event Action<WiimoteInput>? WiimoteRaw;
+
+    /// <summary>
+    /// While a Couchtop game is running, controllers and Wii Remotes stop moving the pointer and pressing keys;
+    /// the game reads them directly. HOME / Guide still open the Quick Menu.
+    /// </summary>
+    public bool GameCapture
+    {
+        get => _gameCapture;
+        set => _gameCapture = value;
+    }
 
     public int ConnectedControllers => _connected.Count(c => c);
     public bool WiimoteConnected => _wiimote?.IsConnected == true;
@@ -138,7 +153,7 @@ public sealed class InputService : IDisposable
             HomeRequested?.Invoke();
             return;
         }
-        if (!IsOurWindowInFront()) return;
+        if (_gameCapture || !IsOurWindowInFront()) return;
 
         if (state.LeftX != 0 || state.LeftY != 0) MoveCursor(StickMath.Curve(state.LeftX), -StickMath.Curve(state.LeftY), dt);
         if ((pressed & GamepadButtons.A) != 0) Mouse(NativeMethods.MOUSEEVENTF_LEFTDOWN);
@@ -210,13 +225,14 @@ public sealed class InputService : IDisposable
         var pressed = input.Buttons & ~_wiimotePrevious;
         var released = _wiimotePrevious & ~input.Buttons;
         _wiimotePrevious = input.Buttons;
+        WiimoteRaw?.Invoke(input);
 
         if ((pressed & WiimoteButtons.Home) != 0)
         {
             HomeRequested?.Invoke();
             return;
         }
-        if (!IsOurWindowInFront()) return;
+        if (_gameCapture || !IsOurWindowInFront()) return;
 
         var point = WiimotePointerMapper.Map(input.Dots);
         var monitor = CurrentMonitor();

@@ -228,6 +228,20 @@
         </Viewbox>
     </DataTemplate>
 
+    <DataTemplate x:Key="Art.sports">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource MidArtBack}" />
+                <Ellipse Canvas.Left="180" Canvas.Top="-80" Width="300" Height="300"><Ellipse.Fill><RadialGradientBrush><GradientStop Color="#338FD98A" Offset="0" /><GradientStop Color="#008FD98A" Offset="1" /></RadialGradientBrush></Ellipse.Fill></Ellipse>
+                <Border Canvas.Left="240" Canvas.Top="40" Width="126" Height="126" CornerRadius="30" Background="#228FD98A" BorderBrush="#558FD98A" BorderThickness="2" c:IdleAnim.Kind="Bob">
+                    <Path Margin="28" Stretch="Uniform" Stroke="#B8EDB3" StrokeThickness="6" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 40,4 A 36,36 0 1 1 39.9,4 Z M 12,16 Q 40,40 12,66 M 68,14 Q 40,40 68,66" />
+                </Border>
+                <TextBlock Canvas.Left="28" Canvas.Top="24" Text="Coming soon · work in progress" Style="{StaticResource MidArtCaption}" />
+                <TextBlock Canvas.Left="26" Canvas.Top="170" Text="Sports" Style="{StaticResource MidArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
     <DataTemplate x:Key="Art.power">
         <Viewbox Stretch="UniformToFill">
             <Canvas Width="400" Height="240" ClipToBounds="True">

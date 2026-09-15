@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.3.2-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.4.0-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -89,7 +89,17 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 - Channels launch the real apps: shortcuts, executables, packaged apps (AUMID), `steam://` and other protocols.
 - If an app moved after an update, Couchtop re-discovers it automatically. If it's gone, you're offered **Locate…** or **Remove Channel**.
 - **Customize** mode: drag channels between slots and pages, add (installed app, program, website, folder), rename, recolor, set a custom picture, run as administrator, or remove.
-- Built-in channels: **Files**, **Photos** (with slideshow), **Web** (WebView2 browser), **Settings**, **Power** and **Customize**.
+- Built-in channels: **Files**, **Photos** (with slideshow), **Web** (WebView2 browser), **Sports**, **Settings**, **Power** and **Customize**.
+
+**Your own music and sounds**
+- Replace the menu music with any song you like: **Settings › Sound › Menu music › Choose File…**. It loops while the menu is in front.
+- Replace any menu sound (startup, point, select, back, page turn, start, Quick Menu, tick, error) with your own audio.
+- MP3, WAV, M4A, AAC, WMA and FLAC all work. Sounds longer than 5 seconds are cut short.
+- Couchtop keeps its own copy of each file in its data folder, so moving or deleting the original is fine, and one button puts the built-in sounds back.
+
+**Couchtop Sports (coming soon)**
+- Five quick 3D sports built into Couchtop: **Tennis**, **Baseball**, **Bowling**, **Golf** and **Boxing**, with easy controls, training challenges and local multiplayer.
+- The Sports channel is on the menu as a sneak peek. It is **still being made and isn't playable yet**.
 
 **Everywhere**
 - **Quick Menu** overlay on top of any running app: back to the menu, close the app, switch windows, volume, controller status, Settings, Power.

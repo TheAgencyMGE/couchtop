@@ -14,4 +14,7 @@ public interface IScreenView
     bool HandleKey(KeyEventArgs e) => false;
     bool WantsSystemCursor => false;
     bool PlaysAmbience => false;
+
+    /// <summary>True when the view uses the right mouse button itself (games), so it no longer means Back.</summary>
+    bool CapturesMouseButtons => false;
 }

@@ -376,6 +376,7 @@ public partial class MenuView : UserControl, IScreenView
             case BuiltInChannels.Files: _window.Navigate(new FilesView(_host, _window), origin); break;
             case BuiltInChannels.Photos: _window.Navigate(new PhotosView(_host, _window), origin); break;
             case BuiltInChannels.Browser: _window.Navigate(new BrowserView(_host, _window), origin); break;
+            case BuiltInChannels.Sports: _window.Navigate(Sports.SportsAccess.CreateEntryView(_host, _window), origin); break;
             case BuiltInChannels.Settings: _window.Navigate(new SettingsView(_host, _window), origin); break;
             case BuiltInChannels.Power: _window.Navigate(new PowerView(_host, _window), origin); break;
             case BuiltInChannels.Customize: SetEditMode(true); break;
