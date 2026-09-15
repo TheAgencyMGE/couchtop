@@ -11,7 +11,7 @@ public static class ThemeCatalog
     {
         new("Classic", "Classic", "Bright white console menu with sky-blue accents"),
         new("Night", "Night", "The dim slate look for dark rooms"),
-        new("SkyResort", "Sky Resort", "Glossy glass, open skies, sea and bubbles"),
+        new("SkyResort", "Sky Resort", "See-through glass, sunny skies, grass and bubbles"),
         new("NeonCity", "Neon City", "Black steel, hazard yellow and cyan neon"),
         new("Midnight", "Midnight", "Sleek, flat and dark"),
         new("Sakura", "Sakura", "Soft pink petals and warm paper"),

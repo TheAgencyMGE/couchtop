@@ -165,7 +165,21 @@ public static class ChannelArtFactory
             Margin = new Thickness(0, 0, 0, -iconSize * 0.14),
             Fill = new RadialGradientBrush(Color.FromArgb(0x38, 0, 0, 0), Color.FromArgb(0, 0, 0, 0)),
         });
-        var icon = new Image { Stretch = Stretch.Uniform };
+        if (Application.Current.TryFindResource("AppIconOrbTemplate") is DataTemplate orb)
+        {
+            // Glass themes sit each app icon inside a see-through bubble.
+            iconHost.Children.Add(new ContentControl
+            {
+                Content = "orb",
+                ContentTemplate = orb,
+                Width = iconSize * 1.3,
+                Height = iconSize * 1.3,
+                Margin = new Thickness(-iconSize * 0.15),
+                IsHitTestVisible = false,
+                Focusable = false,
+            });
+        }
+        var icon = new Image { Stretch = Stretch.Uniform, Margin = new Thickness(Application.Current.TryFindResource("AppIconOrbTemplate") is null ? 0 : iconSize * 0.12) };
         RenderOptions.SetBitmapScalingMode(icon, BitmapScalingMode.HighQuality);
         var letter = new TextBlock
         {
@@ -238,7 +252,7 @@ public static class ChannelArtFactory
         var mix = ThemeManager.ColorOf("CardMixColor", Colors.White);
         var top = Mix(seed, mix, ThemeManager.Number("CardMixTop", 0.86));
         var bottom = Mix(seed, mix, ThemeManager.Number("CardMixBottom", 0.62));
-        var brush = new LinearGradientBrush(top, bottom, 90);
+        var brush = new LinearGradientBrush(top, bottom, 90) { Opacity = ThemeManager.Number("CardOpacity", 1) };
         brush.Freeze();
         return brush;
     }

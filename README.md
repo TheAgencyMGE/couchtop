@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.3.1-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.3.2-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -322,11 +322,6 @@ powershell -ExecutionPolicy Bypass -File build/publish.ps1
 
 Pushing a tag like `v0.3.0-beta.1` runs the release workflow, which builds, tests, packages and publishes a GitHub pre-release.
 
-**Trailer:** the video in `docs/media` is made with [Remotion](https://www.remotion.dev) from the `video/` project:
-
-```bash
-cd video && npm install && npx remotion render CouchtopTrailer ../docs/media/couchtop-trailer.mp4
-```
 
 ---
 
@@ -351,7 +346,6 @@ src/
 tests/
   Couchtop.Tests           xUnit unit + integration tests
   Couchtop.FakeShellApp    Scriptable stand-in app for Guardian integration tests
-video/               Remotion trailer project
 ```
 
 Why WPF: mature per-monitor DPI support, GPU-composited vector animation, no packaging requirement (which a

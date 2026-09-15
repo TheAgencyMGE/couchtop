@@ -3,180 +3,254 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:c="clr-namespace:Couchtop.App.Controls">
     <!--
-        Sky Resort: late-2000s "glass and nature" optimism. Deep blue sky fading to a hazy horizon, a turquoise
-        sea and green island hills, soft clouds, aurora ribbons, a sun flare, and glossy glass orbs drifting up.
-        Controls are aqua gel: white glass with strong top highlights and sky-blue rims. All artwork is original.
+        Sky Resort: late-2000s "glass and nature" optimism (Frutiger Aero). A saturated blue sky with big clouds,
+        a sun burst with rainbow lens-flare rings, a hazy glass city on the horizon, a lush green meadow full of
+        water droplets and bokeh, and bubbles drifting up. Everything in the UI is see-through glass: clear tiles
+        with a hard top-half gloss, icons sealed inside water-droplet orbs, frosted panels. All artwork is original.
     -->
 
     <FontFamily x:Key="AppFont">/Couchtop;component/Assets/Fonts/#Rounded Mplus 1c, Segoe UI</FontFamily>
     <CornerRadius x:Key="PillCornerRadius">42</CornerRadius>
     <CornerRadius x:Key="PillGlowCornerRadius">48</CornerRadius>
-    <CornerRadius x:Key="PillGlossCornerRadius">38,38,20,20</CornerRadius>
+    <CornerRadius x:Key="PillGlossCornerRadius">38,38,12,12</CornerRadius>
     <CornerRadius x:Key="RoundCornerRadius">999</CornerRadius>
     <CornerRadius x:Key="TileCornerRadius">30</CornerRadius>
     <CornerRadius x:Key="TileGlowCornerRadius">38</CornerRadius>
-    <CornerRadius x:Key="TileGlossCornerRadius">24,24,120,120</CornerRadius>
+    <CornerRadius x:Key="TileGlossCornerRadius">24,24,6,6</CornerRadius>
     <CornerRadius x:Key="PanelCornerRadius">46</CornerRadius>
     <CornerRadius x:Key="CardCornerRadius">36</CornerRadius>
     <CornerRadius x:Key="ItemCornerRadius">28</CornerRadius>
     <CornerRadius x:Key="InputCornerRadius">36</CornerRadius>
     <CornerRadius x:Key="TrackCornerRadius">9</CornerRadius>
-    <Thickness x:Key="PillBorderThickness">4</Thickness>
-    <Thickness x:Key="RoundBorderThickness">5</Thickness>
-    <Thickness x:Key="TileBorderThickness">4</Thickness>
-    <Thickness x:Key="PanelBorderThickness">4</Thickness>
-    <sys:Double x:Key="TileClipRadius">24</sys:Double>
+    <Thickness x:Key="PillBorderThickness">3</Thickness>
+    <Thickness x:Key="RoundBorderThickness">3</Thickness>
+    <Thickness x:Key="TileBorderThickness">3</Thickness>
+    <Thickness x:Key="PanelBorderThickness">3</Thickness>
+    <sys:Double x:Key="TileClipRadius">26</sys:Double>
     <sys:Double x:Key="TileChamfer">0</sys:Double>
-    <sys:Double x:Key="TileGlossOpacity">0.85</sys:Double>
+    <sys:Double x:Key="TileGlossOpacity">1</sys:Double>
     <Color x:Key="CardMixColor">#FFFFFF</Color>
-    <sys:Double x:Key="CardMixTop">0.78</sys:Double>
-    <sys:Double x:Key="CardMixBottom">0.5</sys:Double>
-    <Color x:Key="BarShadowColor">#0B5E99</Color>
-    <sys:Double x:Key="BarShadowOpacity">0.35</sys:Double>
+    <sys:Double x:Key="CardMixTop">0.72</sys:Double>
+    <sys:Double x:Key="CardMixBottom">0.45</sys:Double>
+    <sys:Double x:Key="CardOpacity">0.42</sys:Double>
+    <Color x:Key="BarShadowColor">#0B4F9C</Color>
+    <sys:Double x:Key="BarShadowOpacity">0.3</sys:Double>
 
-    <Color x:Key="AccentColor">#0EA5E9</Color>
-    <Color x:Key="AccentDeepColor">#0B74C4</Color>
-    <Color x:Key="TileBorderColor">#A9DDF5</Color>
-    <Color x:Key="ButtonBorderColor">#8CCFEE</Color>
-    <Color x:Key="ButtonTextColor">#185A86</Color>
+    <Color x:Key="AccentColor">#0A8FF0</Color>
+    <Color x:Key="AccentDeepColor">#0660C4</Color>
+    <Color x:Key="TileBorderColor">#D9FFFFFF</Color>
+    <Color x:Key="ButtonBorderColor">#E6FFFFFF</Color>
+    <Color x:Key="ButtonTextColor">#0B4A86</Color>
 
     <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#0B78D8" Offset="0" />
-        <GradientStop Color="#2E9BEB" Offset="0.22" />
-        <GradientStop Color="#76C9F5" Offset="0.48" />
-        <GradientStop Color="#CBEFFD" Offset="0.62" />
-        <GradientStop Color="#EFFBFF" Offset="0.66" />
-        <GradientStop Color="#3CC6DE" Offset="0.68" />
-        <GradientStop Color="#118DC2" Offset="1" />
+        <GradientStop Color="#0057E0" Offset="0" />
+        <GradientStop Color="#0A86F5" Offset="0.25" />
+        <GradientStop Color="#3FB8FF" Offset="0.5" />
+        <GradientStop Color="#A8E6FF" Offset="0.62" />
+        <GradientStop Color="#E9FBFF" Offset="0.645" />
+        <GradientStop Color="#C8F46A" Offset="0.665" />
+        <GradientStop Color="#78D22E" Offset="0.8" />
+        <GradientStop Color="#2E9A1E" Offset="1" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="StripeBrush" Color="#00000000" />
 
-    <SolidColorBrush x:Key="AccentBrush" Color="#0EA5E9" />
-    <SolidColorBrush x:Key="AccentDeepBrush" Color="#0B74C4" />
-    <SolidColorBrush x:Key="AccentGlowBrush" Color="#9954E6FF" />
-    <SolidColorBrush x:Key="AccentSoftBrush" Color="#D5F1FD" />
-    <SolidColorBrush x:Key="TileGlowBrush" Color="#B3FFFFFF" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#0A8FF0" />
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#0660C4" />
+    <SolidColorBrush x:Key="AccentGlowBrush" Color="#B3FFFFFF" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#8CFFFFFF" />
+    <SolidColorBrush x:Key="TileGlowBrush" Color="#CCFFFFFF" />
     <SolidColorBrush x:Key="BadgeRimBrush" Color="#FFFFFF" />
 
-    <SolidColorBrush x:Key="TextBrush" Color="#1D4E73" />
-    <SolidColorBrush x:Key="TileTextBrush" Color="#1D4E73" />
-    <SolidColorBrush x:Key="SubtleTextBrush" Color="#5B86A6" />
+    <SolidColorBrush x:Key="TextBrush" Color="#0B3F73" />
+    <SolidColorBrush x:Key="TileTextBrush" Color="#0B3F73" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#2F6597" />
     <SolidColorBrush x:Key="ClockBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="InverseTextBrush" Color="#FFFFFF" />
 
-    <SolidColorBrush x:Key="TileBorderBrush" Color="#E6FFFFFF" />
-    <SolidColorBrush x:Key="BubbleBorderBrush" Color="#8CCFEE" />
+    <!-- Glass: bright rim, faint white body so the scene shows through -->
+    <SolidColorBrush x:Key="TileBorderBrush" Color="#D9FFFFFF" />
+    <SolidColorBrush x:Key="BubbleBorderBrush" Color="#FFFFFF" />
     <LinearGradientBrush x:Key="TileBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FFFFFF" Offset="0" />
-        <GradientStop Color="#DDF3FD" Offset="1" />
+        <GradientStop Color="#59FFFFFF" Offset="0" />
+        <GradientStop Color="#26FFFFFF" Offset="0.6" />
+        <GradientStop Color="#40E6FAFF" Offset="1" />
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="EmptyTileBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#40FFFFFF" Offset="0" />
-        <GradientStop Color="#1FFFFFFF" Offset="1" />
+        <GradientStop Color="#33FFFFFF" Offset="0" />
+        <GradientStop Color="#14FFFFFF" Offset="1" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="EmptyTileBorderBrush" Color="#80FFFFFF" />
+    <!-- Aero gloss: strong highlight that ends in a hard edge halfway down -->
     <LinearGradientBrush x:Key="GlossBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#F2FFFFFF" Offset="0" />
-        <GradientStop Color="#80FFFFFF" Offset="0.45" />
+        <GradientStop Color="#D9FFFFFF" Offset="0" />
+        <GradientStop Color="#66FFFFFF" Offset="0.9" />
         <GradientStop Color="#00FFFFFF" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="BarBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#F7FFFFFF" Offset="0" />
-        <GradientStop Color="#E4F5FD" Offset="0.45" />
-        <GradientStop Color="#BFE6F8" Offset="1" />
+        <GradientStop Color="#A6FFFFFF" Offset="0" />
+        <GradientStop Color="#73EAF8FF" Offset="0.45" />
+        <GradientStop Color="#59CDEFFF" Offset="0.46" />
+        <GradientStop Color="#80BDEBFF" Offset="1" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="BarLineBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="BarLineBrush" Color="#F2FFFFFF" />
 
     <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FAFFFFFF" Offset="0" />
-        <GradientStop Color="#F0E6F6FD" Offset="1" />
+        <GradientStop Color="#E6FFFFFF" Offset="0" />
+        <GradientStop Color="#CCEFF9FF" Offset="0.5" />
+        <GradientStop Color="#C7DDF3FF" Offset="1" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="PanelBorderBrush" Color="#FFFFFF" />
-    <SolidColorBrush x:Key="CardBrush" Color="#F2FAFE" />
+    <SolidColorBrush x:Key="CardBrush" Color="#B3FFFFFF" />
 
     <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FFFFFF" Offset="0" />
-        <GradientStop Color="#E6F7FF" Offset="0.5" />
-        <GradientStop Color="#B8E4FA" Offset="0.51" />
-        <GradientStop Color="#D9F2FD" Offset="1" />
+        <GradientStop Color="#F2FFFFFF" Offset="0" />
+        <GradientStop Color="#BFEFFAFF" Offset="0.5" />
+        <GradientStop Color="#8CBFE8FF" Offset="0.51" />
+        <GradientStop Color="#B3DDF4FF" Offset="1" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#8CCFEE" />
-    <SolidColorBrush x:Key="ButtonTextBrush" Color="#185A86" />
-    <SolidColorBrush x:Key="TrackBrush" Color="#C6E7F6" />
-    <SolidColorBrush x:Key="ScrollTrackBrush" Color="#33FFFFFF" />
-    <SolidColorBrush x:Key="ScrimBrush" Color="#66093A5C" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#E6FFFFFF" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#0B4A86" />
+    <SolidColorBrush x:Key="TrackBrush" Color="#80FFFFFF" />
+    <SolidColorBrush x:Key="ScrollTrackBrush" Color="#40FFFFFF" />
+    <SolidColorBrush x:Key="ScrimBrush" Color="#66053A6B" />
 
     <LinearGradientBrush x:Key="HeaderBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#F7FFFFFF" Offset="0" />
-        <GradientStop Color="#E3F5FD" Offset="0.5" />
-        <GradientStop Color="#C9EBFA" Offset="1" />
+        <GradientStop Color="#D9FFFFFF" Offset="0" />
+        <GradientStop Color="#B3E6F7FF" Offset="0.5" />
+        <GradientStop Color="#99C4E9FF" Offset="0.51" />
+        <GradientStop Color="#B3D9F2FF" Offset="1" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="SuccessBrush" Color="#5CC72E" />
-    <SolidColorBrush x:Key="DangerBrush" Color="#EF5A6F" />
-    <SolidColorBrush x:Key="WarningBrush" Color="#F4A627" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#46C21A" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#EF4A63" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#F49B12" />
 
     <LinearGradientBrush x:Key="PointerFillBrush" StartPoint="0,0" EndPoint="0.4,1">
         <GradientStop Color="#FFFFFF" Offset="0" />
         <GradientStop Color="#FFFFFF" Offset="0.45" />
         <GradientStop Color="#BDE8FB" Offset="1" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="PointerOutlineBrush" Color="#0B74C4" />
-    <SolidColorBrush x:Key="PointerShadowBrush" Color="#063B66" />
+    <SolidColorBrush x:Key="PointerOutlineBrush" Color="#0660C4" />
+    <SolidColorBrush x:Key="PointerShadowBrush" Color="#033366" />
     <SolidColorBrush x:Key="PointerCuffBrush" Color="#DFF4FD" />
     <RadialGradientBrush x:Key="SplashGlowBrush">
-        <GradientStop Color="#99FFFFFF" Offset="0" />
+        <GradientStop Color="#CCFFFFFF" Offset="0" />
         <GradientStop Color="#00FFFFFF" Offset="1" />
     </RadialGradientBrush>
-    <SolidColorBrush x:Key="QuickScrimBrush" Color="#8C052B4A" />
+    <SolidColorBrush x:Key="QuickScrimBrush" Color="#80032A52" />
     <LinearGradientBrush x:Key="QuickTopBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#F24FC3F7" Offset="0" />
-        <GradientStop Color="#F21B9AE4" Offset="0.5" />
-        <GradientStop Color="#F20B72C6" Offset="0.51" />
-        <GradientStop Color="#F21087D6" Offset="1" />
+        <GradientStop Color="#E64FC3F7" Offset="0" />
+        <GradientStop Color="#E61B9AE4" Offset="0.5" />
+        <GradientStop Color="#E60B72C6" Offset="0.51" />
+        <GradientStop Color="#E61087D6" Offset="1" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="QuickTopLineBrush" Color="#F2FFFFFF" />
     <LinearGradientBrush x:Key="QuickBottomBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#E60D5A8F" Offset="0" />
-        <GradientStop Color="#F2083A60" Offset="1" />
+        <GradientStop Color="#D90D5A8F" Offset="0" />
+        <GradientStop Color="#E6083A60" Offset="1" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="QuickTextBrush" Color="#FFFFFF" />
 
-    <!-- A glass orb: faint body, bright rim, crescent highlight and a refracted glint. -->
+    <!-- ============================================================ glass building blocks -->
+
+    <!-- A clear bubble: faint body, bright rim, crescent highlight and a refracted glint. -->
     <DataTemplate x:Key="SkyOrb">
         <Viewbox>
             <Canvas Width="100" Height="100">
-                <Ellipse Width="100" Height="100" StrokeThickness="1.6" Stroke="#CCFFFFFF">
+                <Ellipse Width="100" Height="100" StrokeThickness="1.6" Stroke="#E6FFFFFF">
                     <Ellipse.Fill>
                         <RadialGradientBrush GradientOrigin="0.5,0.62" Center="0.5,0.55" RadiusX="0.55" RadiusY="0.55">
-                            <GradientStop Color="#0AFFFFFF" Offset="0" />
-                            <GradientStop Color="#1FBFF3FF" Offset="0.7" />
-                            <GradientStop Color="#8CFFFFFF" Offset="1" />
+                            <GradientStop Color="#0DFFFFFF" Offset="0" />
+                            <GradientStop Color="#26BFF3FF" Offset="0.7" />
+                            <GradientStop Color="#A6FFFFFF" Offset="1" />
                         </RadialGradientBrush>
                     </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Width="100" Height="100" StrokeThickness="2.5" Opacity="0.45">
+                    <Ellipse.Stroke>
+                        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                            <GradientStop Color="#00FF6EC7" Offset="0.2" />
+                            <GradientStop Color="#FFFFE35A" Offset="0.45" />
+                            <GradientStop Color="#FF5AF08C" Offset="0.6" />
+                            <GradientStop Color="#0048B8FF" Offset="0.85" />
+                        </LinearGradientBrush>
+                    </Ellipse.Stroke>
                 </Ellipse>
                 <Path Data="M 16,44 C 16,24 32,10 54,9 C 38,15 26,28 24,46 C 22,52 16,52 16,44 Z">
                     <Path.Fill>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#F2FFFFFF" Offset="0" />
+                            <GradientStop Color="#FFFFFFFF" Offset="0" />
                             <GradientStop Color="#33FFFFFF" Offset="1" />
                         </LinearGradientBrush>
                     </Path.Fill>
                 </Path>
-                <Ellipse Canvas.Left="30" Canvas.Top="14" Width="12" Height="8" Fill="#E6FFFFFF" />
-                <Path Data="M 24,78 A 34,34 0 0 0 80,70" Stroke="#80FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
-                <Ellipse Canvas.Left="72" Canvas.Top="58" Width="7" Height="7" Fill="#99FFFFFF" />
+                <Ellipse Canvas.Left="30" Canvas.Top="14" Width="12" Height="8" Fill="#F2FFFFFF" />
+                <Path Data="M 24,78 A 34,34 0 0 0 80,70" Stroke="#99FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                <Ellipse Canvas.Left="72" Canvas.Top="58" Width="7" Height="7" Fill="#B3FFFFFF" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <!-- A water droplet resting on grass: sky reflected on top, meadow reflected below. -->
+    <DataTemplate x:Key="SkyDroplet">
+        <Viewbox>
+            <Canvas Width="100" Height="100">
+                <Ellipse Canvas.Left="8" Canvas.Top="88" Width="84" Height="14" Fill="#40175F0A" />
+                <Ellipse Width="100" Height="100" Stroke="#F2FFFFFF" StrokeThickness="1.4">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#E6F4FCFF" Offset="0" />
+                            <GradientStop Color="#CC6CC6FF" Offset="0.3" />
+                            <GradientStop Color="#B32E8FE8" Offset="0.5" />
+                            <GradientStop Color="#CC5CC72A" Offset="0.56" />
+                            <GradientStop Color="#D98FE04A" Offset="0.82" />
+                            <GradientStop Color="#F2E9FFC8" Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Path Data="M 14,40 C 16,22 32,9 52,8 C 36,15 24,26 22,44 C 20,50 14,49 14,40 Z" Fill="#F2FFFFFF" />
+                <Ellipse Canvas.Left="60" Canvas.Top="16" Width="10" Height="6" Fill="#CCFFFFFF" />
+                <Path Data="M 26,84 A 32,32 0 0 0 76,82" Stroke="#E6FFFFFF" StrokeThickness="4" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <!-- Glass bubble behind each app icon on the menu. -->
+    <DataTemplate x:Key="AppIconOrbTemplate">
+        <Viewbox>
+            <Canvas Width="100" Height="100">
+                <Ellipse Width="100" Height="100" Stroke="#E6FFFFFF" StrokeThickness="1.8">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush GradientOrigin="0.5,0.7" Center="0.5,0.55" RadiusX="0.55" RadiusY="0.55">
+                            <GradientStop Color="#1AFFFFFF" Offset="0" />
+                            <GradientStop Color="#33CDEFFF" Offset="0.72" />
+                            <GradientStop Color="#99FFFFFF" Offset="1" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Path Data="M 14,42 C 15,23 31,9 52,8 C 36,15 25,27 22,44 C 20,50 14,50 14,42 Z" Fill="#CCFFFFFF" />
+                <Path Data="M 24,80 A 34,34 0 0 0 78,74" Stroke="#80FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
             </Canvas>
         </Viewbox>
     </DataTemplate>
 
     <DataTemplate x:Key="SkyCloud">
-        <Canvas Width="420" Height="150">
-            <Ellipse Canvas.Left="0" Canvas.Top="70" Width="190" Height="80" Fill="#D9FFFFFF" />
-            <Ellipse Canvas.Left="80" Canvas.Top="24" Width="170" Height="120" Fill="#E6FFFFFF" />
-            <Ellipse Canvas.Left="190" Canvas.Top="0" Width="150" Height="140" Fill="#F2FFFFFF" />
-            <Ellipse Canvas.Left="280" Canvas.Top="60" Width="140" Height="90" Fill="#D9FFFFFF" />
-            <Rectangle Canvas.Left="60" Canvas.Top="100" Width="320" Height="50" RadiusX="25" RadiusY="25" Fill="#E6FFFFFF" />
+        <Canvas Width="520" Height="220">
+            <Ellipse Canvas.Left="20" Canvas.Top="96" Width="230" Height="120">
+                <Ellipse.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#FFFFFF" Offset="0.3" /><GradientStop Color="#D6E6F4" Offset="1" /></LinearGradientBrush></Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Canvas.Left="110" Canvas.Top="34" Width="210" Height="170">
+                <Ellipse.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#FFFFFF" Offset="0.35" /><GradientStop Color="#DCEAF6" Offset="1" /></LinearGradientBrush></Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Canvas.Left="230" Canvas.Top="0" Width="190" Height="190">
+                <Ellipse.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#FFFFFF" Offset="0.4" /><GradientStop Color="#D3E4F3" Offset="1" /></LinearGradientBrush></Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Canvas.Left="340" Canvas.Top="80" Width="170" Height="130">
+                <Ellipse.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#FFFFFF" Offset="0.3" /><GradientStop Color="#D6E6F4" Offset="1" /></LinearGradientBrush></Ellipse.Fill>
+            </Ellipse>
+            <Rectangle Canvas.Left="70" Canvas.Top="140" Width="400" Height="76" RadiusX="38" RadiusY="38">
+                <Rectangle.Fill><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#F7FBFF" Offset="0" /><GradientStop Color="#CFE0EF" Offset="1" /></LinearGradientBrush></Rectangle.Fill>
+            </Rectangle>
         </Canvas>
     </DataTemplate>
 
@@ -184,107 +258,300 @@
         <Grid ClipToBounds="True">
             <Viewbox Stretch="UniformToFill">
                 <Canvas Width="1920" Height="1080">
-                    <!-- Sun and lens flare -->
-                    <Ellipse Canvas.Left="1180" Canvas.Top="-620" Width="1300" Height="1300">
-                        <Ellipse.Fill>
-                            <RadialGradientBrush>
-                                <GradientStop Color="#F2FFFFFF" Offset="0" />
-                                <GradientStop Color="#99FFFFFF" Offset="0.12" />
-                                <GradientStop Color="#33E0F7FF" Offset="0.42" />
-                                <GradientStop Color="#00FFFFFF" Offset="1" />
-                            </RadialGradientBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                    <Ellipse Canvas.Left="1606" Canvas.Top="-24" Width="88" Height="88" Fill="#FFFFFF" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="6" />
-                    <Ellipse Canvas.Left="1400" Canvas.Top="170" Width="70" Height="70" Fill="#14FFFFFF" Stroke="#40FFFFFF" StrokeThickness="2" />
-                    <Ellipse Canvas.Left="1300" Canvas.Top="262" Width="26" Height="26" Fill="#33FFFFFF" />
-                    <Ellipse Canvas.Left="1090" Canvas.Top="380" Width="140" Height="140" Fill="#0FBDF7FF" Stroke="#26FFFFFF" StrokeThickness="2" />
-
-                    <!-- Aurora ribbons -->
-                    <Path Data="M -100,430 C 380,250 900,560 1400,330 C 1700,200 1900,300 2050,250 L 2050,320 C 1900,370 1700,290 1400,420 C 900,640 380,340 -100,520 Z"
-                          c:IdleAnim.Kind="Float" c:IdleAnim.Distance="90" c:IdleAnim.Duration="26">
-                        <Path.Fill>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#00FFFFFF" Offset="0" />
-                                <GradientStop Color="#66FFFFFF" Offset="0.3" />
-                                <GradientStop Color="#4DB6FFD9" Offset="0.6" />
-                                <GradientStop Color="#00FFFFFF" Offset="1" />
-                            </LinearGradientBrush>
-                        </Path.Fill>
-                    </Path>
-                    <Path Data="M -100,250 C 500,120 1000,330 1500,160 C 1750,80 1900,120 2050,90 L 2050,120 C 1900,160 1750,120 1500,205 C 1000,380 500,170 -100,290 Z"
-                          c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-70" c:IdleAnim.Duration="32">
-                        <Path.Fill>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#00FFFFFF" Offset="0" />
-                                <GradientStop Color="#4DFFFFFF" Offset="0.45" />
-                                <GradientStop Color="#00FFFFFF" Offset="1" />
-                            </LinearGradientBrush>
-                        </Path.Fill>
-                    </Path>
-
-                    <!-- Clouds -->
-                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="-120" Canvas.Top="-40" Opacity="0.95" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="70" c:IdleAnim.Duration="38" />
-                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="760" Canvas.Top="-78" Opacity="0.7" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-90" c:IdleAnim.Duration="46">
-                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.8" ScaleY="0.8" /></ContentControl.LayoutTransform>
-                    </ContentControl>
-                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="1640" Canvas.Top="300" Opacity="0.85" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-60" c:IdleAnim.Duration="40">
-                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.7" ScaleY="0.7" /></ContentControl.LayoutTransform>
-                    </ContentControl>
-                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="-160" Canvas.Top="480" Opacity="0.75" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="50" c:IdleAnim.Duration="36">
-                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.65" ScaleY="0.65" /></ContentControl.LayoutTransform>
-                    </ContentControl>
-
-                    <!-- Sea shimmer along the horizon -->
-                    <Rectangle Canvas.Top="712" Width="1920" Height="4" Fill="#99FFFFFF" />
-                    <Rectangle Canvas.Left="40" Canvas.Top="740" Width="70" Height="4" RadiusX="2" RadiusY="2" Fill="#CCFFFFFF" c:IdleAnim.Kind="Twinkle" />
-                    <Rectangle Canvas.Left="1790" Canvas.Top="752" Width="90" Height="4" RadiusX="2" RadiusY="2" Fill="#CCFFFFFF" c:IdleAnim.Kind="Twinkle" />
-                    <Rectangle Canvas.Left="545" Canvas.Top="790" Width="60" Height="4" RadiusX="2" RadiusY="2" Fill="#B3FFFFFF" c:IdleAnim.Kind="Twinkle" />
-                    <Rectangle Canvas.Left="1340" Canvas.Top="784" Width="50" Height="4" RadiusX="2" RadiusY="2" Fill="#B3FFFFFF" c:IdleAnim.Kind="Twinkle" />
-
-                    <!-- Island hills with a palm -->
-                    <Path Data="M -60,1080 L -60,700 C 60,640 190,650 300,730 C 350,766 390,800 430,860 L 430,1080 Z">
-                        <Path.Fill>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Color="#9BE35F" Offset="0" />
-                                <GradientStop Color="#45B03A" Offset="0.6" />
-                                <GradientStop Color="#2F8A2E" Offset="1" />
-                            </LinearGradientBrush>
-                        </Path.Fill>
-                    </Path>
-                    <Path Data="M -60,700 C 60,640 190,650 300,730" Stroke="#66FFFFFF" StrokeThickness="6" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
-                    <Path Data="M 1560,1080 C 1620,800 1760,700 1990,740 L 1990,1080 Z">
-                        <Path.Fill>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Color="#F4E1A6" Offset="0" />
-                                <GradientStop Color="#8ED957" Offset="0.18" />
-                                <GradientStop Color="#3A9F36" Offset="1" />
-                            </LinearGradientBrush>
-                        </Path.Fill>
-                    </Path>
-                    <Path Data="M 1850,740 C 1838,660 1852,590 1880,540" Stroke="#9A6B3D" StrokeThickness="12" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
-                    <Canvas Canvas.Left="1880" Canvas.Top="540" c:IdleAnim.Kind="Sway">
-                        <Path Fill="#3FAE3C" Data="M 0,0 C -40,-30 -90,-20 -120,20 C -80,0 -40,0 0,0 Z" />
-                        <Path Fill="#56C447" Data="M 0,0 C -30,-60 -80,-70 -110,-50 C -60,-45 -30,-30 0,0 Z" />
-                        <Path Fill="#3FAE3C" Data="M 0,0 C 20,-60 70,-70 100,-40 C 60,-40 30,-30 0,0 Z" />
-                        <Path Fill="#56C447" Data="M 0,0 C 40,-20 90,-10 110,30 C 70,10 40,5 0,0 Z" />
-                        <Ellipse Canvas.Left="-10" Canvas.Top="-6" Width="16" Height="16" Fill="#8B5A2B" />
+                    <!-- Sun burst: slowly turning rays, glow and core -->
+                    <Canvas Canvas.Left="1480" Canvas.Top="150">
+                        <Path Canvas.Left="-1100" Canvas.Top="-1100" Width="2200" Height="2200" Stretch="None" c:IdleAnim.Kind="Turn" c:IdleAnim.Duration="140"
+                              Data="M 1100,1100 L 1060,0 L 1140,0 Z M 1100,1100 L 1878,322 L 1935,378 Z M 1100,1100 L 2200,1060 L 2200,1140 Z M 1100,1100 L 1878,1878 L 1822,1935 Z M 1100,1100 L 1140,2200 L 1060,2200 Z M 1100,1100 L 322,1878 L 265,1822 Z M 1100,1100 L 0,1140 L 0,1060 Z M 1100,1100 L 322,322 L 378,265 Z M 1100,1100 L 1520,84 L 1580,106 Z M 1100,1100 L 2116,1520 L 2094,1580 Z M 1100,1100 L 680,2116 L 620,2094 Z M 1100,1100 L 84,680 L 106,620 Z">
+                            <Path.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="#B3FFFFFF" Offset="0" />
+                                    <GradientStop Color="#33FFFFFF" Offset="0.35" />
+                                    <GradientStop Color="#00FFFFFF" Offset="0.8" />
+                                </RadialGradientBrush>
+                            </Path.Fill>
+                        </Path>
+                        <Ellipse Canvas.Left="-520" Canvas.Top="-520" Width="1040" Height="1040">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="#FFFFFFFF" Offset="0" />
+                                    <GradientStop Color="#E6FFFFFF" Offset="0.1" />
+                                    <GradientStop Color="#66FFF6C8" Offset="0.25" />
+                                    <GradientStop Color="#1AC8F0FF" Offset="0.55" />
+                                    <GradientStop Color="#00FFFFFF" Offset="1" />
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <Ellipse Canvas.Left="-150" Canvas.Top="-150" Width="300" Height="300" Stroke="#40FFFFFF" StrokeThickness="3" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="5" />
                     </Canvas>
 
-                    <!-- Glass orbs rising -->
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="30" Canvas.Top="560" Width="110" Height="110" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="34" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="96" Canvas.Top="250" Width="46" Height="46" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="22" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1780" Canvas.Top="420" Width="130" Height="130" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="40" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1830" Canvas.Top="120" Width="54" Height="54" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="26" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="520" Canvas.Top="8" Width="40" Height="40" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="24" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1150" Canvas.Top="266" Width="34" Height="34" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="20" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="908" Canvas.Top="520" Width="30" Height="30" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="18" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="10" Canvas.Top="880" Width="74" Height="74" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="30" />
-                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1700" Canvas.Top="760" Width="64" Height="64" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="28" />
+                    <!-- Rainbow lens-flare rings trailing away from the sun -->
+                    <Ellipse Canvas.Left="1130" Canvas.Top="250" Width="220" Height="220" StrokeThickness="6" Fill="#0FFFFFFF">
+                        <Ellipse.Stroke>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#66FF6EC7" Offset="0" /><GradientStop Color="#66FFE35A" Offset="0.35" /><GradientStop Color="#665AF08C" Offset="0.65" /><GradientStop Color="#6648B8FF" Offset="1" />
+                            </LinearGradientBrush>
+                        </Ellipse.Stroke>
+                    </Ellipse>
+                    <Ellipse Canvas.Left="1010" Canvas.Top="380" Width="70" Height="70" Fill="#40C8F7FF" Stroke="#66FFFFFF" StrokeThickness="2" />
+                    <Ellipse Canvas.Left="760" Canvas.Top="520" Width="380" Height="380" StrokeThickness="10" Fill="#08FFFFFF" Opacity="0.7">
+                        <Ellipse.Stroke>
+                            <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                <GradientStop Color="#40FF6EC7" Offset="0" /><GradientStop Color="#40FFE35A" Offset="0.35" /><GradientStop Color="#405AF08C" Offset="0.65" /><GradientStop Color="#4048B8FF" Offset="1" />
+                            </LinearGradientBrush>
+                        </Ellipse.Stroke>
+                    </Ellipse>
+                    <Ellipse Canvas.Left="1240" Canvas.Top="60" Width="46" Height="46" Fill="#59FFFFFF" />
+
+                    <!-- Clouds -->
+                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="-170" Canvas.Top="-30" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="70" c:IdleAnim.Duration="40" />
+                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="560" Canvas.Top="-110" Opacity="0.9" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-80" c:IdleAnim.Duration="48">
+                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.85" ScaleY="0.85" /></ContentControl.LayoutTransform>
+                    </ContentControl>
+                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="1560" Canvas.Top="380" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-60" c:IdleAnim.Duration="42">
+                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.9" ScaleY="0.9" /></ContentControl.LayoutTransform>
+                    </ContentControl>
+                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="-200" Canvas.Top="400" Opacity="0.95" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="55" c:IdleAnim.Duration="38">
+                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.8" ScaleY="0.8" /></ContentControl.LayoutTransform>
+                    </ContentControl>
+                    <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="1100" Canvas.Top="560" Opacity="0.8" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-40" c:IdleAnim.Duration="36">
+                        <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.6" ScaleY="0.6" /></ContentControl.LayoutTransform>
+                    </ContentControl>
+
+                    <!-- Hazy glass city on the horizon -->
+                    <Canvas Canvas.Left="0" Canvas.Top="470" Opacity="0.7">
+                        <Canvas.Resources>
+                            <LinearGradientBrush x:Key="Tower" StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#F2FFFFFF" Offset="0" />
+                                <GradientStop Color="#CCD9EEFB" Offset="0.5" />
+                                <GradientStop Color="#B39CC7E6" Offset="0.51" />
+                                <GradientStop Color="#CCC4E2F5" Offset="1" />
+                            </LinearGradientBrush>
+                        </Canvas.Resources>
+                        <Rectangle Canvas.Left="20" Canvas.Top="90" Width="70" Height="200" Fill="{StaticResource Tower}" />
+                        <Rectangle Canvas.Left="100" Canvas.Top="20" Width="84" Height="270" Fill="{StaticResource Tower}" />
+                        <Path Canvas.Left="100" Canvas.Top="-10" Data="M 0,30 Q 42,0 84,30 Z" Fill="#E6FFFFFF" />
+                        <Rectangle Canvas.Left="196" Canvas.Top="120" Width="60" Height="170" Fill="{StaticResource Tower}" />
+                        <Rectangle Canvas.Left="266" Canvas.Top="60" Width="78" Height="230" Fill="{StaticResource Tower}" />
+                        <Rectangle Canvas.Left="1640" Canvas.Top="110" Width="72" Height="180" Fill="{StaticResource Tower}" />
+                        <Rectangle Canvas.Left="1724" Canvas.Top="40" Width="90" Height="250" Fill="{StaticResource Tower}" />
+                        <Path Canvas.Left="1724" Canvas.Top="10" Data="M 0,30 Q 45,-4 90,30 Z" Fill="#E6FFFFFF" />
+                        <Rectangle Canvas.Left="1826" Canvas.Top="140" Width="70" Height="150" Fill="{StaticResource Tower}" />
+                        <Path Stroke="#40FFFFFF" StrokeThickness="2" Data="M 108,60 L 176,60 M 108,100 L 176,100 M 108,140 L 176,140 M 108,180 L 176,180 M 1732,90 L 1806,90 M 1732,130 L 1806,130 M 1732,170 L 1806,170 M 1732,210 L 1806,210" />
+                    </Canvas>
+
+                    <!-- Horizon haze -->
+                    <Rectangle Canvas.Top="640" Width="1920" Height="110">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#00FFFFFF" Offset="0" /><GradientStop Color="#CCFFFFFF" Offset="0.55" /><GradientStop Color="#00FFFFFF" Offset="1" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!-- Meadow: rolling grass with light across the top -->
+                    <Path Data="M -20,760 C 300,700 700,730 1000,720 C 1350,708 1650,690 1940,730 L 1940,1100 L -20,1100 Z">
+                        <Path.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#C9F76A" Offset="0" />
+                                <GradientStop Color="#86DA34" Offset="0.3" />
+                                <GradientStop Color="#3FA51F" Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                    </Path>
+                    <Path Stroke="#80F4FFD0" StrokeThickness="5" Data="M -20,760 C 300,700 700,730 1000,720 C 1350,708 1650,690 1940,730" />
+
+                    <!-- Grass blades along the front edges -->
+                    <Path Fill="#2F8F17" Data="M 0,1080 C 10,960 18,900 30,860 C 34,920 36,1000 40,1080 Z M 36,1080 C 52,980 70,920 96,880 C 86,950 80,1020 78,1080 Z M 80,1080 C 86,990 100,940 128,905 C 120,970 118,1030 120,1080 Z M 120,1080 C 136,1000 150,960 170,930 C 166,990 164,1040 166,1080 Z M 160,1080 C 180,1010 200,975 236,950 C 216,1000 206,1050 204,1080 Z" />
+                    <Path Fill="#48B324" Data="M 14,1080 C 24,990 40,940 62,905 C 58,970 54,1030 56,1080 Z M 100,1080 C 108,1000 118,955 146,925 C 138,990 134,1040 136,1080 Z M 190,1080 C 206,1020 224,990 256,970 C 238,1020 230,1060 230,1080 Z" />
+                    <Path Fill="#2F8F17" Data="M 1920,1080 C 1910,960 1902,900 1890,860 C 1886,920 1884,1000 1880,1080 Z M 1884,1080 C 1868,980 1850,920 1824,880 C 1834,950 1840,1020 1842,1080 Z M 1840,1080 C 1834,990 1820,940 1792,905 C 1800,970 1802,1030 1800,1080 Z M 1800,1080 C 1784,1000 1770,960 1750,930 C 1754,990 1756,1040 1754,1080 Z M 1760,1080 C 1740,1010 1720,975 1684,950 C 1704,1000 1714,1050 1716,1080 Z" />
+                    <Path Fill="#48B324" Data="M 1906,1080 C 1896,990 1880,940 1858,905 C 1862,970 1866,1030 1864,1080 Z M 1820,1080 C 1812,1000 1802,955 1774,925 C 1782,990 1786,1040 1784,1080 Z" />
+
+                    <!-- Bokeh -->
+                    <Ellipse Canvas.Left="60" Canvas.Top="800" Width="90" Height="90" Fill="#40E9FFB0" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="4" />
+                    <Ellipse Canvas.Left="300" Canvas.Top="740" Width="50" Height="50" Fill="#4DFFFFFF" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="5.5" />
+                    <Ellipse Canvas.Left="1780" Canvas.Top="780" Width="70" Height="70" Fill="#40E9FFB0" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="4.6" />
+                    <Ellipse Canvas.Left="1540" Canvas.Top="730" Width="36" Height="36" Fill="#59FFFFFF" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="3.8" />
+                    <Ellipse Canvas.Left="930" Canvas.Top="760" Width="44" Height="44" Fill="#33FFFFFF" c:IdleAnim.Kind="Breathe" c:IdleAnim.Duration="5" />
+                    <Ellipse Canvas.Left="1330" Canvas.Top="800" Width="80" Height="80" Fill="#26F4FFC8" />
+                    <Ellipse Canvas.Left="520" Canvas.Top="810" Width="64" Height="64" Fill="#26F4FFC8" />
+
+                    <!-- Water droplets on the grass -->
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="-30" Canvas.Top="700" Width="190" Height="190" c:IdleAnim.Kind="Bob" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="150" Canvas.Top="850" Width="92" Height="92" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="90" Canvas.Top="610" Width="56" Height="56" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="1770" Canvas.Top="660" Width="170" Height="170" c:IdleAnim.Kind="Bob" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="1680" Canvas.Top="840" Width="84" Height="84" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="1800" Canvas.Top="560" Width="60" Height="60" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="1180" Canvas.Top="760" Width="70" Height="70" />
+                    <ContentControl Content="d" ContentTemplate="{StaticResource SkyDroplet}" Canvas.Left="700" Canvas.Top="770" Width="50" Height="50" />
+
+                    <!-- Bubbles drifting up -->
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="40" Canvas.Top="300" Width="90" Height="90" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="32" />
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1800" Canvas.Top="250" Width="110" Height="110" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="38" />
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1846" Canvas.Top="20" Width="48" Height="48" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="24" />
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="520" Canvas.Top="6" Width="42" Height="42" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="26" />
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="1150" Canvas.Top="270" Width="30" Height="30" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="20" />
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="906" Canvas.Top="518" Width="32" Height="32" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="18" />
+                    <ContentControl Content="o" ContentTemplate="{StaticResource SkyOrb}" Canvas.Left="120" Canvas.Top="120" Width="54" Height="54" c:IdleAnim.Kind="Rise" c:IdleAnim.Distance="1080" c:IdleAnim.Duration="28" />
                 </Canvas>
             </Viewbox>
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="TileDecorTemplate"><Grid /></DataTemplate>
+
+    <!-- ============================================================ built-in channel art: icons inside glass orbs -->
+
+    <Style x:Key="SkyArtLabel" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource AppFont}" />
+        <Setter Property="FontSize" Value="42" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <!-- A colored glass orb. Background is the tint; the content is a white glyph sealed inside. -->
+    <Style x:Key="SkyGlassOrb" TargetType="ContentControl">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContentControl">
+                    <Viewbox>
+                        <Grid Width="100" Height="100">
+                            <Ellipse Margin="6,90,6,-6" Height="12" VerticalAlignment="Top" Fill="#330A3A66" />
+                            <Ellipse Fill="{TemplateBinding Background}" />
+                            <Ellipse>
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush GradientOrigin="0.5,0.85" Center="0.5,0.6" RadiusX="0.6" RadiusY="0.6">
+                                        <GradientStop Color="#59FFFFFF" Offset="0" />
+                                        <GradientStop Color="#00FFFFFF" Offset="0.55" />
+                                        <GradientStop Color="#40002850" Offset="1" />
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <ContentPresenter Margin="25" />
+                            <Ellipse Stroke="#F2FFFFFF" StrokeThickness="1.6" />
+                            <Canvas>
+                                <Path Data="M 13,44 C 13,22 30,8 54,7 C 36,14 23,27 21,46 C 19,53 13,52 13,44 Z">
+                                    <Path.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#FFFFFFFF" Offset="0" />
+                                            <GradientStop Color="#40FFFFFF" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Path.Fill>
+                                </Path>
+                                <Ellipse Canvas.Left="60" Canvas.Top="12" Width="12" Height="7" Fill="#E6FFFFFF" />
+                                <Path Data="M 22,82 A 34,34 0 0 0 80,76" Stroke="#B3FFFFFF" StrokeThickness="3.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                            </Canvas>
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <RadialGradientBrush x:Key="OrbAmber" GradientOrigin="0.4,0.3"><GradientStop Color="#99FFE27A" Offset="0" /><GradientStop Color="#CCF2A515" Offset="1" /></RadialGradientBrush>
+    <RadialGradientBrush x:Key="OrbPink" GradientOrigin="0.4,0.3"><GradientStop Color="#99FFB3D9" Offset="0" /><GradientStop Color="#CCE8418F" Offset="1" /></RadialGradientBrush>
+    <RadialGradientBrush x:Key="OrbBlue" GradientOrigin="0.4,0.3"><GradientStop Color="#9987D6FF" Offset="0" /><GradientStop Color="#CC0A6FE0" Offset="1" /></RadialGradientBrush>
+    <RadialGradientBrush x:Key="OrbLime" GradientOrigin="0.4,0.3"><GradientStop Color="#99D8FF8A" Offset="0" /><GradientStop Color="#CC45B51C" Offset="1" /></RadialGradientBrush>
+    <RadialGradientBrush x:Key="OrbSilver" GradientOrigin="0.4,0.3"><GradientStop Color="#99E6F4FF" Offset="0" /><GradientStop Color="#CC5E8FB5" Offset="1" /></RadialGradientBrush>
+    <RadialGradientBrush x:Key="OrbRed" GradientOrigin="0.4,0.3"><GradientStop Color="#99FFB0A6" Offset="0" /><GradientStop Color="#CCE23B3B" Offset="1" /></RadialGradientBrush>
+
+    <!-- Soft glassy wash inside each built-in tile so the frame's see-through body stays readable -->
+    <LinearGradientBrush x:Key="SkyArtWash" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#40FFFFFF" Offset="0" />
+        <GradientStop Color="#0DFFFFFF" Offset="0.55" />
+        <GradientStop Color="#26BFEFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <DataTemplate x:Key="Art.files">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="150" Canvas.Top="30" Width="26" Height="26" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbAmber}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176" c:IdleAnim.Kind="Bob">
+                    <Path Stretch="Uniform" Fill="#FFFFFF" Data="M 0,10 Q 0,4 6,4 L 28,4 L 36,12 L 74,12 Q 80,12 80,18 L 80,58 Q 80,64 74,64 L 6,64 Q 0,64 0,58 Z" />
+                </ContentControl>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Files" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Files" Style="{StaticResource SkyArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.photos">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="160" Canvas.Top="150" Width="20" Height="20" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbPink}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176" c:IdleAnim.Kind="Sway">
+                    <Grid>
+                        <Path Stretch="Uniform" Fill="#FFFFFF" Data="M 0,6 Q 0,0 6,0 L 74,0 Q 80,0 80,6 L 80,58 Q 80,64 74,64 L 6,64 Q 0,64 0,58 Z M 8,54 L 26,32 L 40,46 L 52,36 L 72,54 Z" />
+                    </Grid>
+                </ContentControl>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Photos" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Photos" Style="{StaticResource SkyArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.browser">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="168" Canvas.Top="40" Width="24" Height="24" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbBlue}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176">
+                    <Path Stretch="Uniform" Stroke="#FFFFFF" StrokeThickness="6" Data="M 40,4 A 36,36 0 1 1 39.9,4 Z M 4,40 L 76,40 M 40,4 C 20,24 20,56 40,76 C 60,56 60,24 40,4 M 10,22 L 70,22 M 10,58 L 70,58" c:IdleAnim.Kind="Sway" />
+                </ContentControl>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Internet" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" FontSize="40" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Internet" Style="{StaticResource SkyArtLabel}" FontSize="40" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.customize">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="156" Canvas.Top="140" Width="22" Height="22" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbLime}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176" c:IdleAnim.Kind="Bob">
+                    <Path Stretch="Uniform" Fill="#FFFFFF" Data="F0 M 40,2 C 64,2 80,18 80,36 C 80,48 70,50 62,48 C 54,46 50,52 54,60 C 58,70 50,78 40,78 C 18,78 0,62 0,40 C 0,18 18,2 40,2 Z M 20,30 A 6,6 0 1 0 20.1,30 Z M 36,16 A 6,6 0 1 0 36.1,16 Z M 58,22 A 6,6 0 1 0 58.1,22 Z M 20,52 A 6,6 0 1 0 20.1,52 Z" />
+                </ContentControl>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Customize" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" FontSize="38" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Customize" Style="{StaticResource SkyArtLabel}" FontSize="38" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.settings">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="160" Canvas.Top="36" Width="20" Height="20" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbSilver}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176">
+                    <Viewbox c:IdleAnim.Kind="Spin">
+                        <Canvas Width="80" Height="80">
+                            <Path Stroke="#FFFFFF" StrokeThickness="13" Data="M 40,18 L 40,5 M 40,62 L 40,75 M 62,40 L 75,40 M 18,40 L 5,40 M 55.5,24.5 L 64.7,15.3 M 55.5,55.5 L 64.7,64.7 M 24.5,55.5 L 15.3,64.7 M 24.5,24.5 L 15.3,15.3" />
+                            <Ellipse Canvas.Left="14" Canvas.Top="14" Width="52" Height="52" Stroke="#FFFFFF" StrokeThickness="10" />
+                        </Canvas>
+                    </Viewbox>
+                </ContentControl>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Settings" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Settings" Style="{StaticResource SkyArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Art.power">
+        <Viewbox Stretch="UniformToFill">
+            <Canvas Width="400" Height="240" ClipToBounds="True">
+                <Rectangle Width="400" Height="240" Fill="{StaticResource SkyArtWash}" />
+                <Ellipse Canvas.Left="150" Canvas.Top="60" Width="24" Height="24" Stroke="#CCFFFFFF" StrokeThickness="2" Fill="#1AFFFFFF" c:IdleAnim.Kind="Bob" />
+                <ContentControl Style="{StaticResource SkyGlassOrb}" Background="{StaticResource OrbRed}" Canvas.Left="206" Canvas.Top="24" Width="176" Height="176" c:IdleAnim.Kind="Pulse">
+                    <Path Stretch="Uniform" Stroke="#FFFFFF" StrokeThickness="9" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 22,16 A 30,30 0 1 0 58,16 M 40,4 L 40,38" />
+                </ContentControl>
+                <TextBlock Canvas.Left="26" Canvas.Top="172" Text="Power" Style="{StaticResource SkyArtLabel}" Foreground="#660A4A86" />
+                <TextBlock Canvas.Left="24" Canvas.Top="169" Text="Power" Style="{StaticResource SkyArtLabel}" />
+            </Canvas>
+        </Viewbox>
+    </DataTemplate>
 </ResourceDictionary>

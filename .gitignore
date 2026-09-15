@@ -8,10 +8,5 @@ TestResults/
 *.swp
 snapshots/
 
-# Remotion video project
-video/node_modules/
-video/out/
-video/.remotion/
-video/public/shots/
-video/public/fonts/
-video/public/icon.png
+# Video and marketing work (Remotion trailer, Shorts, banners) is kept out of the main repo
+video/

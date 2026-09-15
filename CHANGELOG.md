@@ -2,6 +2,15 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.3.2-beta.1] - 2026-09-14
+
+### Fixed
+
+- **Sky Resort** now looks like real Frutiger Aero instead of a tinted Classic menu:
+  - Tiles, app cards, the bottom bar and panels are see-through glass with a hard top-half gloss.
+  - Built-in channel icons sit inside clear, colored glass orbs, and app icons get a glass bubble.
+  - The scenery is a saturated blue sky with big clouds, a turning sun burst with rainbow lens flares, a hazy glass city, and a green meadow with water droplets, bokeh and rising bubbles.
+
 ## [0.3.1-beta.1] - 2026-09-14
 
 ### Fixed
@@ -58,6 +67,7 @@ First public, very early beta.
 - In shell mode there is no system tray; use **Quick Menu › Windows Desktop** when you need Explorer.
 - Wii Remote pointing requires an IR sensor bar.
 
+[0.3.2-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.3.2-beta.1
 [0.3.1-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.3.1-beta.1
 [0.3.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.3.0-beta.1
 [0.2.0-beta.1]: https://github.com/TheAgencyMGE/couchtop/releases/tag/v0.2.0-beta.1

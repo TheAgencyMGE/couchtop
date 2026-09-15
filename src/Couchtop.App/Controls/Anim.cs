@@ -108,6 +108,10 @@ public static class IdleAnim
                     CacheForScenery(element);
                     translate.BeginAnimation(TranslateTransform.XProperty, Loop(0, GetDistance(element), GetDuration(element), true, Anim.EaseInOut, begin, SceneryFps));
                     break;
+                case "Turn":
+                    CacheForScenery(element);
+                    rotate.BeginAnimation(RotateTransform.AngleProperty, Loop(0, 360, GetDuration(element), false, null, begin, SceneryFps));
+                    break;
                 case "Scan":
                     CacheForScenery(element);
                     translate.BeginAnimation(TranslateTransform.YProperty, Loop(0, GetDistance(element), GetDuration(element), false, null, begin, SceneryFps));
