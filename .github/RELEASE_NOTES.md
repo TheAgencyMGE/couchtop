@@ -2,8 +2,12 @@
 
 ### New in this version
 
-- **Your own music and sounds.** In **Settings › Sound** you can replace the menu music with any song, and swap out individual menu sounds (startup, select, back, page turn and more). MP3, WAV, M4A, AAC, WMA and FLAC all work, and one button puts Couchtop's own sounds back.
-- **Couchtop Sports is coming soon.** A Sports channel appears on your menu as a sneak peek at tennis, baseball, bowling, golf and boxing. It's still being made and isn't playable yet.
+- **Couchtop can be your whole desktop.** Turn on Shell Mode yourself (Settings › Shell Mode, after the Safety Test) and Couchtop replaces the Windows desktop, taskbar and Start menu while Windows keeps running underneath. It is never switched on for you.
+- **Couchtop Bar:** open apps grouped per program, search, the notification area for background apps, volume, battery, Wi-Fi, clock and power. It keeps maximized windows clear and hides for full-screen games. Try it in launcher mode with Settings › Desktop › Couchtop Bar › Always.
+- **Shortcuts:** `Ctrl + Alt + Space` searches apps, files, settings and open windows; `Ctrl + Alt + Tab` switches apps; `Ctrl + Alt + D` clears the screen.
+- **Status center** with volume, battery, Wi-Fi, notifications and quick links to the Windows settings panels.
+- **Files is a real file manager now:** tabs, split view, search, copy/move, rename, Recycle Bin, zip and unzip, properties, drives, USB and network folders.
+- **Accessibility:** a High Contrast theme and bigger text.
 
 ### Which download?
 

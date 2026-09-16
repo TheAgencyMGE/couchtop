@@ -16,6 +16,7 @@ public static class ThemeCatalog
         new("Midnight", "Midnight", "Sleek, flat and dark"),
         new("Sakura", "Sakura", "Soft pink petals and warm paper"),
         new("Sunset", "Sunset", "Golden hour over the water"),
+        new("HighContrast", "High Contrast", "Black, white and yellow for maximum readability"),
     };
 
     public static bool IsKnown(string? id) => id is not null && All.Any(t => t.Id == id);

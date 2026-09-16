@@ -159,6 +159,31 @@ public static class NativeMethods
     public const uint MOUSEEVENTF_WHEEL = 0x0800;
     public const uint KEYEVENTF_KEYUP = 0x0002;
 
+    // Application desktop toolbar (the Couchtop Bar reserves screen space like a taskbar does)
+    public const uint ABM_NEW = 0x00000000;
+    public const uint ABM_REMOVE = 0x00000001;
+    public const uint ABM_QUERYPOS = 0x00000002;
+    public const uint ABM_SETPOS = 0x00000003;
+    public const uint ABM_GETSTATE = 0x00000004;
+    public const uint ABM_SETSTATE = 0x0000000A;
+    public const int ABE_LEFT = 0;
+    public const int ABE_TOP = 1;
+    public const int ABE_RIGHT = 2;
+    public const int ABE_BOTTOM = 3;
+    public const int ABS_AUTOHIDE = 0x0000001;
+    public const int ABS_ALWAYSONTOP = 0x0000002;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct APPBARDATA
+    {
+        public int cbSize;
+        public IntPtr hWnd;
+        public uint uCallbackMessage;
+        public int uEdge;
+        public RECT rc;
+        public IntPtr lParam;
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct BITMAP
     {
@@ -239,6 +264,25 @@ public static class NativeMethods
     [DllImport("user32.dll")] public static extern void PostQuitMessage(int exitCode);
     [DllImport("user32.dll")] public static extern bool DestroyWindow(IntPtr hWnd);
     [DllImport("user32.dll")] public static extern bool ShutdownBlockReasonCreate(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string reason);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SYSTEM_POWER_STATUS
+    {
+        public byte ACLineStatus;
+        public byte BatteryFlag;
+        public byte BatteryLifePercent;
+        public byte SystemStatusFlag;
+        public int BatteryLifeTime;
+        public int BatteryFullLifeTime;
+    }
+
+    [DllImport("kernel32.dll")] public static extern bool GetSystemPowerStatus(out SYSTEM_POWER_STATUS status);
+    [DllImport("user32.dll")] public static extern short GetAsyncKeyState(int vKey);
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")] public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr newLong);
+    [DllImport("user32.dll")] public static extern IntPtr GetDesktopWindow();
+
+    // shell32
+    [DllImport("shell32.dll")] public static extern IntPtr SHAppBarMessage(uint message, ref APPBARDATA data);
 
     // kernel32
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode)] public static extern IntPtr GetModuleHandle(string? name);

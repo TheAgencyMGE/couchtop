@@ -18,7 +18,7 @@ namespace Couchtop.App.Views;
 
 public sealed class SettingsView : UserControl, IScreenView
 {
-    private static readonly string[] Categories = { "Display", "Sound", "Controls", "Channels", "Shell Mode", "Data", "About" };
+    private static readonly string[] Categories = { "Display", "Desktop", "Sound", "Controls", "Channels", "Shell Mode", "Data", "About" };
 
     private readonly AppHost _host;
     private readonly MainWindow _window;
@@ -78,6 +78,7 @@ public sealed class SettingsView : UserControl, IScreenView
         switch (category)
         {
             case "Display": BuildDisplay(); break;
+            case "Desktop": BuildDesktop(); break;
             case "Sound": BuildSound(); break;
             case "Controls": BuildControls(); break;
             case "Channels": BuildChannels(); break;
@@ -228,6 +229,21 @@ public sealed class SettingsView : UserControl, IScreenView
         Toggle("Backdrop on other screens", "Covers other monitors with a calm Couchtop background", () => S.BackdropOnOtherMonitors, v => S.BackdropOnOtherMonitors = v, _window.RebuildBackdrops);
         Choice("Pointer", "The hand pointer tilts as you move it", new[] { ("Hand", "hand"), ("Windows cursor", "system") }, () => S.UseSystemCursor ? "system" : "hand", v => S.UseSystemCursor = v == "system", _window.ApplyCursorMode);
         Toggle("Reduce motion", "Turns off tile animations, scenery, wobble and zoom transitions", () => S.ReduceMotion, v => S.ReduceMotion = v, () => _window.ApplyTheme(S.Theme));
+        Choice("Text size", "Makes Couchtop's own text bigger. Pick the High Contrast theme above for maximum readability.",
+            new[] { ("Normal", "1"), ("Large", "1.2"), ("Larger", "1.4") },
+            () => S.TextScale switch { >= 1.35 => "1.4", >= 1.15 => "1.2", _ => "1" },
+            v => S.TextScale = double.Parse(v, System.Globalization.CultureInfo.InvariantCulture),
+            () =>
+            {
+                ViewKit.TextScale = S.TextScale;
+                _window.Menu.RebuildPages();
+                Refresh();
+            });
+        Buttons("Windows accessibility", "Narrator, Magnifier, contrast themes and pointer size live in Windows",
+            ("Open Windows Settings", () =>
+            {
+                if (!WindowsSettings.Open(WindowsSettings.Accessibility)) _window.ShowToast("Windows Settings could not be opened");
+            }));
         Choice("Clock", null, new[] { ("12-hour", "12"), ("24-hour", "24") }, () => S.Clock24Hour ? "24" : "12", v => S.Clock24Hour = v == "24", _window.Menu.RefreshClock);
         Toggle("Startup screen", "Shows the Couchtop title for a moment when starting", () => S.ShowStartupSplash, v => S.ShowStartupSplash = v);
         Toggle("Quick launch", "Start apps right away instead of showing the channel start screen", () => S.QuickLaunch, v => S.QuickLaunch = v);
@@ -238,6 +254,65 @@ public sealed class SettingsView : UserControl, IScreenView
     {
         var digits = new string(device.Where(char.IsDigit).ToArray());
         return digits.Length > 0 ? "Display " + digits : device;
+    }
+
+    private void BuildDesktop()
+    {
+        Header("Desktop");
+        Info(_host.IsShellSession
+            ? "Couchtop is the desktop for this session: it replaces Explorer's desktop, taskbar and Start menu while Windows keeps running underneath."
+            : "Couchtop is in launcher mode, so Explorer's desktop and taskbar are still there. Turn on Shell Mode to make Couchtop the desktop at your next sign-in.");
+
+        Choice("Couchtop Bar", "The bar along the bottom with your open apps, search, the clock and status",
+            new[] { ("In shell mode", "shell"), ("Always", "always"), ("Never", "never") },
+            () => S.CouchtopBar, v => S.CouchtopBar = v, () =>
+            {
+                _window.ApplyDesktopBar();
+                Refresh();
+            });
+        Toggle("Keep the bar clear", "Reserves that strip of the screen so maximized windows stop above it", () => S.BarReservesSpace, v => S.BarReservesSpace = v, _window.RefreshDesktopBar);
+        Choice("Switch app shortcut", "Shows every open window, like Alt + Tab",
+            new[] { ("Ctrl + Alt + Tab", "Ctrl+Alt+Tab"), ("Ctrl + Shift + Tab", "Ctrl+Shift+Tab"), ("Ctrl + Alt + W", "Ctrl+Alt+W") },
+            () => S.TaskSwitcherHotkey, v => S.TaskSwitcherHotkey = v, () =>
+            {
+                _window.RegisterDesktopHotkeys();
+                Refresh();
+            });
+        Choice("Search shortcut", "Finds apps, files, settings and open windows",
+            new[] { ("Ctrl + Alt + Space", "Ctrl+Alt+Space"), ("Ctrl + Alt + F", "Ctrl+Alt+F"), ("Ctrl + Shift + Space", "Ctrl+Shift+Space") },
+            () => S.CommandPaletteHotkey, v => S.CommandPaletteHotkey = v, () =>
+            {
+                _window.RegisterDesktopHotkeys();
+                Refresh();
+            });
+        Toggle("Continue where I left off", "Reopens the Couchtop channel you had open (Files comes back in the same folder)", () => S.RestoreLastScreen, v => S.RestoreLastScreen = v);
+        Buttons("Try them", null,
+            ("Open Search", _window.OpenCommandPalette),
+            ("Switch App", _window.OpenTaskSwitcher),
+            ("Minimize All", () => _host.Desktop.MinimizeAll()));
+        Header("Windows settings");
+        Info("Couchtop handles the desktop; Windows still owns the hardware. These open the Windows panels, and they work in shell mode too.");
+        Buttons("Network", "Wi-Fi, Bluetooth and other connections",
+            ("Wi-Fi", () => OpenWindows(WindowsSettings.Wifi)),
+            ("Bluetooth", () => OpenWindows(WindowsSettings.Bluetooth)),
+            ("All network", () => OpenWindows(WindowsSettings.Network)));
+        Buttons("Hardware", "Screens, sound devices and battery",
+            ("Display", () => OpenWindows(WindowsSettings.Display)),
+            ("Sound", () => OpenWindows(WindowsSettings.Sound)),
+            ("Power & sleep", () => OpenWindows(WindowsSettings.Power)));
+        Buttons("System", "Installed programs, updates and everything else",
+            ("Apps", () => OpenWindows(WindowsSettings.Apps)),
+            ("Windows Update", () => OpenWindows(WindowsSettings.Update)),
+            ("All Windows settings", () => OpenWindows(WindowsSettings.Home)));
+
+        Info($"Show the Couchtop menu and clear the screen: {MainWindow.ShowDesktopHotkey}.\n" +
+             "On the bar: click an app to show or minimize it, middle-click to close it, right-click for snapping, moving to another screen and closing.\n" +
+             "The Quick Menu (and a controller's Guide or HOME button) works on top of full-screen apps.");
+    }
+
+    private void OpenWindows(string page)
+    {
+        if (!WindowsSettings.Open(page)) _window.ShowToast("Windows Settings could not be opened");
     }
 
     private void BuildSound()

@@ -129,6 +129,35 @@
         <Setter Property="MinHeight" Value="86" />
         <Setter Property="FontSize" Value="32" />
     </Style>
+    <!-- Flat, compact buttons for the Couchtop Bar (the console pills are far too big for a taskbar). -->
+    <Style x:Key="BarButton" TargetType="ButtonBase">
+        <Setter Property="FontFamily" Value="{DynamicResource AppFont}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonTextBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Border x:Name="Shell" CornerRadius="{DynamicResource ItemCornerRadius}" Background="{TemplateBinding Background}" BorderThickness="0,0,0,4" BorderBrush="Transparent" Margin="0,2,0,0">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Shell" Property="Background" Value="{DynamicResource AccentSoftBrush}" />
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter TargetName="Shell" Property="Background" Value="{DynamicResource AccentSoftBrush}" />
+                            <Setter TargetName="Shell" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Shell" Property="Background" Value="{DynamicResource TrackBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="SmallPill" TargetType="ButtonBase" BasedOn="{StaticResource PillButton}">
         <Setter Property="MinHeight" Value="64" />
         <Setter Property="MinWidth" Value="120" />

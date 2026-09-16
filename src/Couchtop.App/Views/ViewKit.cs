@@ -8,12 +8,15 @@ namespace Couchtop.App.Views;
 /// <summary>Small helpers for building consistent console-style screens in code.</summary>
 public static class ViewKit
 {
+    /// <summary>Multiplies every text size Couchtop draws (Settings › Display › Text size).</summary>
+    public static double TextScale { get; set; } = 1.0;
+
     public static TextBlock Text(string text, double size = 30, FontWeight? weight = null, string brush = "TextBrush", bool wrap = true, TextAlignment align = TextAlignment.Left)
     {
         var tb = new TextBlock
         {
             Text = text,
-            FontSize = size,
+            FontSize = size * TextScale,
             FontWeight = weight ?? FontWeights.Normal,
             TextWrapping = wrap ? TextWrapping.Wrap : TextWrapping.NoWrap,
             TextTrimming = wrap ? TextTrimming.None : TextTrimming.CharacterEllipsis,
@@ -128,6 +131,16 @@ public static class ViewKit
     };
 
     public static ItemsPanelTemplate WrapPanelTemplate() => new(new FrameworkElementFactory(typeof(WrapPanel)));
+
+    /// <summary>Turns raw BGRA pixels from the Windows shell into an image WPF can draw.</summary>
+    public static System.Windows.Media.Imaging.BitmapSource? ToBitmap(Couchtop.Core.Native.RawImage? raw)
+    {
+        if (raw is null) return null;
+        var bitmap = System.Windows.Media.Imaging.BitmapSource.Create(raw.Width, raw.Height, 96, 96,
+            System.Windows.Media.PixelFormats.Bgra32, null, raw.Pixels, raw.Width * 4);
+        bitmap.Freeze();
+        return bitmap;
+    }
 
     public static Image IconImage(double size)
     {

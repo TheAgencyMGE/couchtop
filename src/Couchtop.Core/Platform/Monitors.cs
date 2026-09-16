@@ -2,10 +2,19 @@ using Couchtop.Core.Native;
 
 namespace Couchtop.Core.Platform;
 
-/// <summary>A display in physical pixels.</summary>
-public sealed record MonitorDescriptor(string DeviceName, int X, int Y, int Width, int Height, bool IsPrimary, double Scale)
+/// <summary>
+/// A display in physical pixels. The work area is the part left for app windows (the whole screen in shell mode,
+/// or the screen minus Explorer's taskbar when Explorer is running).
+/// </summary>
+public sealed record MonitorDescriptor(string DeviceName, int X, int Y, int Width, int Height, bool IsPrimary, double Scale,
+    int WorkX = 0, int WorkY = 0, int WorkWidth = 0, int WorkHeight = 0)
 {
     public bool Contains(int x, int y) => x >= X && y >= Y && x < X + Width && y < Y + Height;
+
+    public int WorkLeft => WorkWidth > 0 ? WorkX : X;
+    public int WorkTop => WorkHeight > 0 ? WorkY : Y;
+    public int UsableWidth => WorkWidth > 0 ? WorkWidth : Width;
+    public int UsableHeight => WorkHeight > 0 ? WorkHeight : Height;
 }
 
 public static class Monitors
@@ -36,7 +45,9 @@ public static class Monitors
         var scale = 1.0;
         if (NativeMethods.GetDpiForMonitor(handle, 0, out var dpiX, out _) == 0 && dpiX > 0) scale = dpiX / 96.0;
         var r = info.rcMonitor;
-        return new MonitorDescriptor(info.szDevice, r.Left, r.Top, r.Width, r.Height, (info.dwFlags & 1) != 0, scale);
+        var work = info.rcWork;
+        return new MonitorDescriptor(info.szDevice, r.Left, r.Top, r.Width, r.Height, (info.dwFlags & 1) != 0, scale,
+            work.Left, work.Top, work.Width, work.Height);
     }
 
     /// <summary>

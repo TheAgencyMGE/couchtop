@@ -38,6 +38,23 @@ public sealed class UserSettings
     /// <summary>User's own sounds by slot id (see <see cref="CustomSoundSlots"/>).</summary>
     public Dictionary<string, CustomAudioFile> CustomSounds { get; set; } = new();
 
+    // Desktop shell
+    /// <summary>When the Couchtop Bar (taskbar) is shown: "shell" (only as the Windows shell), "always" or "never".</summary>
+    public string CouchtopBar { get; set; } = "shell";
+
+    public bool BarReservesSpace { get; set; } = true;
+    public string TaskSwitcherHotkey { get; set; } = "Ctrl+Alt+Tab";
+    public string CommandPaletteHotkey { get; set; } = "Ctrl+Alt+Space";
+
+    /// <summary>Text size for Couchtop's own screens: 1.0 normal, up to 1.4 for large text.</summary>
+    public double TextScale { get; set; } = 1.0;
+
+    /// <summary>Reopen the channel that was on screen when Couchtop last closed.</summary>
+    public bool RestoreLastScreen { get; set; }
+
+    public string? LastScreen { get; set; }
+    public string? LastFolder { get; set; }
+
     // Displays
     public string? TargetMonitor { get; set; }
     public bool BackdropOnOtherMonitors { get; set; } = true;
@@ -81,6 +98,12 @@ public sealed class UserSettings
         Theme = ThemeCatalog.Normalize(Theme);
         if (!Enum.IsDefined(ShellBootstrap)) ShellBootstrap = ShellBootstrapMode.Resilient;
         HomeMenuHotkey = string.IsNullOrWhiteSpace(HomeMenuHotkey) ? "Ctrl+Alt+Home" : HomeMenuHotkey.Trim();
+        CouchtopBar = CouchtopBar?.Trim().ToLowerInvariant() is "always" or "never" or "shell" ? CouchtopBar!.Trim().ToLowerInvariant() : "shell";
+        TextScale = double.IsFinite(TextScale) ? Math.Clamp(TextScale, 1.0, 1.4) : 1.0;
+        if (string.IsNullOrWhiteSpace(LastScreen)) LastScreen = null;
+        if (string.IsNullOrWhiteSpace(LastFolder)) LastFolder = null;
+        TaskSwitcherHotkey = Hotkey(TaskSwitcherHotkey, "Ctrl+Alt+Tab");
+        CommandPaletteHotkey = Hotkey(CommandPaletteHotkey, "Ctrl+Alt+Space");
         SearchUrl = string.IsNullOrWhiteSpace(SearchUrl) || !SearchUrl.Contains("{0}") ? "https://duckduckgo.com/?q={0}" : SearchUrl;
         BrowserHome ??= "";
         PhotosFolder ??= "";
@@ -101,6 +124,10 @@ public sealed class UserSettings
     };
 
     private static double Clamp01(double v) => double.IsFinite(v) ? Math.Clamp(v, 0, 1) : 0.5;
+
+    /// <summary>Keeps a hotkey only when it still parses, so a hand-edited file can't leave a shortcut dead.</summary>
+    private static string Hotkey(string? value, string fallback) =>
+        !string.IsNullOrWhiteSpace(value) && Platform.HotkeyParser.TryParse(value, out _) ? value!.Trim() : fallback;
 }
 
 public sealed record Bookmark(string Title, string Url);

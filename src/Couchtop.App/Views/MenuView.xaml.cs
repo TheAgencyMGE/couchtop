@@ -371,9 +371,11 @@ public partial class MenuView : UserControl, IScreenView
 
     public void OpenBuiltIn(string id, Point? origin)
     {
+        // Remembered for "continue where I left off"; written to disk when Couchtop closes.
+        _host.Settings.Current.LastScreen = id;
         switch (id)
         {
-            case BuiltInChannels.Files: _window.Navigate(new FilesView(_host, _window), origin); break;
+            case BuiltInChannels.Files: _window.Navigate(new FilesView(_host, _window, _host.Settings.Current.RestoreLastScreen ? _host.Settings.Current.LastFolder : null), origin); break;
             case BuiltInChannels.Photos: _window.Navigate(new PhotosView(_host, _window), origin); break;
             case BuiltInChannels.Browser: _window.Navigate(new BrowserView(_host, _window), origin); break;
             case BuiltInChannels.Sports: _window.Navigate(Sports.SportsAccess.CreateEntryView(_host, _window), origin); break;

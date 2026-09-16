@@ -25,6 +25,10 @@ public partial class MainWindow : Window
 {
     private const int EmergencyHotkeyId = 1;
     private const int HomeHotkeyId = 2;
+    private const int SwitcherHotkeyId = 3;
+    private const int PaletteHotkeyId = 4;
+    private const int ShowDesktopHotkeyId = 5;
+    public const string ShowDesktopHotkey = "Ctrl+Alt+D";
     private static bool _classHandlersRegistered;
 
     private readonly AppHost _host;
@@ -35,6 +39,11 @@ public partial class MainWindow : Window
     private IntPtr _hwnd;
     private HwndSource? _source;
     private HomeMenuWindow? _home;
+    private CouchtopBar? _bar;
+    private CommandPaletteWindow? _palette;
+    private TaskSwitcherWindow? _switcher;
+    private CalendarWindow? _calendar;
+    private StatusCenterWindow? _status;
     private TaskCompletionSource<object?>? _dialog;
     private CancellationTokenSource? _activationCts;
     private bool _splashActive;
@@ -161,6 +170,116 @@ public partial class MainWindow : Window
         _host.Input.Start();
         ListenForActivation();
         RebuildBackdrops();
+        _host.StartTrayHost();
+        ApplyDesktopBar();
+    }
+
+    // ---------------------------------------------------------------- desktop shell
+
+    /// <summary>
+    /// Shows or hides the Couchtop Bar. It is on by default only when Couchtop is the Windows shell; with Explorer
+    /// running its taskbar is already there, so the bar stays out of the way unless the user asks for it.
+    /// </summary>
+    public void ApplyDesktopBar()
+    {
+        if (_host.Options.IsSnapshot) return;
+        var mode = _host.Settings.Current.CouchtopBar;
+        var wanted = mode == "always" || (mode == "shell" && _host.IsShellSession);
+        if (wanted == (_bar is not null))
+        {
+            _bar?.Reposition();
+            return;
+        }
+        if (wanted)
+        {
+            _bar = new CouchtopBar(_host, this);
+            _bar.Show();
+            _bar.Start();
+            Log.Info("Couchtop Bar shown");
+        }
+        else
+        {
+            _bar?.Close();
+            _bar = null;
+        }
+    }
+
+    /// <summary>Opens the command palette (search everything) over whatever is on screen.</summary>
+    public void OpenCommandPalette()
+    {
+        if (_host.Options.IsSnapshot) return;
+        if (_palette is { IsVisible: true })
+        {
+            _palette.Activate();
+            return;
+        }
+        _palette = new CommandPaletteWindow(_host, this);
+        _palette.Closed += (_, _) => _palette = null;
+        _palette.ShowPalette();
+    }
+
+    /// <summary>Opens the task switcher, or steps it along when it is already up.</summary>
+    public void OpenTaskSwitcher()
+    {
+        if (_host.Options.IsSnapshot) return;
+        if (_switcher is { IsVisible: true })
+        {
+            _switcher.Step(1);
+            return;
+        }
+        var switcher = new TaskSwitcherWindow(_host, this);
+        switcher.Closed += (_, _) => _switcher = null;
+        if (!switcher.ShowSwitcher())
+        {
+            ShowToast("No other windows are open");
+            return;
+        }
+        _switcher = switcher;
+    }
+
+    /// <summary>Opens the status center (volume, battery, Wi-Fi, notifications) above the bar.</summary>
+    public void OpenStatusCenter()
+    {
+        if (_status is { IsVisible: true })
+        {
+            _status.Close();
+            return;
+        }
+        _status = new StatusCenterWindow(_host, this);
+        _status.Closed += (_, _) => _status = null;
+        _status.ShowPanel();
+    }
+
+    public void OpenCalendar()
+    {
+        if (_calendar is { IsVisible: true })
+        {
+            _calendar.Close();
+            return;
+        }
+        _calendar = new CalendarWindow(_host, this);
+        _calendar.Closed += (_, _) => _calendar = null;
+        _calendar.ShowPopup();
+    }
+
+    /// <summary>Rebuilds the bar so a changed setting (like reserving screen space) takes effect right away.</summary>
+    public void RefreshDesktopBar()
+    {
+        _bar?.Close();
+        _bar = null;
+        ApplyDesktopBar();
+    }
+
+    public void OpenBuiltIn(string builtInId)
+    {
+        BringToFront();
+        Menu.OpenBuiltIn(builtInId, null);
+    }
+
+    public void OpenBuiltInView(FrameworkElement view)
+    {
+        BringToFront();
+        Navigate(view);
     }
 
     private void OnContentRendered(object? sender, EventArgs e)
@@ -172,6 +291,7 @@ public partial class MainWindow : Window
             return;
         }
 
+        ViewKit.TextScale = _host.Settings.Current.TextScale;
         _host.SignalReady();
         _host.RefreshChannelsInBackground();
         if (_host.Options.SmokeTestSeconds > 0) ScheduleSmokeTestExit();
@@ -255,6 +375,7 @@ public partial class MainWindow : Window
     {
         UpdateActivity();
         Menu.Focus();
+        RestoreLastScreen();
         if (_host.Settings.Current.WelcomeShown) return;
         _host.Settings.Current.WelcomeShown = true;
         _host.SaveSettings();
@@ -262,6 +383,20 @@ public partial class MainWindow : Window
             "Welcome to Couchtop!\n\nPoint at a channel and click to start it. Press " + _host.Settings.Current.HomeMenuHotkey +
             " at any time (or Guide / Home on a controller) for the Quick Menu.\n\nIf anything ever goes wrong, Ctrl + Alt + Shift + F12 takes you straight back to the normal Windows desktop.",
             "OK");
+    }
+
+    /// <summary>
+    /// "Continue where I left off": reopens the built-in channel that was on screen last time. Only built-in
+    /// screens come back, never an app, so a crashing app can't be relaunched into a loop.
+    /// </summary>
+    private void RestoreLastScreen()
+    {
+        var settings = _host.Settings.Current;
+        if (!settings.RestoreLastScreen || _host.Options.IsSnapshot) return;
+        var id = settings.LastScreen;
+        if (id is null || !BuiltInChannels.All.Contains(id) || id == BuiltInChannels.Customize || id == BuiltInChannels.Power) return;
+        Log.Info("Restoring last screen: " + id);
+        Menu.OpenBuiltIn(id, null);
     }
 
     private void UpdateActivity()
@@ -402,6 +537,24 @@ public partial class MainWindow : Window
         if (!EmergencyHotkeyRegistered)
             Log.Warn("Emergency hotkey not registered here (in shell mode the Guardian owns it).");
         RegisterHomeHotkey();
+        RegisterDesktopHotkeys();
+    }
+
+    /// <summary>Desktop-wide shortcuts for the task switcher and the command palette.</summary>
+    public void RegisterDesktopHotkeys()
+    {
+        if (_hwnd == IntPtr.Zero) return;
+        foreach (var (id, text) in new[]
+                 {
+                     (SwitcherHotkeyId, _host.Settings.Current.TaskSwitcherHotkey),
+                     (PaletteHotkeyId, _host.Settings.Current.CommandPaletteHotkey),
+                     (ShowDesktopHotkeyId, ShowDesktopHotkey),
+                 })
+        {
+            NativeMethods.UnregisterHotKey(_hwnd, id);
+            if (HotkeyParser.TryParse(text, out var hotkey) && NativeMethods.RegisterHotKey(_hwnd, id, hotkey.Modifiers, hotkey.VirtualKey)) continue;
+            Log.Warn($"Shortcut '{text}' could not be registered (another app may own it).");
+        }
     }
 
     public void RegisterHomeHotkey()
@@ -426,6 +579,19 @@ public partial class MainWindow : Window
                 case HomeHotkeyId:
                     handled = true;
                     ToggleHomeMenu();
+                    break;
+                case SwitcherHotkeyId:
+                    handled = true;
+                    OpenTaskSwitcher();
+                    break;
+                case PaletteHotkeyId:
+                    handled = true;
+                    OpenCommandPalette();
+                    break;
+                case ShowDesktopHotkeyId:
+                    handled = true;
+                    _host.Desktop.MinimizeAll();
+                    BringToFront();
                     break;
             }
         }
@@ -481,6 +647,7 @@ public partial class MainWindow : Window
 
     public void RebuildBackdrops()
     {
+        _bar?.Reposition();
         foreach (var b in _backdrops) b.Close();
         _backdrops.Clear();
         if (_host.Options.IsSnapshot || !_host.Settings.Current.BackdropOnOtherMonitors) return;
@@ -942,6 +1109,9 @@ public partial class MainWindow : Window
             settings.SnapshotScrollToEnd();
             await Task.Delay(900);
             Save(dir, "04c-sound-custom");
+            settings.SelectCategory("Desktop");
+            await Task.Delay(900);
+            Save(dir, "04d-desktop");
             settings.SelectCategory("Shell Mode");
             await Task.Delay(1000);
             Save(dir, "05-shell-mode");
@@ -968,6 +1138,7 @@ public partial class MainWindow : Window
             GoHome();
 
             await SaveSportsSnapshotsAsync(dir);
+            await SaveDesktopSnapshotsAsync(dir);
 
             _ = ShowDialogAsync("Remove \"Example\" from your channels?\nThe app itself stays installed.", "Remove", "Cancel");
             await Task.Delay(900);
@@ -1047,6 +1218,45 @@ public partial class MainWindow : Window
             Log.Error("Snapshot rendering failed", ex);
         }
         _host.Exit(0);
+    }
+
+    /// <summary>
+    /// Renders the desktop-shell windows (bar, search, switcher) without showing them, so the renders never
+    /// disturb the real desktop and never capture the real window titles of whoever runs them.
+    /// </summary>
+    private async Task SaveDesktopSnapshotsAsync(string dir)
+    {
+        var bar = new CouchtopBar(_host, this);
+        bar.SnapshotPrepare();
+        SaveVisual((FrameworkElement)bar.Content, 1920, CouchtopBar.BarHeight * 2, dir, "09e-couchtop-bar");
+
+        var palette = new CommandPaletteWindow(_host, this);
+        await palette.SnapshotPrepareAsync("se");
+        SaveVisual((FrameworkElement)palette.Content, 980, 660, dir, "09f-search");
+
+        var switcher = new TaskSwitcherWindow(_host, this);
+        switcher.SnapshotPrepare();
+        SaveVisual((FrameworkElement)switcher.Content, 1600, 900, dir, "09g-task-switcher");
+
+        var status = new StatusCenterWindow(_host, this);
+        status.SnapshotPrepare();
+        SaveVisual((FrameworkElement)status.Content, 520, 700, dir, "09h-status-center");
+        await Task.Delay(200);
+    }
+
+    private static void SaveVisual(FrameworkElement content, double width, double height, string dir, string name)
+    {
+        content.Measure(new Size(width, height));
+        content.Arrange(new Rect(0, 0, width, height));
+        content.UpdateLayout();
+        Log.Info($"snapshot {name}: content {content.ActualWidth:0}x{content.ActualHeight:0}");
+        var bitmap = new RenderTargetBitmap((int)width, (int)height, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(content);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var fs = File.Create(Path.Combine(dir, name + ".png"));
+        encoder.Save(fs);
+        Log.Info("Snapshot saved: " + name);
     }
 
     private async Task SaveSportsSnapshotsAsync(string dir)

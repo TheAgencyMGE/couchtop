@@ -12,6 +12,7 @@ using Couchtop.Core.Native;
 using Couchtop.Core.Safety;
 using Couchtop.Core.Settings;
 using Couchtop.Core.Shell;
+using CoreShell = Couchtop.Core.Shell;
 using Couchtop.Core.Storage;
 
 namespace Couchtop.App;
@@ -40,6 +41,7 @@ public sealed class AppHost
         Shell = new ShellModeManager(Registry, Install, () => Compatibility.Run(), EvaluateSafetyGate);
         Discovery = DiscoveryService.CreateDefault(Paths, Settings.Current);
         Launcher = new AppLauncher(new SystemProcessStarter(), new DiscoveryChannelResolver(Discovery));
+        Desktop = new DesktopService(options.IsSnapshot ? new DemoWindowSource() : null);
         AudioLibrary = new CustomAudioLibrary(System.IO.Path.Combine(Paths.DataRoot, "custom-audio"));
         Audio = new AudioService(Settings.Current, AudioLibrary);
         Icons = new IconService(Paths.IconCacheDirectory);
@@ -63,6 +65,23 @@ public sealed class AppHost
     public AppLauncher Launcher { get; }
     public AudioService Audio { get; }
     public CustomAudioLibrary AudioLibrary { get; }
+
+    /// <summary>Running app windows, for the Couchtop Bar and the task switcher.</summary>
+    public DesktopService Desktop { get; private set; } = null!;
+
+    /// <summary>The notification area, only while Couchtop is the Windows shell (Explorer owns it otherwise).</summary>
+    public TrayHost? Tray { get; private set; }
+
+    /// <summary>
+    /// Takes over the notification area so background apps (sync clients, driver utilities, chat apps) still work
+    /// without Explorer. Never started in launcher mode, where it would steal icons from the real taskbar.
+    /// </summary>
+    public void StartTrayHost()
+    {
+        if (Tray is not null || Options.IsSnapshot || !IsShellSession || NativeMethods.IsExplorerShellRunning()) return;
+        var tray = new TrayHost();
+        if (tray.Start()) Tray = tray;
+    }
     public IconService Icons { get; }
     public SessionSentinel Session { get; }
     public InputService? Input { get; set; }
@@ -259,8 +278,11 @@ public sealed class AppHost
         {
             _heartbeatTimer?.Stop();
             SaveLayout(raiseChanged: false);
+            SaveSettings();
             if (!Options.IsSnapshot) Session.End(clean: code is ExitCodes.Success or ExitCodes.SwitchToExplorer or ExitCodes.Restart or ExitCodes.SignOut or ExitCodes.Emergency);
             Input?.Dispose();
+            Tray?.Dispose();
+            Desktop.Dispose();
             Audio.Dispose();
             Icons.Dispose();
         }

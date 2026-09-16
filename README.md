@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.4.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.5.0-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -81,7 +81,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 - Curved bottom bar with a big clock (blinking colon), the date, a menu button and a **Message Board**.
 - A channel start screen with **Menu** and **Start** buttons, zoom transitions and a launch flash.
 - Original synthesized sound effects, startup jingle and a music-box menu loop. The music plays only while the menu is in front.
-- Seven themes that restyle everything, including the pointer and scenery: Classic, Night, Sky Resort, Neon City, Midnight, Sakura and Sunset. Plus a reduced-motion option and a 12/24-hour clock.
+- Eight themes that restyle everything, including the pointer and scenery: Classic, Night, Sky Resort, Neon City, Midnight, Sakura, Sunset and High Contrast. Plus reduced motion, larger text and a 12/24-hour clock.
 
 **Channels**
 - Automatically discovers Start menu programs, Microsoft Store apps, **Steam games** (all libraries, with header art), **Epic Games** titles and Windows tools.
@@ -90,6 +90,21 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 - If an app moved after an update, Couchtop re-discovers it automatically. If it's gone, you're offered **Locate…** or **Remove Channel**.
 - **Customize** mode: drag channels between slots and pages, add (installed app, program, website, folder), rename, recolor, set a custom picture, run as administrator, or remove.
 - Built-in channels: **Files**, **Photos** (with slideshow), **Web** (WebView2 browser), **Sports**, **Settings**, **Power** and **Customize**.
+
+**A desktop, not just a launcher**
+- Turn on **Shell Mode** (Settings › Shell Mode, after the Safety Test) and Couchtop becomes the desktop: it replaces Explorer's desktop, taskbar and Start menu while Windows keeps running underneath. It is never turned on for you.
+- **Couchtop Bar:** your open apps grouped per program, the Couchtop button, search, the notification area, volume/battery/Wi-Fi, clock and power. It keeps maximized windows clear of itself and hides for full-screen games.
+- **Task switcher** (`Ctrl + Alt + Tab`), **search everything** (`Ctrl + Alt + Space`) across channels, apps, windows, settings and files, and **clear the screen** (`Ctrl + Alt + D`).
+- **Status center** for volume, battery, Wi-Fi and notifications, with one click through to the Windows panels for Wi-Fi, Bluetooth, display, sound, power and accessibility.
+- **Window management** from the bar: show, minimize, maximize, snap left/right, move to the next screen, close.
+- **Background apps keep working**: sync clients, chat apps and driver utilities get a real notification area even with Explorer gone.
+- You can also show the bar in launcher mode (Settings › Desktop › Couchtop Bar › Always).
+
+**Files**
+- Tabs and a split view, so you can drag a folder open on each side and copy between them.
+- Search inside a folder and everything under it, sort, details or grid view, and hidden files.
+- Copy, cut, paste, rename, new folder, delete to the Recycle Bin, zip and unzip, and a properties panel with size, dates, owner, attributes and shortcut targets.
+- Drives with free space, USB sticks and discs, network folders, and the Recycle Bin.
 
 **Your own music and sounds**
 - Replace the menu music with any song you like: **Settings › Sound › Menu music › Choose File…**. It loops while the menu is in front.

@@ -2,6 +2,23 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.5.0-beta.1] - 2026-09-16
+
+### Added
+
+- **Couchtop as a full desktop shell.** Shell Mode still has to be turned on by hand (Settings › Shell Mode, after the Safety Test), but once it is, Couchtop replaces the Windows desktop, taskbar and Start menu while Windows keeps running underneath:
+  - **Couchtop Bar:** a taskbar along the bottom with your open apps (grouped per program), the Couchtop button, search, the notification area, volume/battery/Wi-Fi status, the clock and power. It reserves its strip so maximized windows stop above it, and hides itself for full-screen games and videos.
+  - **Task switcher:** Ctrl + Alt + Tab shows every open window as console-style cards; Tab steps, Enter switches.
+  - **Search everything:** Ctrl + Alt + Space finds channels, installed apps, open windows, settings, actions and your files, and opens the best match with Enter.
+  - **Status center:** volume, battery, Wi-Fi, notifications and one-click access to the Windows panels for Wi-Fi, Bluetooth, display, sound, power and accessibility.
+  - **Window management:** show, minimize, maximize, close, snap left/right, move to the next screen, and Ctrl + Alt + D to clear the screen.
+  - **Notification area:** background apps (sync clients, chat apps, driver utilities) keep working without Explorer; their icons sit on the bar and clicks go back to them.
+  - **Clock and calendar** popup from the bar.
+- **Files is now a real file manager:** tabs, a split view for copying between two folders, search inside a folder and everything under it, copy/cut/paste, rename, new folder, delete to the Recycle Bin, zip and unzip, a properties panel (size, dates, owner, attributes, shortcut target), a details view, hidden files, sorting, drives with free space, removable media and network folders.
+- **Accessibility:** a **High Contrast** theme (black, white and yellow), a **Text size** setting for Couchtop's own screens, and a shortcut to the Windows accessibility settings. Reduce motion and the Windows pointer option were already there.
+- **Continue where I left off:** optionally reopens the Couchtop channel you had open, with Files returning to the same folder.
+- New **Desktop** page in Settings for the bar, the shortcuts and session restore.
+
 ## [0.4.0-beta.1] - 2026-09-15
 
 ### Added
