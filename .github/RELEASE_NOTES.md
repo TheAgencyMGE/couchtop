@@ -2,12 +2,8 @@
 
 ### New in this version
 
-- **Couchtop can be your whole desktop.** Turn on Shell Mode yourself (Settings › Shell Mode, after the Safety Test) and Couchtop replaces the Windows desktop, taskbar and Start menu while Windows keeps running underneath. It is never switched on for you.
-- **Couchtop Bar:** open apps grouped per program, search, the notification area for background apps, volume, battery, Wi-Fi, clock and power. It keeps maximized windows clear and hides for full-screen games. Try it in launcher mode with Settings › Desktop › Couchtop Bar › Always.
-- **Shortcuts:** `Ctrl + Alt + Space` searches apps, files, settings and open windows; `Ctrl + Alt + Tab` switches apps; `Ctrl + Alt + D` clears the screen.
-- **Status center** with volume, battery, Wi-Fi, notifications and quick links to the Windows settings panels.
-- **Files is a real file manager now:** tabs, split view, search, copy/move, rename, Recycle Bin, zip and unzip, properties, drives, USB and network folders.
-- **Accessibility:** a High Contrast theme and bigger text.
+- **Smoother menu on every screen.** Fixes the menu dropping to around 22 fps a few seconds after you stop moving the mouse ([#1](https://github.com/TheAgencyMGE/couchtop/issues/1)). Scenery now runs at a smooth 60 fps, and hover effects and transitions follow your monitor's refresh rate (90, 120, 144 Hz and up).
+- The log now notes whether graphics are hardware accelerated, which helps with performance reports.
 
 ### Which download?
 

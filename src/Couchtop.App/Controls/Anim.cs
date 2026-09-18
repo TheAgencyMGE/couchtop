@@ -9,6 +9,12 @@ public static class Anim
 {
     public static bool Reduced => AppHost.CurrentOrNull?.Settings.Current.ReduceMotion == true;
 
+    /// <summary>
+    /// True when Windows can't hardware-accelerate WPF (software rendering). Then ambient animations drop to a low
+    /// frame rate so the menu stays responsive; on a real GPU they run at a smooth 60 fps.
+    /// </summary>
+    public static bool LowPowerGraphics { get; set; }
+
     public static readonly IEasingFunction EaseOut = Freeze(new CubicEase { EasingMode = EasingMode.EaseOut });
     public static readonly IEasingFunction EaseInOut = Freeze(new CubicEase { EasingMode = EasingMode.EaseInOut });
     public static readonly IEasingFunction Springy = Freeze(new BackEase { Amplitude = 0.45, EasingMode = EasingMode.EaseOut });
@@ -145,8 +151,13 @@ public static class IdleAnim
         }
     }
 
-    /// <summary>Scenery drifts slowly across large areas, so a lower frame rate is invisible and saves render work.</summary>
-    private const int SceneryFps = 24;
+    /// <summary>
+    /// Ambient scenery and idle tile loops run at a smooth 60 fps on a real GPU (24 under software rendering).
+    /// They used to be held to 24-30 fps, which read as a sudden drop to ~22 fps and visible judder on 90-144 Hz
+    /// screens whenever the pointer rested. 60 keeps slow drifting motion smooth without making an idle menu on a
+    /// 144 Hz screen redraw 144 times a second; anything that reacts to the user is not capped at all.
+    /// </summary>
+    private static int? SceneryFps => Anim.LowPowerGraphics ? 24 : 60;
 
     /// <summary>
     /// Moving scenery is rendered once into a GPU texture and then only re-composited each frame,
@@ -157,7 +168,7 @@ public static class IdleAnim
         if (element.CacheMode is null) element.CacheMode = new BitmapCache { SnapsToDevicePixels = false };
     }
 
-    private static DoubleAnimation Loop(double from, double to, double seconds, bool autoReverse, IEasingFunction? ease, TimeSpan begin, int fps = 30)
+    private static DoubleAnimation Loop(double from, double to, double seconds, bool autoReverse, IEasingFunction? ease, TimeSpan begin, int? fps = null)
     {
         var a = new DoubleAnimation(from, to, TimeSpan.FromSeconds(seconds))
         {
@@ -166,8 +177,9 @@ public static class IdleAnim
             EasingFunction = ease,
             BeginTime = begin,
         };
-        // Ambient loops are slow and subtle; 30 FPS halves render work while the menu idles.
-        Timeline.SetDesiredFrameRate(a, fps);
+        // Ambient loops: 60 fps on a GPU, 30 under software rendering (see SceneryFps).
+        var rate = fps ?? (Anim.LowPowerGraphics ? 30 : 60);
+        if (rate is { } r) Timeline.SetDesiredFrameRate(a, r);
         a.Freeze();
         return a;
     }
@@ -194,7 +206,7 @@ public static class IdleAnim
         a.KeyFrames.Add(new LinearDoubleKeyFrame(exit, KeyTime.FromTimeSpan(t1)));
         a.KeyFrames.Add(new DiscreteDoubleKeyFrame(reenter, KeyTime.FromTimeSpan(t1 + TimeSpan.FromMilliseconds(1))));
         a.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(duration))));
-        Timeline.SetDesiredFrameRate(a, SceneryFps);
+        if (SceneryFps is { } rate) Timeline.SetDesiredFrameRate(a, rate);
         a.Freeze();
         return a;
     }

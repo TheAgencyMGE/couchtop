@@ -2,6 +2,13 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.5.1-beta.1] - 2026-09-17
+
+### Fixed
+
+- **Menu frame rate dropping to ~22 fps** ([#1](https://github.com/TheAgencyMGE/couchtop/issues/1)). Once the pointer stopped moving, the menu's scenery and idle tile animations were held to 24-30 fps to save power, and every animation was capped at 60 fps, so high-refresh screens saw the menu fall from full speed to ~22 fps and judder. Scenery now runs at a smooth 60 fps and hover effects and transitions follow your monitor's refresh rate (90, 120, 144 Hz…). If Windows can only render in software, the ambient animations still slow down so the menu stays responsive.
+- The Couchtop log now records whether graphics are hardware accelerated, to help with performance reports.
+
 ## [0.5.0-beta.1] - 2026-09-16
 
 ### Added

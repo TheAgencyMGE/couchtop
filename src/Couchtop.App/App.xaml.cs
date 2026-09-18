@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Couchtop.App.Controls;
 using Couchtop.App.Views;
 using Couchtop.Core.Diagnostics;
 using Couchtop.Core.Settings;
@@ -12,7 +13,11 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        Timeline.DesiredFrameRateProperty.OverrideMetadata(typeof(Timeline), new FrameworkPropertyMetadata(60));
+        // No global frame-rate cap: animations run at the monitor's refresh rate (a 60 fps cap made 90-144 Hz
+        // screens judder). WPF reports its rendering tier in the high word: 2 = full GPU acceleration.
+        var tier = RenderCapability.Tier >> 16;
+        Anim.LowPowerGraphics = tier < 2;
+        Log.Info($"Graphics: render tier {tier}{(tier < 2 ? " (software or limited acceleration; ambient animations capped)" : " (hardware accelerated)")}");
 
         var host = AppHost.Create(Program.Options);
         ThemeManager.Apply(host.Settings.Current.Theme);

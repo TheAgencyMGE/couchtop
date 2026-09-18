@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.5.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.5.1-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -422,7 +422,7 @@ Measured with `--smoke-test 30` on a 16-thread desktop, Debug build, 1920×1080,
 |---|---|
 | Launch to first frame | ~1.5–2.4 s (Debug, no ReadyToRun; release builds use ReadyToRun) |
 | Working set with 35 channels and icons | ~175 MB |
-| CPU with the menu in front and animating | ~2% of total CPU |
+| CPU with the menu in front and animating | ~4% of total CPU (scenery at a smooth 60 fps; hover and transitions follow your monitor's refresh rate) |
 | CPU with another app in front | Idle animations, menu music, clock blinking and fast controller polling pause |
 
 ---
