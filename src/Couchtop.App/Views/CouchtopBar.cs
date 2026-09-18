@@ -34,6 +34,9 @@ public sealed class CouchtopBar : Window
     private readonly TextBlock _badge = new() { FontSize = 16, FontWeight = FontWeights.ExtraBold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
     private readonly Border _badgeHost;
     private readonly DispatcherTimer _clockTimer = new(DispatcherPriority.Background) { Interval = TimeSpan.FromSeconds(10) };
+    private readonly Image _palFace = new() { Width = 40, Height = 40, Clip = new EllipseGeometry(new Point(20, 20), 19, 19) };
+    private readonly Button _palButton;
+    private Pals.PalBarBubble? _palBubble;
     private AppBarDock? _dock;
     private IntPtr _hwnd;
     private bool _closing;
@@ -90,6 +93,20 @@ public sealed class CouchtopBar : Window
         // Right: tray icons, status, notifications, clock, power.
         var right = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6, 0, 12, 0) };
         right.Children.Add(_tray);
+
+        // The user's Pal: opens Pal Studio, and speaks up from here while other apps are in front.
+        _palButton = new Button { Content = _palFace, Width = 52, Height = 46, Padding = new Thickness(0), ToolTip = "Your Pal" };
+        Style(_palButton);
+        _palButton.Click += (_, _) =>
+        {
+            _main.BringToFront();
+            _main.OpenBuiltIn(Core.Channels.BuiltInChannels.Pals);
+        };
+        right.Children.Add(_palButton);
+        UpdatePal();
+        _host.Pals.ProfileChanged += UpdatePal;
+        _host.Pals.Reacted += OnPalReacted;
+
         right.Children.Add(IconButton(
             "M 4,22 L 12,22 L 24,10 L 24,42 L 12,30 L 4,30 Z M 31,16 A 14,14 0 0 1 31,36 M 37,9 A 22,22 0 0 1 37,43",
             "Volume, battery, Wi-Fi and notifications", () => _main.OpenStatusCenter()));
@@ -232,6 +249,9 @@ public sealed class CouchtopBar : Window
         if (_host.Tray is { } tray) tray.Changed -= RebuildTray;
         _host.Desktop.Changed -= Rebuild;
         _host.MessagesChanged -= OnMessagesChanged;
+        _host.Pals.ProfileChanged -= UpdatePal;
+        _host.Pals.Reacted -= OnPalReacted;
+        _palBubble?.Close();
         _host.Desktop.RemoveListener();
         _dock?.Dispose();
         _dock = null;
@@ -402,6 +422,28 @@ public sealed class CouchtopBar : Window
         Style(button);
         button.Click += (_, _) => action();
         return button;
+    }
+
+    private void UpdatePal()
+    {
+        if (_host.Pals.Profile is not { } profile)
+        {
+            _palButton.Visibility = Visibility.Collapsed;
+            return;
+        }
+        _palButton.Visibility = Visibility.Visible;
+        _palButton.ToolTip = profile.Name + " (edit in Pals)";
+        _palFace.Source = Pals.PalPortrait.Render(profile, 40, 40, Pals.AvatarFraming.Face);
+    }
+
+    private void OnPalReacted(Core.Pals.PalReaction reaction, Pals.PalStage stage)
+    {
+        if (stage != Pals.PalStage.Bar || _closing || !IsVisible || reaction.Text is null) return;
+        _palBubble ??= new Pals.PalBarBubble(_host);
+        // Anchor the bubble's corner just above the Pal button, in screen units.
+        var corner = _palButton.PointToScreen(new Point(_palButton.ActualWidth + 40, 0));
+        if (PresentationSource.FromVisual(this)?.CompositionTarget is { } target) corner = target.TransformFromDevice.Transform(corner);
+        _palBubble.ShowLine(reaction, corner);
     }
 
     /// <summary>Bar buttons are flat and compact rather than the big console pills used inside Couchtop.</summary>

@@ -104,7 +104,7 @@ public sealed class StatusCenterWindow : Window
         panel.SetResourceReference(FrameworkElement.StyleProperty, "AppPanel");
         Content = panel;
 
-        Deactivated += (_, _) => Close();
+        ViewKit.CloseWhenDeactivated(this);
         PreviewKeyDown += (_, e) =>
         {
             if (e.Key != Key.Escape) return;

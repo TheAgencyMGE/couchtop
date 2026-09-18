@@ -46,6 +46,7 @@ public sealed class AppHost
         Audio = new AudioService(Settings.Current, AudioLibrary);
         Icons = new IconService(Paths.IconCacheDirectory);
         Session = new SessionSentinel(Paths.SessionFile);
+        Pals = new Pals.PalService(this);
         IsShellSession = options.ShellSession || (!options.IsSnapshot && !NativeMethods.IsExplorerShellRunning());
     }
 
@@ -65,6 +66,9 @@ public sealed class AppHost
     public AppLauncher Launcher { get; }
     public AudioService Audio { get; }
     public CustomAudioLibrary AudioLibrary { get; }
+
+    /// <summary>The user's Pal: its look, its memory and its reactions to what happens in Couchtop.</summary>
+    public Pals.PalService Pals { get; }
 
     /// <summary>Running app windows, for the Couchtop Bar and the task switcher.</summary>
     public DesktopService Desktop { get; private set; } = null!;
@@ -278,6 +282,7 @@ public sealed class AppHost
         {
             _heartbeatTimer?.Stop();
             SaveLayout(raiseChanged: false);
+            Pals.Flush();
             SaveSettings();
             if (!Options.IsSnapshot) Session.End(clean: code is ExitCodes.Success or ExitCodes.SwitchToExplorer or ExitCodes.Restart or ExitCodes.SignOut or ExitCodes.Emergency);
             Input?.Dispose();

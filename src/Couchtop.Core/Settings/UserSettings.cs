@@ -15,6 +15,8 @@ public sealed class UserSettings
 {
     public const int CurrentSchemaVersion = 1;
 
+    public const string DefaultSwitcherHotkey = "Ctrl+Alt+W";
+
     public int SchemaVersion { get; set; } = CurrentSchemaVersion;
 
     // Look & feel
@@ -43,7 +45,7 @@ public sealed class UserSettings
     public string CouchtopBar { get; set; } = "shell";
 
     public bool BarReservesSpace { get; set; } = true;
-    public string TaskSwitcherHotkey { get; set; } = "Ctrl+Alt+Tab";
+    public string TaskSwitcherHotkey { get; set; } = DefaultSwitcherHotkey;
     public string CommandPaletteHotkey { get; set; } = "Ctrl+Alt+Space";
 
     /// <summary>Text size for Couchtop's own screens: 1.0 normal, up to 1.4 for large text.</summary>
@@ -102,7 +104,10 @@ public sealed class UserSettings
         TextScale = double.IsFinite(TextScale) ? Math.Clamp(TextScale, 1.0, 1.4) : 1.0;
         if (string.IsNullOrWhiteSpace(LastScreen)) LastScreen = null;
         if (string.IsNullOrWhiteSpace(LastFolder)) LastFolder = null;
-        TaskSwitcherHotkey = Hotkey(TaskSwitcherHotkey, "Ctrl+Alt+Tab");
+        TaskSwitcherHotkey = Hotkey(TaskSwitcherHotkey, DefaultSwitcherHotkey);
+        // Windows keeps Ctrl+Alt+Tab for itself, and Ctrl+Shift+Tab would take tab switching away from every
+        // browser, so earlier defaults move to one that can actually be registered.
+        if (TaskSwitcherHotkey.Replace(" ", "").ToLowerInvariant() is "ctrl+alt+tab" or "ctrl+shift+tab") TaskSwitcherHotkey = DefaultSwitcherHotkey;
         CommandPaletteHotkey = Hotkey(CommandPaletteHotkey, "Ctrl+Alt+Space");
         SearchUrl = string.IsNullOrWhiteSpace(SearchUrl) || !SearchUrl.Contains("{0}") ? "https://duckduckgo.com/?q={0}" : SearchUrl;
         BrowserHome ??= "";

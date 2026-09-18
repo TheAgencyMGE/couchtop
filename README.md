@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.5.1-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.6.0-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -89,12 +89,18 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 - Channels launch the real apps: shortcuts, executables, packaged apps (AUMID), `steam://` and other protocols.
 - If an app moved after an update, Couchtop re-discovers it automatically. If it's gone, you're offered **Locate…** or **Remove Channel**.
 - **Customize** mode: drag channels between slots and pages, add (installed app, program, website, folder), rename, recolor, set a custom picture, run as administrator, or remove.
-- Built-in channels: **Files**, **Photos** (with slideshow), **Web** (WebView2 browser), **Sports**, **Settings**, **Power** and **Customize**.
+- Built-in channels: **Files**, **Photos** (with slideshow), **Web** (WebView2 browser), **Pals**, **Sports**, **Settings**, **Power** and **Customize**.
+
+**Pals**
+- Make a **Pal**, a 3D character of your own, in the Pals channel: body proportions, skin, face shape, eyes (style, color, size, spacing, height), brows, nose, mouth, cheeks, facial hair, 14 hairstyles with dyed tips, tops with prints, bottoms, shoes, hats, glasses, scarves, backpacks, earrings, a name and a personality.
+- Your Pal lives on the home screen: it strolls along the bottom bar, watches the pointer, looks up at tiles you hover, sits down when things are quiet and naps if you leave it alone. Poke it, or pick it up and drop it somewhere else.
+- It reacts to what you do (launching, closing and switching apps, coming back to Couchtop, themes, low battery) with gestures and over 160 handwritten lines, chosen by rules rather than generated. It waits by the Start button, sees you off on the Power screen, peeks in on other Couchtop screens and speaks up in the Couchtop Bar while you use other apps.
+- It never talks over full-screen games or videos, spaces out its remarks, and can be set to chatty, now and then, quiet or never talking (Settings › Pals).
 
 **A desktop, not just a launcher**
 - Turn on **Shell Mode** (Settings › Shell Mode, after the Safety Test) and Couchtop becomes the desktop: it replaces Explorer's desktop, taskbar and Start menu while Windows keeps running underneath. It is never turned on for you.
 - **Couchtop Bar:** your open apps grouped per program, the Couchtop button, search, the notification area, volume/battery/Wi-Fi, clock and power. It keeps maximized windows clear of itself and hides for full-screen games.
-- **Task switcher** (`Ctrl + Alt + Tab`), **search everything** (`Ctrl + Alt + Space`) across channels, apps, windows, settings and files, and **clear the screen** (`Ctrl + Alt + D`).
+- **Task switcher** (`Ctrl + Alt + W`), **search everything** (`Ctrl + Alt + Space`) across channels, apps, windows, settings and files, and **clear the screen** (`Ctrl + Alt + D`).
 - **Status center** for volume, battery, Wi-Fi and notifications, with one click through to the Windows panels for Wi-Fi, Bluetooth, display, sound, power and accessibility.
 - **Window management** from the bar: show, minimize, maximize, snap left/right, move to the next screen, close.
 - **Background apps keep working**: sync clients, chat apps and driver utilities get a real notification area even with Explorer gone.

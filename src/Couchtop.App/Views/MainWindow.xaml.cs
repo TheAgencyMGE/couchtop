@@ -72,6 +72,10 @@ public partial class MainWindow : Window
         ViewLayer.Children.Add(Menu);
         _stack.Add(Menu);
 
+        // The Pal's corner peek sits above every screen but below dialogs and the pointer.
+        _palPeek = new Pals.PalPeek(host);
+        RootGrid.Children.Insert(RootGrid.Children.IndexOf(DialogLayer), _palPeek);
+
         _displayDebounce = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
         _displayDebounce.Tick += (_, _) =>
         {
@@ -935,8 +939,12 @@ public partial class MainWindow : Window
         AfterViewChanged(Menu);
     }
 
+    private readonly Pals.PalPeek _palPeek;
+
     private void AfterViewChanged(FrameworkElement view)
     {
+        // A screen with its own Pal doesn't need the corner one too.
+        if (view is Pals.IPalHost { ShowsPal: true }) _palPeek.Hide();
         ApplyCursorMode();
         (view as IScreenView)?.OnShown();
         UpdateActivity();
@@ -1067,6 +1075,14 @@ public partial class MainWindow : Window
         Directory.CreateDirectory(dir);
         try
         {
+            // Developers can render just one area while iterating (e.g. COUCHTOP_SNAPSHOT_ONLY=pals).
+            if (Environment.GetEnvironmentVariable("COUCHTOP_SNAPSHOT_ONLY") == "pals")
+            {
+                await Task.Delay(2500);
+                await SavePalSnapshotsAsync(dir);
+                _host.Exit(0);
+                return;
+            }
             await Task.Delay(4000);
             _pointerInside = true;
             _useSystemCursor = false;
@@ -1305,6 +1321,135 @@ public partial class MainWindow : Window
         GoHome();
         await Task.Delay(400);
 #endif
+    }
+
+    private async Task SavePalSnapshotsAsync(string dir)
+    {
+        // A lineup of random Pals, each mid-gesture, for judging the look without clicking through the editor.
+        var gestures = new[] { Core.Pals.PalGesture.None, Core.Pals.PalGesture.Wave, Core.Pals.PalGesture.Cheer, Core.Pals.PalGesture.Think, Core.Pals.PalGesture.Shrug, Core.Pals.PalGesture.Dance };
+        var moods = new[] { Core.Pals.PalMood.Happy, Core.Pals.PalMood.Excited, Core.Pals.PalMood.Surprised, Core.Pals.PalMood.Thinking, Core.Pals.PalMood.Cheeky, Core.Pals.PalMood.Neutral };
+        var sheet = new DrawingVisual();
+        using (var dc = sheet.RenderOpen())
+        {
+            dc.DrawRectangle(new LinearGradientBrush(Color.FromRgb(232, 244, 250), Color.FromRgb(196, 222, 236), 90), null, new Rect(0, 0, 1920, 1080));
+            for (var i = 0; i < 12; i++)
+            {
+                var profile = Core.Pals.PalProfile.Random(100 + i);
+                var picture = Pals.PalPortrait.Render(profile, 300, 500, Pals.AvatarFraming.FullBody, gestures[i % gestures.Length], moods[i % moods.Length], 0.7, i % 3 == 1 ? 25 : 0);
+                dc.DrawImage(picture, new Rect(20 + (i % 6) * 315, 20 + (i / 6) * 520, 300, 500));
+            }
+        }
+        var bitmap = new RenderTargetBitmap(1920, 1080, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(sheet);
+        Pals.PalPortrait.Save(bitmap, Path.Combine(dir, "pals-lineup.png"));
+
+        var faces = new DrawingVisual();
+        using (var dc = faces.RenderOpen())
+        {
+            dc.DrawRectangle(new SolidColorBrush(Color.FromRgb(236, 242, 246)), null, new Rect(0, 0, 1920, 1080));
+            var i = 0;
+            foreach (var mood in Enum.GetValues<Core.Pals.PalMood>())
+            {
+                var profile = Core.Pals.PalProfile.Random(200 + i);
+                profile.Hat = "none";
+                dc.DrawImage(Pals.PalPortrait.Render(profile, 460, 500, Pals.AvatarFraming.Face, mood: mood), new Rect(10 + (i % 4) * 475, 20 + (i / 4) * 520, 460, 500));
+                i++;
+            }
+        }
+        bitmap = new RenderTargetBitmap(1920, 1080, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(faces);
+        Pals.PalPortrait.Save(bitmap, Path.Combine(dir, "pals-faces.png"));
+        var moves = new DrawingVisual();
+        using (var dc = moves.RenderOpen())
+        {
+            dc.DrawRectangle(new SolidColorBrush(Color.FromRgb(236, 242, 246)), null, new Rect(0, 0, 1920, 1080));
+            var profile = Core.Pals.PalProfile.Random(7);
+            var all = Enum.GetValues<Core.Pals.PalGesture>().Where(g => g is not (Core.Pals.PalGesture.Sleep or Core.Pals.PalGesture.Sit)).ToList();
+            for (var i = 0; i < all.Count; i++)
+            {
+                var picture = Pals.PalPortrait.Render(profile, 190, 330, Pals.AvatarFraming.FullBody, all[i], Core.Pals.PalMood.Happy, all[i] == Core.Pals.PalGesture.None ? 0.6 : 0.75);
+                dc.DrawImage(picture, new Rect(10 + (i % 10) * 190, 20 + (i / 10) * 360, 190, 330));
+                var label = new FormattedText(all[i].ToString(), System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 18, Brushes.Black, 1);
+                dc.DrawText(label, new Point(20 + (i % 10) * 190, 340 + (i / 10) * 360));
+            }
+        }
+        bitmap = new RenderTargetBitmap(1920, 1080, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(moves);
+        Pals.PalPortrait.Save(bitmap, Path.Combine(dir, "pals-gestures.png"));
+        await SavePalScreensAsync(dir);
+        Log.Info("Snapshot saved: pals");
+        await Task.Delay(100);
+    }
+
+    /// <summary>The Pal where people meet it: Pal Studio, the home screen, a start screen, Power, the peek and the bar.</summary>
+    private async Task SavePalScreensAsync(string dir)
+    {
+        var studio = new Pals.PalStudioView(_host, this);
+        Navigate(studio);
+        await Task.Delay(1200);
+        foreach (var category in new[] { "Body", "Face", "Hair", "Extras", "Personality" })
+        {
+            studio.SnapshotPrepare(category);
+            await Task.Delay(700);
+            Save(dir, "pals-studio-" + category.ToLowerInvariant());
+        }
+        GoHome();
+        await Task.Delay(800);
+
+        var pip = new Core.Pals.PalProfile
+        {
+            Name = "Pip", HairStyle = "swept", HairColor = "#6E4A2F", Skin = "#E8B48C", EyeStyle = "sparkle", EyeColor = "#3C6FA8",
+            TopStyle = "hoodie", TopColor = "#35B4E5", TopAccent = "#FFFFFF", TopPattern = "star", BottomStyle = "jeans", BottomColor = "#3E5C8A",
+            ShoeStyle = "sneakers", ShoeColor = "#F25C54", Cheeks = "blush", Personality = "cheerful",
+        }.Normalize();
+        _host.Pals.SaveProfile(pip);
+        await Task.Delay(1500);
+        Menu.SnapshotPal(650, Core.Pals.PalGesture.Wave, "Hi! I'm Pip. So this is Couchtop? It's lovely in here!");
+        await Task.Delay(600);
+        Save(dir, "pals-home");
+        Menu.SnapshotPal(1290, Core.Pals.PalGesture.None, null);
+        await Task.Delay(400);
+        Save(dir, "pals-home-right");
+
+        var app = _host.Layout.Layout.Channels.FirstOrDefault(c => c.Kind != ChannelKind.BuiltIn);
+        if (app is not null)
+        {
+            var preview = new ChannelPreviewView(_host, this, app);
+            Navigate(preview);
+            await Task.Delay(1400);
+            preview.SnapshotPal(Core.Pals.PalGesture.Cheer, "Ooh, " + app.Title + "! Show them what you've got.");
+            await Task.Delay(500);
+            Save(dir, "pals-preview");
+            GoHome();
+            await Task.Delay(600);
+        }
+
+        var power = new PowerView(_host, this);
+        Navigate(power);
+        await Task.Delay(1200);
+        power.SnapshotPal(Core.Pals.PalGesture.Wave, "Heading off? See you soon!");
+        await Task.Delay(500);
+        Save(dir, "pals-power");
+        GoHome();
+        await Task.Delay(600);
+
+        var settings = new SettingsView(_host, this);
+        Navigate(settings);
+        await Task.Delay(1000);
+        settings.SelectCategory("Pals");
+        await Task.Delay(500);
+        _palPeek.SnapshotShow(new Core.Pals.PalReaction(Core.Pals.PalGesture.Dance, Core.Pals.PalMood.Cheeky, "Neon lights! I feel so cool right now."));
+        await Task.Delay(600);
+        Save(dir, "pals-peek-settings");
+        _palPeek.Hide();
+        GoHome();
+        await Task.Delay(600);
+
+        var bubble = new Pals.PalBarBubble(_host);
+        bubble.ShowLine(new Core.Pals.PalReaction(Core.Pals.PalGesture.Wave, Core.Pals.PalMood.Happy, "You've been playing a while. Maybe stretch your legs?"), new Point(-4000, -4000));
+        await Task.Delay(400);
+        SaveVisual((FrameworkElement)bubble.Content, 640, 180, dir, "pals-bar-bubble");
+        bubble.Close();
     }
 
     private async Task SaveWebSnapshotAsync(string dir, string name)

@@ -35,6 +35,7 @@ public static class ChannelActions
         {
             case LaunchStatus.Started:
                 window.ShowToast($"Starting {channel.Title}…");
+                host.Pals.ReportLaunch(channel);
                 if (host.Settings.Current.HideMenuWhenAppLaunches && !host.IsShellSession) window.WindowState = WindowState.Minimized;
                 break;
             case LaunchStatus.Cancelled:

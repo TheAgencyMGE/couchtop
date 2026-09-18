@@ -11,7 +11,7 @@ using Couchtop.Core.Channels;
 
 namespace Couchtop.App.Views;
 
-public partial class MenuView : UserControl, IScreenView
+public partial class MenuView : UserControl, IScreenView, Pals.IPalHost
 {
     public const double TileW = 372, TileH = 222, GapX = 38, GapY = 28, Left0 = 159, Top0 = 58, PageWidth = 1920;
 
@@ -38,6 +38,7 @@ public partial class MenuView : UserControl, IScreenView
     private int _dropSlot = -1;
     private double _dragX;
     private Image? _ghost;
+    private readonly Pals.PalHomeLayer _pal;
 
     public MenuView(AppHost host, MainWindow window)
     {
@@ -54,6 +55,7 @@ public partial class MenuView : UserControl, IScreenView
         _edgeTimer.Tick += (_, _) => FlipPageWhileDragging();
 
         host.ChannelsChanged += (_, _) => RebuildPages();
+        host.Pals.ProfileChanged += RebuildPages;
         host.MessagesChanged += (_, _) => UpdateBadge();
 
         PrevArrow.Click += (_, _) => GoToPage(_page - 1);
@@ -78,10 +80,20 @@ public partial class MenuView : UserControl, IScreenView
             _pressSlot = -1;
         };
 
+        // The Pal walks along the top of the bottom bar, above everything but the edit banner.
+        _pal = new Pals.PalHomeLayer(host, () => BarShift.Y);
+        Stage.Children.Insert(Stage.Children.IndexOf(EditBanner), _pal);
+        PreviewMouseMove += (_, e) => _pal.Pointer(e.GetPosition(Stage));
+        PreviewKeyDown += (_, _) => _pal.Activity();
+
         RebuildPages();
         UpdateClock();
         UpdateBadge();
     }
+
+    public bool ShowsPal => _pal.ShowsPal;
+
+    internal void SnapshotPal(double x, Core.Pals.PalGesture gesture, string? line) => _pal.SnapshotPose(x, gesture, line);
 
     public bool PlaysAmbience => true;
     public bool IsEditMode => _editMode;
@@ -164,6 +176,7 @@ public partial class MenuView : UserControl, IScreenView
         if (page == _page) return;
         StopIdle();
         SetHoverSlot(-1, fromPointer: true);
+        _pal.PageTurned(Math.Sign(page - _page));
         _page = page;
         _host.Audio.Play(SoundEffect.Page);
         Anim.To(StripShift, TranslateTransform.XProperty, -page * PageWidth, 520, Anim.EaseInOut, completed: () =>
@@ -186,6 +199,8 @@ public partial class MenuView : UserControl, IScreenView
     {
         if (_active == active) return;
         _active = active;
+        _pal.SetActive(active);
+        if (active) _host.Pals.Start(_window);
         if (active)
         {
             StartPageIdle();
@@ -237,10 +252,12 @@ public partial class MenuView : UserControl, IScreenView
         {
             _hoverSlot = -1;
             _window.ShowBubble(null);
+            _pal.Hover(null, null);
             return;
         }
 
         var tile = _tiles[slot];
+        if (!_editMode) _pal.Hover(tile.Channel, tile.TranslatePoint(new Point(TileW / 2, TileH), Stage));
         if (tile.Channel is not null || _editMode || !fromPointer) tile.SetHighlighted(true);
         var text = tile.Channel?.Title ?? (_editMode ? "Add a channel" : null);
         if (tile.Channel is not null) _host.Audio.Play(SoundEffect.Hover);
@@ -381,8 +398,11 @@ public partial class MenuView : UserControl, IScreenView
             case BuiltInChannels.Sports: _window.Navigate(Sports.SportsAccess.CreateEntryView(_host, _window), origin); break;
             case BuiltInChannels.Settings: _window.Navigate(new SettingsView(_host, _window), origin); break;
             case BuiltInChannels.Power: _window.Navigate(new PowerView(_host, _window), origin); break;
+            case BuiltInChannels.Pals: _window.Navigate(new Pals.PalStudioView(_host, _window), origin); break;
             case BuiltInChannels.Customize: SetEditMode(true); break;
         }
+        if (id != BuiltInChannels.Customize) _pal.ChannelOpened();
+        _host.Pals.ReportBuiltIn(id);
     }
 
     public void SetEditMode(bool on)

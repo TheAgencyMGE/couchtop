@@ -57,7 +57,7 @@ public sealed class TaskSwitcherWindow : Window
 
         PreviewKeyDown += OnKeyDown;
         PreviewKeyUp += OnKeyUp;
-        Deactivated += (_, _) => Cancel();
+        ViewKit.CloseWhenDeactivated(this, Cancel);
         MouseDown += (_, e) =>
         {
             if (e.ChangedButton == MouseButton.Right) Cancel();

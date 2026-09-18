@@ -2,6 +2,18 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.6.0-beta.1] - 2026-09-18
+
+### Added
+
+- **Pals:** a new channel on the main page for making your own 3D character, and having it around Couchtop. Pal Studio has live 3D editing of body, face, eyes, hair, clothes and accessories, plus a name and one of five personalities. Your Pal walks along the home screen, reacts to what you do with gestures and 160+ handwritten lines, and turns up by the Start button, on the Power screen, in a corner of other screens and in the Couchtop Bar. How often it talks, and where it appears, is up to you (Settings › Pals).
+
+### Fixed
+
+- Closing search, the task switcher, the calendar or the status center with Esc no longer logs a "Something went wrong" notice.
+- The Files toolbar buttons (Details view, Show hidden, Sort) no longer fail after the first use.
+- The task switcher shortcut is now **Ctrl + Alt + W**. Windows reserves Ctrl + Alt + Tab for itself, so the old default could never work; saved settings move over automatically.
+
 ## [0.5.1-beta.1] - 2026-09-17
 
 ### Fixed

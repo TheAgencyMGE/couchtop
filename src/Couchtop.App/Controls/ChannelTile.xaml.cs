@@ -143,6 +143,9 @@ public static class ChannelArtFactory
 {
     public static FrameworkElement Build(Channel channel, AppHost host, bool large)
     {
+        // The Pals tile shows the user's own Pal, unless a theme brings its own artwork.
+        if (channel is { Kind: ChannelKind.BuiltIn, BuiltInId: BuiltInChannels.Pals } && Application.Current.TryFindResource("Art.pals") is not DataTemplate)
+            return Pals.PalTileArt.Build(host);
         if (channel.Kind == ChannelKind.BuiltIn && channel.BuiltInId is not null &&
             Application.Current.TryFindResource("Art." + channel.BuiltInId) is DataTemplate template)
         {

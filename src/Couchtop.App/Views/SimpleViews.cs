@@ -14,13 +14,14 @@ using Couchtop.Core.Platform;
 namespace Couchtop.App.Views;
 
 /// <summary>The console-style start screen shown before an app channel starts ("Menu" / "Start").</summary>
-public sealed class ChannelPreviewView : UserControl, IScreenView
+public sealed class ChannelPreviewView : UserControl, IScreenView, Pals.IPalHost
 {
     private readonly AppHost _host;
     private readonly MainWindow _window;
     private readonly Channel _channel;
     private readonly Button _start;
     private readonly ScaleTransform _artZoom = new(1, 1);
+    private readonly Pals.PalActor? _pal;
     private bool _launching;
 
     public ChannelPreviewView(AppHost host, MainWindow window, Channel channel)
@@ -58,7 +59,36 @@ public sealed class ChannelPreviewView : UserControl, IScreenView
         bar.Children.Add(buttons);
         stage.Children.Add(bar);
 
+        // The Pal waits by the Start button, standing on the bar.
+        if (host.Pals.HasPal && host.Pals.Preferences.ShowOnHome)
+        {
+            _pal = new Pals.PalActor(host, 250, 280)
+            {
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 818 + 4 - 280 + 38, 36, 0),
+                BubbleShift = -90,
+                AcceptsReactions = () => window.CurrentView == this,
+            };
+            _pal.View.SetFraming(0.5, 1.28, instant: true);
+            _pal.View.HitTestBody = true;
+            _pal.View.SnapFacing(-30);
+            stage.Children.Add(_pal);
+        }
+
         Content = new Viewbox { Stretch = Stretch.Uniform, Child = stage };
+    }
+
+    public bool ShowsPal => _pal is not null;
+
+    internal void SnapshotPal(Core.Pals.PalGesture gesture, string line)
+    {
+        if (_pal?.Animator is not { } animator) return;
+        animator.Fidgets = false;
+        animator.Play(gesture, Core.Pals.PalMood.Excited);
+        _pal.View.Step(0.7, 20);
+        _pal.Say(line, 30);
+        _pal.View.Step(0.05, 2);
     }
 
     public bool PlaysAmbience => true;
@@ -96,16 +126,20 @@ public sealed class ChannelPreviewView : UserControl, IScreenView
     {
         if (_launching) return;
         _launching = true;
+        _pal?.Animator?.Play(Core.Pals.PalGesture.Cheer, Core.Pals.PalMood.Excited);
         var status = await ChannelActions.LaunchAsync(_window, _host, _channel);
         _launching = false;
+        // Give the Pal a moment to finish its good-luck line while the app opens.
+        if (status == LaunchStatus.Started && _pal?.IsSpeaking == true) await Task.Delay(1800);
         if (status == LaunchStatus.Started && _window.CurrentView == this) _window.ReturnToMenu();
     }
 }
 
-public sealed class PowerView : UserControl, IScreenView
+public sealed class PowerView : UserControl, IScreenView, Pals.IPalHost
 {
     private readonly AppHost _host;
     private readonly MainWindow _window;
+    private readonly Pals.PalActor? _pal;
 
     public PowerView(AppHost host, MainWindow window)
     {
@@ -157,10 +191,45 @@ public sealed class PowerView : UserControl, IScreenView
         var hint = ViewKit.Text("Emergency exit: Ctrl + Alt + Shift + F12 always returns to the Windows desktop.", 28, FontWeights.Normal, "SubtleTextBrush", align: TextAlignment.Center);
         hint.Margin = new Thickness(0, 40, 0, 0);
         body.Children.Add(hint);
-        Content = ViewKit.Scaffold("Power", "What would you like to do?", body, window.ReturnToMenu);
+        var scaffold = ViewKit.Scaffold("Power", "What would you like to do?", body, window.ReturnToMenu);
+        if (host.Pals.HasPal && host.Pals.Preferences.ShowOnHome && scaffold is Viewbox { Child: Grid stage })
+        {
+            // The Pal sees you off from the bottom corner.
+            _pal = new Pals.PalActor(host, 240, 270)
+            {
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(0, 0, 24, -10),
+                BubbleShift = -110,
+                AcceptsReactions = () => window.CurrentView == this,
+            };
+            _pal.View.SetFraming(0.5, 1.28, instant: true);
+            _pal.View.HitTestBody = true;
+            _pal.View.SnapFacing(-25);
+            Grid.SetRowSpan(_pal, 2);
+            stage.Children.Add(_pal);
+        }
+        Content = scaffold;
     }
 
-    private async Task<bool> Confirm(string message, string action) => await _window.ShowDialogAsync(message, action, "Cancel") == action;
+    public bool ShowsPal => _pal is not null;
+
+    internal void SnapshotPal(Core.Pals.PalGesture gesture, string line)
+    {
+        if (_pal?.Animator is not { } animator) return;
+        animator.Fidgets = false;
+        animator.Play(gesture, Core.Pals.PalMood.Excited);
+        _pal.View.Step(0.7, 20);
+        _pal.Say(line, 30);
+        _pal.View.Step(0.05, 2);
+    }
+
+    private async Task<bool> Confirm(string message, string action)
+    {
+        var yes = await _window.ShowDialogAsync(message, action, "Cancel") == action;
+        if (yes) _pal?.Animator?.Play(Core.Pals.PalGesture.Wave, Core.Pals.PalMood.Happy);
+        return yes;
+    }
 
     private static Button Tile(string title, string subtitle, string glyph, bool filled, Func<Task> action)
     {

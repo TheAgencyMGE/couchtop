@@ -2,8 +2,10 @@
 
 ### New in this version
 
-- **Smoother menu on every screen.** Fixes the menu dropping to around 22 fps a few seconds after you stop moving the mouse ([#1](https://github.com/TheAgencyMGE/couchtop/issues/1)). Scenery now runs at a smooth 60 fps, and hover effects and transitions follow your monitor's refresh rate (90, 120, 144 Hz and up).
-- The log now notes whether graphics are hardware accelerated, which helps with performance reports.
+- **Pals.** A new channel on the main page for making your own 3D character: body, face, eyes, hair, clothes, accessories, a name and a personality. Your Pal hangs out on the home screen, follows your pointer, reacts to what you do with 160+ handwritten lines, and turns up by the Start button, on the Power screen, peeking in on other screens and in the Couchtop Bar. Poke it, or pick it up and drop it somewhere. How often it talks is up to you (Settings › Pals), and it never talks over full-screen games or videos.
+- Closing search, the task switcher, the calendar or the status center with Esc no longer posts a "Something went wrong" notice.
+- The Files toolbar buttons (Details view, Show hidden, Sort) keep working after the first use.
+- The task switcher shortcut is now **Ctrl + Alt + W**. Windows keeps Ctrl + Alt + Tab for itself, so the old one never worked.
 
 ### Which download?
 

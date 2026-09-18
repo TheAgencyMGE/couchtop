@@ -129,7 +129,7 @@ public sealed class CommandPaletteWindow : Window
             _ = RunQuery();
         };
         PreviewKeyDown += OnKeyDown;
-        Deactivated += (_, _) => Close();
+        ViewKit.CloseWhenDeactivated(this);
         Closed += (_, _) => _query?.Cancel();
     }
 

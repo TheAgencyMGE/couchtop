@@ -346,6 +346,8 @@ public sealed class FilesView : UserControl, IScreenView
         searchLabel.Margin = new Thickness(18, 0, 10, 0);
         var searchGroup = new StackPanel { Orientation = Orientation.Horizontal };
         searchGroup.Children.Add(searchLabel);
+        // The search box outlives each rebuild, so it has to leave the previous toolbar row first.
+        if (_search.Parent is Panel previous) previous.Children.Remove(_search);
         searchGroup.Children.Add(_search);
         _toolbar.Children.Add(searchGroup);
         UpdateToolbarState();

@@ -269,11 +269,12 @@ public sealed class DesktopSettingsTests
         Assert.Equal(expected, new UserSettings { TextScale = stored }.Normalize().TextScale);
 
     [Theory]
-    [InlineData("Ctrl+Alt+Tab", "Ctrl+Alt+Tab")]
-    [InlineData("nonsense", "Ctrl+Alt+Tab")]
-    [InlineData("", "Ctrl+Alt+Tab")]
-    [InlineData("Ctrl+Alt+W", "Ctrl+Alt+W")]
-    public void A_broken_shortcut_falls_back_to_the_default(string stored, string expected) =>
+    [InlineData("Ctrl+Alt+Tab", "Ctrl+Alt+W")]
+    [InlineData("Ctrl + Shift + Tab", "Ctrl+Alt+W")]
+    [InlineData("nonsense", "Ctrl+Alt+W")]
+    [InlineData("", "Ctrl+Alt+W")]
+    [InlineData("Ctrl+Alt+S", "Ctrl+Alt+S")]
+    public void A_broken_or_reserved_shortcut_falls_back_to_the_default(string stored, string expected) =>
         Assert.Equal(expected, new UserSettings { TaskSwitcherHotkey = stored }.Normalize().TaskSwitcherHotkey);
 
     [Fact]

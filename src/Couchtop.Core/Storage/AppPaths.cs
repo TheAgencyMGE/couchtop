@@ -20,6 +20,7 @@ public sealed class AppPaths
     public string LayoutFile => Path.Combine(DataRoot, "channels.json");
     public string SafetyFile => Path.Combine(DataRoot, "shell-safety.json");
     public string SessionFile => Path.Combine(DataRoot, "session.json");
+    public string PalsFile => Path.Combine(DataRoot, "pals.json");
     public string CacheDirectory => Path.Combine(DataRoot, "cache");
     public string DiscoveryCacheFile => Path.Combine(CacheDirectory, "discovery.json");
     public string IconCacheDirectory => Path.Combine(CacheDirectory, "icons");

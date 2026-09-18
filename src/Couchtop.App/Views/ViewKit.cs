@@ -11,6 +11,20 @@ public static class ViewKit
     /// <summary>Multiplies every text size Couchtop draws (Settings › Display › Text size).</summary>
     public static double TextScale { get; set; } = 1.0;
 
+    /// <summary>
+    /// Closes a popup when it loses focus. Closing a window also deactivates it, so without the guard a popup
+    /// dismissed with Esc or a click would try to close a second time and throw.
+    /// </summary>
+    public static void CloseWhenDeactivated(Window window, Action? close = null)
+    {
+        var closing = false;
+        window.Closing += (_, _) => closing = true;
+        window.Deactivated += (_, _) =>
+        {
+            if (!closing) (close ?? window.Close)();
+        };
+    }
+
     public static TextBlock Text(string text, double size = 30, FontWeight? weight = null, string brush = "TextBrush", bool wrap = true, TextAlignment align = TextAlignment.Left)
     {
         var tb = new TextBlock

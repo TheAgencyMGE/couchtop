@@ -75,8 +75,12 @@ public static class BuiltInChannels
     public const string Power = "power";
     public const string Customize = "customize";
     public const string Sports = "sports";
+    public const string Pals = "pals";
 
-    public static readonly IReadOnlyList<string> All = new[] { Files, Photos, Browser, Sports, Customize, Settings, Power };
+    public static readonly IReadOnlyList<string> All = new[] { Files, Photos, Browser, Pals, Sports, Customize, Settings, Power };
+
+    /// <summary>Built-ins that belong on the first page even for people whose first page is already full.</summary>
+    public static readonly IReadOnlyList<string> FirstPage = new[] { Pals };
 
     /// <summary>The built-ins that existed before per-channel tracking; layouts from then already know them.</summary>
     public static readonly IReadOnlyList<string> Original = new[] { Files, Photos, Browser, Customize, Settings, Power };
@@ -92,6 +96,7 @@ public static class BuiltInChannels
         Power => "Power",
         Customize => "Customize",
         Sports => "Sports",
+        Pals => "Pals",
         _ => id,
     };
 

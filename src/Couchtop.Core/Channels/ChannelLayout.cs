@@ -47,7 +47,8 @@ public static class LayoutEditor
             if (Find(layout, channel.Id) is not null) continue;
             try
             {
-                Place(layout, channel);
+                if (BuiltInChannels.FirstPage.Contains(id)) PlaceOnFirstPage(layout, channel);
+                else Place(layout, channel);
                 added++;
             }
             catch (InvalidOperationException ex)
@@ -113,6 +114,32 @@ public static class LayoutEditor
             }
         }
         throw new InvalidOperationException("The channel menu is full.");
+    }
+
+    /// <summary>
+    /// Puts a channel on the first page. When that page is full, the last app tile there moves to the first free
+    /// slot further on and the new channel takes its place; built-in channels are never pushed off.
+    /// </summary>
+    public static int PlaceOnFirstPage(ChannelLayout layout, Channel channel)
+    {
+        if (layout.Channels.All(c => c.Id != channel.Id)) layout.Channels.Add(channel);
+        var existing = SlotOf(layout, channel.Id);
+        if (existing >= 0) return existing;
+        EnsureCapacity(layout, ChannelLayout.SlotsPerPage - 1);
+        for (var i = 0; i < ChannelLayout.SlotsPerPage; i++)
+        {
+            if (layout.Slots[i] is not null) continue;
+            layout.Slots[i] = channel.Id;
+            return i;
+        }
+        for (var i = ChannelLayout.SlotsPerPage - 1; i >= 0; i--)
+        {
+            if (At(layout, i) is not { Kind: not ChannelKind.BuiltIn } bumped) continue;
+            layout.Slots[i] = channel.Id;
+            Place(layout, bumped, ChannelLayout.SlotsPerPage);
+            return i;
+        }
+        return Place(layout, channel);
     }
 
     /// <summary>Moves a channel; if the target is occupied the two channels swap, like the Menu.</summary>

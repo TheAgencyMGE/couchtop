@@ -228,8 +228,9 @@ public class SwingAndChannelTests
         var layout = new ChannelLayout { Seeded = true };
         foreach (var id in BuiltInChannels.Original) LayoutEditor.Place(layout, BuiltInChannels.Create(id));
 
-        Assert.Equal(1, LayoutEditor.OfferNewBuiltIns(layout));
+        Assert.Equal(2, LayoutEditor.OfferNewBuiltIns(layout));
         Assert.NotNull(LayoutEditor.Find(layout, "builtin-" + BuiltInChannels.Sports));
+        Assert.NotNull(LayoutEditor.Find(layout, "builtin-" + BuiltInChannels.Pals));
 
         LayoutEditor.Remove(layout, "builtin-" + BuiltInChannels.Sports);
         Assert.Equal(0, LayoutEditor.OfferNewBuiltIns(layout));

@@ -18,7 +18,7 @@ namespace Couchtop.App.Views;
 
 public sealed class SettingsView : UserControl, IScreenView
 {
-    private static readonly string[] Categories = { "Display", "Desktop", "Sound", "Controls", "Channels", "Shell Mode", "Data", "About" };
+    private static readonly string[] Categories = { "Display", "Desktop", "Sound", "Controls", "Channels", "Pals", "Shell Mode", "Data", "About" };
 
     private readonly AppHost _host;
     private readonly MainWindow _window;
@@ -51,7 +51,8 @@ public sealed class SettingsView : UserControl, IScreenView
             tabs.Children.Add(tab);
             _tabs.Add(tab);
         }
-        body.Children.Add(tabs);
+        // More categories than fit at once on some text sizes, so the list scrolls.
+        body.Children.Add(ViewKit.Scroll(tabs));
 
         _scroll = ViewKit.Scroll(_rows);
         Grid.SetColumn(_scroll, 2);
@@ -82,6 +83,7 @@ public sealed class SettingsView : UserControl, IScreenView
             case "Sound": BuildSound(); break;
             case "Controls": BuildControls(); break;
             case "Channels": BuildChannels(); break;
+            case "Pals": BuildPals(); break;
             case "Shell Mode": BuildShell(); break;
             case "Data": BuildData(); break;
             default: BuildAbout(); break;
@@ -215,6 +217,7 @@ public sealed class SettingsView : UserControl, IScreenView
         Choice("Theme", current.Description + ". Changes colors, shapes, the pointer and scenery.", ThemeCatalog.All.Select(t => (t.Name, t.Id)).ToList(), () => S.Theme, v => S.Theme = v, () =>
         {
             _window.ApplyTheme(S.Theme);
+            _host.Pals.ReportTheme(S.Theme);
             Refresh();
         });
 
@@ -272,7 +275,7 @@ public sealed class SettingsView : UserControl, IScreenView
             });
         Toggle("Keep the bar clear", "Reserves that strip of the screen so maximized windows stop above it", () => S.BarReservesSpace, v => S.BarReservesSpace = v, _window.RefreshDesktopBar);
         Choice("Switch app shortcut", "Shows every open window, like Alt + Tab",
-            new[] { ("Ctrl + Alt + Tab", "Ctrl+Alt+Tab"), ("Ctrl + Shift + Tab", "Ctrl+Shift+Tab"), ("Ctrl + Alt + W", "Ctrl+Alt+W") },
+            new[] { ("Ctrl + Alt + W", "Ctrl+Alt+W"), ("Ctrl + Alt + S", "Ctrl+Alt+S"), ("Ctrl + Alt + Q", "Ctrl+Alt+Q") },
             () => S.TaskSwitcherHotkey, v => S.TaskSwitcherHotkey = v, () =>
             {
                 _window.RegisterDesktopHotkeys();
@@ -497,6 +500,33 @@ public sealed class SettingsView : UserControl, IScreenView
             layout.Seeded = false;
             ChannelSeeder.Apply(layout, _host.Discovery.Latest?.Apps ?? Array.Empty<DiscoveredApp>(), S.AutoAddNewApps);
             _host.SaveLayout();
+            Refresh();
+        }));
+    }
+
+    private void BuildPals()
+    {
+        Header("Pals");
+        var pals = _host.Pals;
+        void OpenStudio() => _window.OpenBuiltInView(new Pals.PalStudioView(_host, _window));
+        if (pals.Profile is not { } profile)
+        {
+            Info("Make a Pal: a little 3D character of your own that hangs out on the home screen and reacts to what you're doing.");
+            Buttons("Your Pal", null, ("Make my Pal", OpenStudio));
+            return;
+        }
+        Buttons(profile.Name, "Change their look, name and personality in Pal Studio", ("Open Pal Studio", OpenStudio));
+        var prefs = pals.Preferences;
+        Toggle("Hang out in Couchtop", "On the home screen, by the Start button and peeking in on other screens", () => prefs.ShowOnHome, v => prefs.ShowOnHome = v, pals.SavePreferences);
+        Toggle("Walk around", "Stroll along the bottom of the home screen", () => prefs.Wander, v => prefs.Wander = v, pals.SavePreferences);
+        Toggle("Speak up in the Couchtop Bar", "While you use other apps. Never over full-screen games or videos.", () => prefs.BarReactions, v => prefs.BarReactions = v, pals.SavePreferences);
+        Choice("How often they talk", "Being poked always gets an answer, unless they never talk",
+            new[] { ("Chatty", "Chatty"), ("Now and then", "Normal"), ("Quiet", "Quiet"), ("Never", "Silent") },
+            () => prefs.Chattiness.ToString(), v => prefs.Chattiness = Enum.Parse<Core.Pals.PalChattiness>(v), pals.SavePreferences);
+        Buttons("Start over", "Say goodbye to this Pal. You can make a new one any time.", ("Remove Pal…", async () =>
+        {
+            if (await _window.ShowDialogAsync($"Say goodbye to {profile.Name}?\nYou can make a new Pal any time.", "Remove", "Cancel") != "Remove") return;
+            pals.RemovePal();
             Refresh();
         }));
     }
