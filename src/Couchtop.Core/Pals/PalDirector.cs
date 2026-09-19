@@ -31,6 +31,10 @@ public enum PalEventKind
     ProfileEdited,
     PowerOpened,
     WokeUp,
+    DesktopArrived,
+    RidingWindow,
+    WindowVanished,
+    Climbed,
 }
 
 /// <summary>Something that happened that a Pal might react to.</summary>
@@ -165,6 +169,11 @@ public sealed class PalDirector
                 return Direct(PalTopic.Goodbye, context, speak: Due("direct:bye", now, TimeSpan.FromMinutes(2)));
             case PalEventKind.WokeUp:
                 return Direct(PalTopic.WakeUp, context, speak: Due("topic:wake", now, TimeSpan.FromMinutes(5)));
+            case PalEventKind.RidingWindow:
+                // Being carried along on a dragged window is the user's doing, so it gets an answer (now and then).
+                return Direct(PalTopic.WindowRide, context, speak: Due("topic:ride", now, TimeSpan.FromMinutes(8)));
+            case PalEventKind.WindowVanished:
+                return Direct(PalTopic.WindowGone, context, speak: Due("topic:gone", now, TimeSpan.FromMinutes(5)));
             case PalEventKind.ThemeChanged:
                 // The user just did something on purpose, so an answer is welcome, but not for every click while browsing themes.
                 return Direct(PalTopic.ThemeChanged, context, speak: Due("topic:theme", now, TimeSpan.FromSeconds(8)));
@@ -247,6 +256,11 @@ public sealed class PalDirector
                     ?? Gesture(PalGesture.Wave, PalMood.Happy, now);
             case PalEventKind.TileHovered:
                 return Once("hover:" + (e.AppKey ?? e.App), TimeSpan.FromHours(2), PalTopic.TileHover, context, now);
+            case PalEventKind.DesktopArrived:
+                return Once("topic:desktop", TimeSpan.FromMinutes(30), PalTopic.DesktopArrive, context, now, bypassGap: true)
+                    ?? Gesture(PalGesture.Wave, PalMood.Happy, now, force: true);
+            case PalEventKind.Climbed:
+                return Once("topic:climb", TimeSpan.FromMinutes(20), PalTopic.Climb, context, now);
             case PalEventKind.CustomizeOpened:
                 return Once("topic:customize", TimeSpan.FromMinutes(40), PalTopic.Customize, context, now, bypassGap: true);
             case PalEventKind.Battery:

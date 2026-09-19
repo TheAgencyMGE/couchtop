@@ -385,6 +385,7 @@ public sealed class PalStudioView : UserControl, IScreenView, IPalHost
         var toggles = new StackPanel();
         toggles.Children.Add(Toggle("Hang out on the home screen", prefs.ShowOnHome, v => prefs.ShowOnHome = v));
         toggles.Children.Add(Toggle("Walk around on their own", prefs.Wander, v => prefs.Wander = v));
+        toggles.Children.Add(Toggle("Visit my desktop and apps", prefs.DesktopVisits, v => prefs.DesktopVisits = v));
         toggles.Children.Add(Toggle("Pop up in the Couchtop Bar while you use apps", prefs.BarReactions, v => prefs.BarReactions = v));
         Section("Around Couchtop", toggles);
     }

@@ -158,6 +158,8 @@ public sealed class SearchService
             ("Switch app", "Show the task switcher", () => _window.OpenTaskSwitcher()),
             ("Customize channels", "Move, rename and add channels", () => { _window.GoHome(); _window.BringToFront(); _window.Menu.SetEditMode(true); }),
             ("Pal Studio", "Change how your Pal looks and acts (avatar, character)", () => { _window.BringToFront(); _window.OpenBuiltIn(BuiltInChannels.Pals); }),
+            (_host.Pals.Preferences.DesktopVisits ? "Keep my Pal in Couchtop" : "Take my Pal to the desktop", "Let your Pal roam the Windows desktop and your apps",
+                () => { _host.Pals.Preferences.DesktopVisits = !_host.Pals.Preferences.DesktopVisits; _host.Pals.SavePreferences(); }),
             ("Message board", "Couchtop notices", () => _window.OpenBuiltInView(new MessageBoardView(_host, _window))),
             ("Find new apps", "Scan for newly installed programs", () => _host.RefreshChannelsInBackground()),
             ("Minimize all windows", "Clear the screen", () => _host.Desktop.MinimizeAll()),

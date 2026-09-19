@@ -298,6 +298,9 @@ public partial class MainWindow : Window
         ViewKit.TextScale = _host.Settings.Current.TextScale;
         _host.SignalReady();
         _host.RefreshChannelsInBackground();
+        // The Pal starts with Couchtop, not with the menu, so it can head out onto the desktop even when
+        // Couchtop opens behind other windows.
+        Dispatcher.BeginInvoke(() => _host.Pals.Start(this), DispatcherPriority.ApplicationIdle);
         if (_host.Options.SmokeTestSeconds > 0) ScheduleSmokeTestExit();
         if (_host.Settings.Current.ShowStartupSplash && !Anim.Reduced) PlaySplash();
         else
@@ -826,11 +829,22 @@ public partial class MainWindow : Window
             e.Handled = true;
         }
         else if (e.ChangedButton == MouseButton.Right && CurrentView is not BrowserView && CurrentView is not IScreenView { CapturesMouseButtons: true } &&
-                 !IsInsideTextBox(e.OriginalSource as DependencyObject))
+                 !IsInsideTextBox(e.OriginalSource as DependencyObject) && !IsInsidePal(e.OriginalSource as DependencyObject))
         {
             GoBack();
             e.Handled = true;
         }
+    }
+
+    /// <summary>Right-clicking a Pal opens its menu rather than going back.</summary>
+    private static bool IsInsidePal(DependencyObject? d)
+    {
+        while (d is not null)
+        {
+            if (d is Pals.AvatarView) return true;
+            d = d is Visual or System.Windows.Media.Media3D.Visual3D ? VisualTreeHelper.GetParent(d) : LogicalTreeHelper.GetParent(d);
+        }
+        return false;
     }
 
     private static bool IsInsideTextBox(DependencyObject? d)

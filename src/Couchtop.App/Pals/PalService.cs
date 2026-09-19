@@ -22,6 +22,9 @@ public enum PalStage
 
     /// <summary>Another app is in front: the Pal speaks up above the Couchtop Bar.</summary>
     Bar,
+
+    /// <summary>Another app is in front and the Pal is out on the desktop: it reacts right there.</summary>
+    Desktop,
 }
 
 /// <summary>
@@ -72,6 +75,11 @@ public sealed class PalService
     public PalProfile? Profile => State.Profile;
     public bool HasPal => State.Profile is not null;
     public PalPreferences Preferences => State.Preferences;
+
+    /// <summary>True while the Pal is out on the Windows desktop (set by the desktop Pal).</summary>
+    public bool DesktopShowing { get; set; }
+
+    public PalDesktopBuddy? DesktopBuddy { get; private set; }
 
     /// <summary>The look changed (or the Pal was made for the first time).</summary>
     public event Action? ProfileChanged;
@@ -154,6 +162,11 @@ public sealed class PalService
         _window = window;
         window.Activated += (_, _) => OnCouchtopActivated();
         window.Deactivated += (_, _) => _awaySince ??= DateTimeOffset.Now;
+        if (!_host.Options.IsSnapshot)
+        {
+            DesktopBuddy = new PalDesktopBuddy(_host, window);
+            DesktopBuddy.Update();
+        }
         UpdateListening();
         if (!_host.Options.IsSnapshot) _batteryTimer.Start();
         if (HasPal) Report(new PalEvent(PalEventKind.Startup));
@@ -241,6 +254,8 @@ public sealed class PalService
             // A peek is a small interruption, so only for something worth saying.
             return reaction.Text is null ? null : PalStage.Peek;
         }
+        // Out on the desktop the Pal reacts in person (it's already hidden for full-screen apps).
+        if (DesktopShowing) return PalStage.Desktop;
         // Over other apps the Pal only ever speaks up in the bar, never over a full-screen game or video.
         if (reaction.Text is null || !Preferences.BarReactions || _host.Desktop.ForegroundIsFullScreen) return null;
         return PalStage.Bar;

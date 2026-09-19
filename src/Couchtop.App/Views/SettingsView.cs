@@ -519,6 +519,9 @@ public sealed class SettingsView : UserControl, IScreenView
         var prefs = pals.Preferences;
         Toggle("Hang out in Couchtop", "On the home screen, by the Start button and peeking in on other screens", () => prefs.ShowOnHome, v => prefs.ShowOnHome = v, pals.SavePreferences);
         Toggle("Walk around", "Stroll along the bottom of the home screen", () => prefs.Wander, v => prefs.Wander = v, pals.SavePreferences);
+        Toggle("Visit the desktop", "Comes out onto the Windows desktop while you use other apps. Walks on the taskbar, drag it anywhere, right-click it for options. Hides for full-screen games and videos.",
+            () => prefs.DesktopVisits, v => prefs.DesktopVisits = v, pals.SavePreferences);
+        Toggle("Climb on windows", "On the desktop, hop up onto app windows (and ride along when you move them)", () => prefs.ClimbWindows, v => prefs.ClimbWindows = v, pals.SavePreferences);
         Toggle("Speak up in the Couchtop Bar", "While you use other apps. Never over full-screen games or videos.", () => prefs.BarReactions, v => prefs.BarReactions = v, pals.SavePreferences);
         Choice("How often they talk", "Being poked always gets an answer, unless they never talk",
             new[] { ("Chatty", "Chatty"), ("Now and then", "Normal"), ("Quiet", "Quiet"), ("Never", "Silent") },

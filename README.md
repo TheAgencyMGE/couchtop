@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.6.1-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.6.2-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -95,6 +95,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 - Make a **Pal**, a 3D character of your own, in the Pals channel: body proportions, skin, face shape, eyes (style, color, size, spacing, height), brows, nose, mouth, cheeks, facial hair, 14 hairstyles with dyed tips, tops with prints, bottoms, shoes, hats, glasses, scarves, backpacks, earrings, a name and a personality.
 - Your Pal lives on the home screen: it strolls along the bottom bar, watches the pointer, looks up at tiles you hover, sits down when things are quiet and naps if you leave it alone. Poke it, or pick it up and drop it somewhere else.
 - It reacts to what you do (launching, closing and switching apps, coming back to Couchtop, themes, low battery) with gestures and over 160 handwritten lines, chosen by rules rather than generated. It waits by the Start button, sees you off on the Power screen, peeks in on other Couchtop screens and speaks up in the Couchtop Bar while you use other apps.
+- **Take it out onto your desktop** (right-click your Pal › *Take me to the desktop*, or Settings › Pals): it walks along the taskbar, hops up onto your app windows, rides along when you drag one, and grumbles when you close the one it was standing on. Pick it up and drop it anywhere; everything around it clicks straight through to your apps.
 - It never talks over full-screen games or videos, spaces out its remarks, and can be set to chatty, now and then, quiet or never talking (Settings › Pals).
 
 **A desktop, not just a launcher**

@@ -2,6 +2,13 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.6.2-beta.1] - 2026-09-18
+
+### Fixed
+
+- **Pals can now come out onto your desktop, as intended for 0.6.** Right-click your Pal and choose *Take me to the desktop* (or turn on Settings › Pals › Visit the desktop) and it roams the Windows desktop while you use other apps: it walks along the taskbar, hops up onto app windows, rides along when you drag one, and falls (with a complaint) when the window under it closes. Poke it, pick it up and drop it anywhere, or right-click it for options. Only the Pal itself catches clicks, it never takes focus from your apps, it hides for full-screen games and videos, and it hands back to the home-screen Pal whenever Couchtop is in front. Off until you turn it on.
+- A Pal no longer stays asleep when Couchtop starts behind other windows: it now wakes up with Couchtop rather than waiting for the home screen to be shown.
+
 ## [0.6.1-beta.1] - 2026-09-18
 
 ### Changed

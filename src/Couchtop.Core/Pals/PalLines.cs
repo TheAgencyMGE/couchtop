@@ -28,6 +28,10 @@ public enum PalTopic
     Charging,
     Goodbye,
     ChannelOpened,
+    DesktopArrive,
+    WindowRide,
+    WindowGone,
+    Climb,
 }
 
 /// <summary>Body language that goes with a reaction. The app turns these into animations.</summary>
@@ -314,5 +318,21 @@ public static class PalLines
         new("bye-2", PalTopic.Goodbye, "Bye for now! I'll be right here.", PalGesture.Wave),
         new("bye-3", PalTopic.Goodbye, "Good night! Sleep well.", PalGesture.Wave, PalMood.Sleepy, c => Night(c) || LateNight(c), Priority: 1),
         new("bye-4", PalTopic.Goodbye, "Leaving already? Okay, go have fun!", PalGesture.Wave, PalMood.Cheeky, Personality: "cheeky"),
+
+        // ---------------------------------------------------------------- out on the desktop
+        new("desk-1", PalTopic.DesktopArrive, "Ooh, so this is where you work!", PalGesture.LookAround, PalMood.Excited),
+        new("desk-2", PalTopic.DesktopArrive, "Don't mind me, I'll just hang out down here.", PalGesture.Wave),
+        new("desk-3", PalTopic.DesktopArrive, "Field trip!", PalGesture.Cheer, PalMood.Excited),
+        new("desk-4", PalTopic.DesktopArrive, "So many windows. I'm climbing all of them.", PalGesture.Point, PalMood.Cheeky, Personality: "cheeky"),
+        new("ride-1", PalTopic.WindowRide, "Whoa! Where are we going?", PalGesture.Surprised, PalMood.Surprised),
+        new("ride-2", PalTopic.WindowRide, "Wheee! Faster!", PalGesture.Cheer, PalMood.Excited),
+        new("ride-3", PalTopic.WindowRide, "Hold on, I'm still up here!", PalGesture.Surprised, PalMood.Worried),
+        new("gone-1", PalTopic.WindowGone, "Hey! I was standing there!", PalGesture.Surprised, PalMood.Surprised),
+        new("gone-2", PalTopic.WindowGone, "Whoooa- oof.", PalGesture.ShakeHead, PalMood.Worried),
+        new("gone-3", PalTopic.WindowGone, "Rude. Very rude.", PalGesture.Shrug, PalMood.Cheeky),
+        new("climb-1", PalTopic.Climb, "Nice view from up here.", PalGesture.LookAround),
+        new("climb-2", PalTopic.Climb, "Top of the world!", PalGesture.Cheer, PalMood.Excited),
+        new("climb-3", PalTopic.Climb, "Parkour!", PalGesture.ThumbsUp, PalMood.Excited, Personality: "sporty"),
+        new("climb-4", PalTopic.Climb, "What's in this window? Just curious.", PalGesture.Think, PalMood.Thinking, Personality: "curious"),
     };
 }

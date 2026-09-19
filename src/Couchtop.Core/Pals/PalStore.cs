@@ -9,6 +9,12 @@ public sealed class PalPreferences
     public bool ShowOnHome { get; set; } = true;
     public bool Wander { get; set; } = true;
     public bool BarReactions { get; set; } = true;
+
+    /// <summary>The Pal leaves Couchtop and roams the Windows desktop while you use other apps. Off until asked for.</summary>
+    public bool DesktopVisits { get; set; }
+
+    /// <summary>On the desktop, the Pal climbs onto app windows rather than only walking along the taskbar.</summary>
+    public bool ClimbWindows { get; set; } = true;
     public PalChattiness Chattiness { get; set; } = PalChattiness.Normal;
 }
 

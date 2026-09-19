@@ -102,6 +102,21 @@ public sealed class CouchtopBar : Window
             _main.BringToFront();
             _main.OpenBuiltIn(Core.Channels.BuiltInChannels.Pals);
         };
+        _palButton.MouseRightButtonUp += (_, e) =>
+        {
+            e.Handled = true;
+            var prefs = _host.Pals.Preferences;
+            var menu = new ContextMenu();
+            var visit = new MenuItem { Header = prefs.DesktopVisits ? "Keep my Pal in Couchtop" : "Let my Pal out on the desktop" };
+            visit.Click += (_, _) =>
+            {
+                prefs.DesktopVisits = !prefs.DesktopVisits;
+                _host.Pals.SavePreferences();
+            };
+            menu.Items.Add(visit);
+            menu.PlacementTarget = _palButton;
+            menu.IsOpen = true;
+        };
         right.Children.Add(_palButton);
         UpdatePal();
         _host.Pals.ProfileChanged += UpdatePal;

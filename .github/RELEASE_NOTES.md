@@ -2,8 +2,8 @@
 
 ### New in this version
 
-- **Sky Resort** and **Neon City** no longer have buildings in the background: just open sky, clouds and glow.
-- A Pal you pick up on the home screen no longer carries its floor shadow into the air.
+- **Pals can now come out onto your desktop**, as intended for 0.6. Right-click your Pal and choose *Take me to the desktop* (or Settings › Pals › Visit the desktop). It walks along the taskbar, climbs onto your app windows, rides along when you drag one, and complains when you close the one it's standing on. Drag it anywhere; everything around it clicks through to your apps, and it hides for full-screen games and videos. Off until you turn it on.
+- A Pal no longer stays asleep when Couchtop starts behind other windows.
 
 ### Which download?
 

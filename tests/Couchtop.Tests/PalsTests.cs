@@ -321,3 +321,63 @@ public class PalChannelPlacementTests
         Assert.InRange(LayoutEditor.SlotOf(layout, "builtin-" + BuiltInChannels.Pals), 0, ChannelLayout.SlotsPerPage - 1);
     }
 }
+
+public class DesktopSurfaceTests
+{
+    private static readonly ScreenRect Screen = new(0, 0, 1920, 1040);
+
+    [Fact]
+    public void The_floor_is_always_a_surface()
+    {
+        var surfaces = DesktopSurfaces.Build(Array.Empty<(IntPtr, ScreenRect)>(), new[] { Screen });
+        var floor = Assert.Single(surfaces);
+        Assert.True(floor.IsFloor);
+        Assert.Equal(1040, floor.Y);
+    }
+
+    [Fact]
+    public void Window_tops_are_walkable_except_where_a_window_in_front_covers_them()
+    {
+        var back = (new IntPtr(2), new ScreenRect(200, 400, 1200, 900));
+        var front = (new IntPtr(1), new ScreenRect(600, 300, 900, 800)); // straddles the back window's top edge
+        var surfaces = DesktopSurfaces.Build(new[] { front, back }, new[] { Screen });
+
+        var backSpans = surfaces.Where(s => s.Owner == new IntPtr(2)).OrderBy(s => s.Left).ToList();
+        Assert.Equal(2, backSpans.Count);
+        Assert.Equal((200.0, 600.0), (backSpans[0].Left, backSpans[0].Right));
+        Assert.Equal((900.0, 1200.0), (backSpans[1].Left, backSpans[1].Right));
+        Assert.Contains(surfaces, s => s.Owner == new IntPtr(1) && s.Y == 300);
+    }
+
+    [Fact]
+    public void Windows_too_close_to_the_top_of_the_screen_are_skipped()
+    {
+        var maximized = (new IntPtr(1), new ScreenRect(0, 0, 1920, 1040));
+        var surfaces = DesktopSurfaces.Build(new[] { maximized }, new[] { Screen });
+        Assert.DoesNotContain(surfaces, s => s.Owner == new IntPtr(1));
+    }
+
+    [Fact]
+    public void A_falling_pal_lands_on_the_first_surface_below()
+    {
+        var window = (new IntPtr(1), new ScreenRect(400, 500, 1000, 900));
+        var surfaces = DesktopSurfaces.Build(new[] { window }, new[] { Screen });
+        Assert.Equal(new IntPtr(1), DesktopSurfaces.Below(surfaces, 700, 100)!.Owner);
+        Assert.True(DesktopSurfaces.Below(surfaces, 1500, 100)!.IsFloor);
+        Assert.True(DesktopSurfaces.Below(surfaces, 700, 600)!.IsFloor);
+    }
+
+    [Fact]
+    public void Desktop_events_get_sensible_reactions()
+    {
+        var clock = new DateTimeOffset(2026, 3, 11, 14, 0, 0, TimeSpan.Zero);
+        var director = new PalDirector(new PalMemory(), () => clock);
+        Assert.StartsWith("desk-", director.Handle(new PalEvent(PalEventKind.DesktopArrived))!.LineId);
+        var ride = director.Handle(new PalEvent(PalEventKind.RidingWindow))!;
+        Assert.True(ride.Direct);
+        Assert.StartsWith("ride-", ride.LineId);
+        // Riding again straight away is just body language.
+        Assert.Null(director.Handle(new PalEvent(PalEventKind.RidingWindow))!.Text);
+        Assert.StartsWith("gone-", director.Handle(new PalEvent(PalEventKind.WindowVanished))!.LineId);
+    }
+}

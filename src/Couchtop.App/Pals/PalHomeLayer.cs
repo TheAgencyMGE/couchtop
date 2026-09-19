@@ -65,6 +65,11 @@ public sealed class PalHomeLayer : Canvas
         _actor.View.MouseLeftButtonDown += OnPress;
         _actor.View.MouseMove += OnDrag;
         _actor.View.MouseLeftButtonUp += OnRelease;
+        _actor.View.MouseRightButtonUp += (_, e) =>
+        {
+            e.Handled = true;
+            ShowMenu();
+        };
         _actor.Pokable = false;
         _actor.View.HitTestBody = true;
 
@@ -347,6 +352,30 @@ public sealed class PalHomeLayer : Canvas
         _falling = drop;
         _fallSpeed = 0;
         _nextWander = _clock + 12;
+    }
+
+    /// <summary>Right-click menu: take the Pal out to the Windows desktop, or edit it.</summary>
+    private void ShowMenu()
+    {
+        var prefs = _host.Pals.Preferences;
+        var menu = new ContextMenu();
+        var visit = new MenuItem { Header = prefs.DesktopVisits ? "Stay in Couchtop" : "Take me to the desktop" };
+        visit.Click += (_, _) =>
+        {
+            prefs.DesktopVisits = !prefs.DesktopVisits;
+            _host.Pals.SavePreferences();
+            // Going out? Head to the desktop together.
+            if (prefs.DesktopVisits && Window.GetWindow(this) is Views.MainWindow main) main.ShowWindowsDesktop();
+        };
+        menu.Items.Add(visit);
+        var edit = new MenuItem { Header = "Edit in Pal Studio" };
+        edit.Click += (_, _) =>
+        {
+            if (Window.GetWindow(this) is Views.MainWindow main) main.OpenBuiltIn(BuiltInChannels.Pals);
+        };
+        menu.Items.Add(edit);
+        menu.PlacementTarget = _actor;
+        menu.IsOpen = true;
     }
 
     // ---------------------------------------------------------------- quiet time
