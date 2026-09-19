@@ -1076,6 +1076,13 @@ public partial class MainWindow : Window
         try
         {
             // Developers can render just one area while iterating (e.g. COUCHTOP_SNAPSHOT_ONLY=pals).
+            if (Environment.GetEnvironmentVariable("COUCHTOP_SNAPSHOT_ONLY") == "palclips")
+            {
+                await Task.Delay(2500);
+                await SavePalClipsAsync(dir);
+                _host.Exit(0);
+                return;
+            }
             if (Environment.GetEnvironmentVariable("COUCHTOP_SNAPSHOT_ONLY") == "pals")
             {
                 await Task.Delay(2500);
@@ -1379,6 +1386,127 @@ public partial class MainWindow : Window
         await SavePalScreensAsync(dir);
         Log.Info("Snapshot saved: pals");
         await Task.Delay(100);
+    }
+
+    /// <summary>Transparent Pal animation clips and clean backdrops for promo videos (COUCHTOP_SNAPSHOT_ONLY=palclips).</summary>
+    private async Task SavePalClipsAsync(string dir)
+    {
+        Directory.CreateDirectory(dir);
+        var pip = new Core.Pals.PalProfile
+        {
+            Name = "Pip", HairStyle = "swept", HairColor = "#6E4A2F", Skin = "#E8B48C", EyeStyle = "sparkle", EyeColor = "#3C6FA8",
+            TopStyle = "hoodie", TopColor = "#35B4E5", TopAccent = "#FFFFFF", TopPattern = "star", BottomStyle = "jeans", BottomColor = "#3E5C8A",
+            ShoeStyle = "sneakers", ShoeColor = "#F25C54", Cheeks = "blush", Personality = "cheerful",
+        }.Normalize();
+        var momo = new Core.Pals.PalProfile
+        {
+            Name = "Momo", HairStyle = "twin-tails", HairColor = "#E86F9A", HairTips = "#FFD35A", Skin = "#F6D2B6", EyeStyle = "lashes", EyeColor = "#7B5AA6",
+            TopStyle = "tee", TopColor = "#FFD35A", TopAccent = "#F25C54", TopPattern = "heart", BottomStyle = "skirt", BottomColor = "#2E3440",
+            ShoeStyle = "high-tops", ShoeColor = "#FFFFFF", Hat = "bow", HatColor = "#F25C54", Cheeks = "both", MouthStyle = "smirk", Personality = "cheeky",
+        }.Normalize();
+        var kai = new Core.Pals.PalProfile
+        {
+            Name = "Kai", HairStyle = "spiky", HairColor = "#1F1B1C", Skin = "#A86F48", EyeStyle = "focused", EyeColor = "#2A211D", BrowStyle = "determined",
+            TopStyle = "jacket", TopColor = "#8BD66A", TopAccent = "#2E3440", BottomStyle = "joggers", BottomColor = "#2E3440", ShoeStyle = "sneakers", ShoeColor = "#35B4E5",
+            Hat = "headphones", HatColor = "#F25C54", Personality = "sporty",
+        }.Normalize();
+
+        const int w = 540, h = 700;
+        var full = Pals.AvatarFraming.FullBody;
+        // COUCHTOP_CLIP_FILTER=momo re-renders just the clips whose names start with it.
+        var only = Environment.GetEnvironmentVariable("COUCHTOP_CLIP_FILTER");
+        bool Wanted(string name) => string.IsNullOrEmpty(only) || name.StartsWith(only, StringComparison.OrdinalIgnoreCase);
+        void Clip(string name, Core.Pals.PalProfile p, double seconds, Action<Pals.AvatarView, int, double> script, double facing = 0)
+        {
+            if (Wanted(name)) Pals.PalClipExporter.Render(dir, name, p, w, h, full, seconds, script, facing);
+        }
+
+        Clip("pip-walk", pip, 3, (v, i, _) => { if (i == 0) v.Animator!.Base = Pals.AvatarBase.Walk; }, facing: 72);
+        Clip("pip-wave", pip, 3.5, (v, i, _) => { if (i == 0) { v.Animator!.Play(Core.Pals.PalGesture.Wave, Core.Pals.PalMood.Happy); v.Animator.Talk(2.6); } });
+        Clip("pip-poke", pip, 2.6, (v, i, _) =>
+        {
+            if (i == 0) v.Animator!.Play(Core.Pals.PalGesture.Surprised, Core.Pals.PalMood.Surprised);
+            if (i == 12) { v.Animator!.Play(Core.Pals.PalGesture.Laugh, Core.Pals.PalMood.Excited); v.Animator.Talk(1.2); }
+        });
+        Clip("pip-held", pip, 3.5, (v, i, t) =>
+        {
+            if (i == 0) { v.Animator!.Base = Pals.AvatarBase.Held; v.Animator.RestingMood = Core.Pals.PalMood.Excited; }
+            v.Animator!.HeldSway = 26 * Math.Sin(t * 3.4);
+            if (i == 8) v.Animator.Talk(1.2);
+        });
+        Clip("pip-land", pip, 2.2, (v, i, _) =>
+        {
+            if (i == 0) v.Animator!.Base = Pals.AvatarBase.Held;
+            if (i == 3) { v.Animator!.Base = Pals.AvatarBase.Idle; v.Animator.RestingMood = Core.Pals.PalMood.Happy; }
+            if (i == 16) { v.Animator!.Play(Core.Pals.PalGesture.ThumbsUp, Core.Pals.PalMood.Happy); v.Animator.Talk(1.0); }
+        });
+        Clip("pip-cheer", pip, 2.4, (v, i, _) => { if (i == 0) v.Animator!.Play(Core.Pals.PalGesture.Cheer, Core.Pals.PalMood.Excited); });
+        Clip("momo-dance", momo, 4, (v, i, _) =>
+        {
+            if (i == 0) { v.Animator!.RestingMood = Core.Pals.PalMood.Cheeky; v.Animator.Play(Core.Pals.PalGesture.Dance, Core.Pals.PalMood.Cheeky); v.Animator.Talk(2.2); }
+            if (i == 96) v.Animator!.Play(Core.Pals.PalGesture.Dance, Core.Pals.PalMood.Cheeky);
+        });
+        Clip("momo-point", momo, 2.8, (v, i, _) =>
+        {
+            if (i == 0) { v.Animator!.RestingMood = Core.Pals.PalMood.Cheeky; v.Animator.Play(Core.Pals.PalGesture.Point, Core.Pals.PalMood.Cheeky); v.Animator.Talk(2.0); }
+        });
+        Clip("momo-spin", momo, 2.2, (v, i, _) =>
+        {
+            if (i == 0) { v.Animator!.RestingMood = Core.Pals.PalMood.Cheeky; v.Animator.Play(Core.Pals.PalGesture.Spin, Core.Pals.PalMood.Excited); }
+            if (i == 40) v.Animator!.Play(Core.Pals.PalGesture.Laugh, Core.Pals.PalMood.Cheeky);
+        });
+        Clip("kai-sleep", kai, 3, (v, i, _) => { if (i == 0) v.Animator!.Base = Pals.AvatarBase.Sleep; });
+        Clip("kai-wake", kai, 2.6, (v, i, _) =>
+        {
+            if (i == 0) v.Animator!.Base = Pals.AvatarBase.Sleep;
+            if (i == 6) { v.Animator!.Base = Pals.AvatarBase.Idle; v.Animator.Play(Core.Pals.PalGesture.Surprised, Core.Pals.PalMood.Surprised); v.Animator.Talk(1.6); }
+        });
+        Clip("kai-stretch", kai, 3, (v, i, _) => { if (i == 0) { v.Animator!.Play(Core.Pals.PalGesture.Stretch, Core.Pals.PalMood.Happy); v.Animator.Talk(1.8); } });
+
+        // Close-up for the hook: Momo winking and chatting.
+        if (Wanted("momo-face")) Pals.PalClipExporter.Render(dir, "momo-face", momo, 720, 720, Pals.AvatarFraming.Face, 3, (v, i, _) =>
+        {
+            if (i == 0) { v.Animator!.RestingMood = Core.Pals.PalMood.Cheeky; v.Animator.Talk(2.6); }
+        });
+
+        // A lineup of different Pals, each doing its own thing.
+        var moves = new[] { Core.Pals.PalGesture.Wave, Core.Pals.PalGesture.Cheer, Core.Pals.PalGesture.Spin, Core.Pals.PalGesture.ThumbsUp, Core.Pals.PalGesture.Dance, Core.Pals.PalGesture.Jump };
+        for (var k = 0; k < moves.Length && Wanted("lineup"); k++)
+        {
+            var move = moves[k];
+            Pals.PalClipExporter.Render(dir, $"lineup-{k}", Core.Pals.PalProfile.Random(100 + k), 360, 480, full, 2, (v, i, _) =>
+            {
+                if (i == 0) v.Animator!.Play(move, Core.Pals.PalMood.Excited);
+            });
+        }
+
+        Pals.PalClipExporter.RenderElement(new HandPointer(), 64, 80, Path.Combine(dir, "hand.png"), 3);
+        if (!string.IsNullOrEmpty(only)) return;
+
+        // Clean home screens (Pip on the Pals tile, but not walking around) in a few themes.
+        _host.Pals.SaveProfile(pip);
+        _host.Pals.Preferences.ShowOnHome = false;
+        _host.Pals.SavePreferences();
+        GoHome();
+        foreach (var theme in new[] { "Classic", "NeonCity", "Sakura", "Sunset" })
+        {
+            ApplyTheme(theme);
+            await Task.Delay(1500);
+            Save(dir, "backdrop-" + theme.ToLowerInvariant());
+        }
+        ApplyTheme("Classic");
+        await Task.Delay(800);
+        var studio = new Pals.PalStudioView(_host, this);
+        Navigate(studio);
+        await Task.Delay(1200);
+        foreach (var category in new[] { "Hair", "Extras" })
+        {
+            studio.SnapshotPrepare(category);
+            await Task.Delay(600);
+            Save(dir, "studio-" + category.ToLowerInvariant());
+        }
+        GoHome();
+        Log.Info("Snapshot saved: pal clips");
     }
 
     /// <summary>The Pal where people meet it: Pal Studio, the home screen, a start screen, Power, the peek and the bar.</summary>

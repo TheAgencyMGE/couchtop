@@ -141,6 +141,7 @@ public sealed class AvatarAnimator
 
         if (Mirror) pose = pose.Mirrored();
         _last = pose;
+        _model.ShadowVisible = _base != AvatarBase.Held;
         _model.Apply(pose, dt);
         _model.SetFace(Face(mood, t));
     }

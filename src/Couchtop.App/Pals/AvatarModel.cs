@@ -216,6 +216,7 @@ public sealed class AvatarModel
     }
 
     public Model3DGroup Root { get; } = new();
+    public bool ShadowVisible { get; set; } = true;
     public Color Skin { get; }
     public Color TopColor { get; }
     public double HeadRadius { get; }
@@ -243,7 +244,8 @@ public sealed class AvatarModel
         var squash = pose.Squash <= 0 ? 1 : pose.Squash;
         _squash.ScaleY = squash;
         _squash.ScaleX = _squash.ScaleZ = 1 + (1 - squash) * 0.6;
-        _shadowScale.ScaleX = _shadowScale.ScaleZ = Math.Clamp(1 - pose.Lift * 2.2, 0.5, 1.1);
+        // Off the ground (being carried) there is no floor right below the feet, so no shadow either.
+        _shadowScale.ScaleX = _shadowScale.ScaleZ = ShadowVisible ? Math.Clamp(1 - pose.Lift * 2.2, 0.5, 1.1) : 0.0001;
 
         _pelvis.Rotate(0, pose.HipYaw + pose.Turn, pose.HipRoll);
         _spine.Rotate(pose.SpinePitch, pose.SpineYaw, pose.SpineRoll);

@@ -2,6 +2,16 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.6.1-beta.1] - 2026-09-18
+
+### Changed
+
+- **Sky Resort** and **Neon City** no longer have buildings in the background, so the sky and the glow have the screen to themselves.
+
+### Fixed
+
+- A Pal you pick up on the home screen no longer takes its floor shadow up into the air with it.
+
 ## [0.6.0-beta.1] - 2026-09-18
 
 ### Added

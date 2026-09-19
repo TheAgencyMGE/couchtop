@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.6.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.6.1-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---

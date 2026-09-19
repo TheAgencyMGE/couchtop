@@ -5,7 +5,7 @@
     <!--
         Neon City: a gritty future-city HUD. Near-black steel, hazard yellow as the signal color, hot red for
         rims and warnings, cyan for focus. Hard edges with cut corners, wide technical type, scanlines, a sweeping
-        scan beam, flickering glitch blocks and a skyline glow. All artwork and text are original.
+        scan beam, flickering glitch blocks and a horizon glow. All artwork and text are original.
     -->
 
     <FontFamily x:Key="AppFont">Bahnschrift, Segoe UI</FontFamily>
@@ -189,22 +189,6 @@
                             </RadialGradientBrush>
                         </Ellipse.Fill>
                     </Ellipse>
-
-                    <!-- Skyline -->
-                    <Path Fill="#07070B" Data="M 0,1080 L 0,700 L 48,700 L 48,640 L 96,640 L 96,590 L 140,590 L 140,720 L 196,720 L 196,560 L 214,540 L 250,540 L 250,760 L 320,760 L 320,680 L 380,680 L 380,1080 Z M 1520,1080 L 1520,690 L 1580,690 L 1580,610 L 1612,610 L 1612,520 L 1640,500 L 1680,500 L 1680,650 L 1740,650 L 1740,580 L 1800,580 L 1800,700 L 1850,700 L 1850,630 L 1920,630 L 1920,1080 Z" />
-                    <Path Stroke="#40FF003C" StrokeThickness="2" Data="M 0,700 L 48,700 L 48,640 L 96,640 L 96,590 L 140,590 L 140,720 L 196,720 L 196,560 L 214,540 L 250,540 L 250,760 L 320,760 L 320,680 L 380,680 M 1520,690 L 1580,690 L 1580,610 L 1612,610 L 1612,520 L 1640,500 L 1680,500 L 1680,650 L 1740,650 L 1740,580 L 1800,580 L 1800,700 L 1850,700 L 1850,630 L 1920,630" />
-                    <Rectangle Canvas.Left="60" Canvas.Top="660" Width="10" Height="6" Fill="#FCEE0A" />
-                    <Rectangle Canvas.Left="108" Canvas.Top="610" Width="10" Height="6" Fill="#00F0FF" c:IdleAnim.Kind="Flicker" />
-                    <Rectangle Canvas.Left="210" Canvas.Top="580" Width="10" Height="6" Fill="#FCEE0A" />
-                    <Rectangle Canvas.Left="226" Canvas.Top="620" Width="10" Height="6" Fill="#FF003C" />
-                    <Rectangle Canvas.Left="1624" Canvas.Top="560" Width="10" Height="6" Fill="#00F0FF" />
-                    <Rectangle Canvas.Left="1650" Canvas.Top="530" Width="10" Height="6" Fill="#FCEE0A" c:IdleAnim.Kind="Flicker" />
-                    <Rectangle Canvas.Left="1760" Canvas.Top="600" Width="10" Height="6" Fill="#FF003C" />
-                    <Rectangle Canvas.Left="1870" Canvas.Top="660" Width="10" Height="6" Fill="#00F0FF" />
-                    <!-- A neon sign on the right tower -->
-                    <Border Canvas.Left="1606" Canvas.Top="380" Width="96" Height="36" BorderBrush="#FF2A6D" BorderThickness="3" c:IdleAnim.Kind="Flicker">
-                        <TextBlock Text="OPEN" FontFamily="Bahnschrift" FontWeight="SemiBold" FontSize="22" Foreground="#FF2A6D" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
 
                     <!-- HUD frame -->
                     <Path Stroke="#FCEE0A" StrokeThickness="4" Data="M 22,96 L 22,22 L 96,22 M 1824,22 L 1898,22 L 1898,96" />

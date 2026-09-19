@@ -4,7 +4,7 @@
                     xmlns:c="clr-namespace:Couchtop.App.Controls">
     <!--
         Sky Resort: late-2000s "glass and nature" optimism (Frutiger Aero). A saturated blue sky with big clouds,
-        a sun burst with rainbow lens-flare rings, a hazy glass city on the horizon, a lush green meadow full of
+        a sun burst with rainbow lens-flare rings, a lush green meadow full of
         water droplets and bokeh, and bubbles drifting up. Everything in the UI is see-through glass: clear tiles
         with a hard top-half gloss, icons sealed inside water-droplet orbs, frosted panels. All artwork is original.
     -->
@@ -316,28 +316,6 @@
                     <ContentControl Content="c" ContentTemplate="{StaticResource SkyCloud}" Canvas.Left="1100" Canvas.Top="560" Opacity="0.8" c:IdleAnim.Kind="Float" c:IdleAnim.Distance="-40" c:IdleAnim.Duration="36">
                         <ContentControl.LayoutTransform><ScaleTransform ScaleX="0.6" ScaleY="0.6" /></ContentControl.LayoutTransform>
                     </ContentControl>
-
-                    <!-- Hazy glass city on the horizon -->
-                    <Canvas Canvas.Left="0" Canvas.Top="470" Opacity="0.7">
-                        <Canvas.Resources>
-                            <LinearGradientBrush x:Key="Tower" StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#F2FFFFFF" Offset="0" />
-                                <GradientStop Color="#CCD9EEFB" Offset="0.5" />
-                                <GradientStop Color="#B39CC7E6" Offset="0.51" />
-                                <GradientStop Color="#CCC4E2F5" Offset="1" />
-                            </LinearGradientBrush>
-                        </Canvas.Resources>
-                        <Rectangle Canvas.Left="20" Canvas.Top="90" Width="70" Height="200" Fill="{StaticResource Tower}" />
-                        <Rectangle Canvas.Left="100" Canvas.Top="20" Width="84" Height="270" Fill="{StaticResource Tower}" />
-                        <Path Canvas.Left="100" Canvas.Top="-10" Data="M 0,30 Q 42,0 84,30 Z" Fill="#E6FFFFFF" />
-                        <Rectangle Canvas.Left="196" Canvas.Top="120" Width="60" Height="170" Fill="{StaticResource Tower}" />
-                        <Rectangle Canvas.Left="266" Canvas.Top="60" Width="78" Height="230" Fill="{StaticResource Tower}" />
-                        <Rectangle Canvas.Left="1640" Canvas.Top="110" Width="72" Height="180" Fill="{StaticResource Tower}" />
-                        <Rectangle Canvas.Left="1724" Canvas.Top="40" Width="90" Height="250" Fill="{StaticResource Tower}" />
-                        <Path Canvas.Left="1724" Canvas.Top="10" Data="M 0,30 Q 45,-4 90,30 Z" Fill="#E6FFFFFF" />
-                        <Rectangle Canvas.Left="1826" Canvas.Top="140" Width="70" Height="150" Fill="{StaticResource Tower}" />
-                        <Path Stroke="#40FFFFFF" StrokeThickness="2" Data="M 108,60 L 176,60 M 108,100 L 176,100 M 108,140 L 176,140 M 108,180 L 176,180 M 1732,90 L 1806,90 M 1732,130 L 1806,130 M 1732,170 L 1806,170 M 1732,210 L 1806,210" />
-                    </Canvas>
 
                     <!-- Horizon haze -->
                     <Rectangle Canvas.Top="640" Width="1920" Height="110">

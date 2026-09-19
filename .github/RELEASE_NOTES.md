@@ -2,10 +2,8 @@
 
 ### New in this version
 
-- **Pals.** A new channel on the main page for making your own 3D character: body, face, eyes, hair, clothes, accessories, a name and a personality. Your Pal hangs out on the home screen, follows your pointer, reacts to what you do with 160+ handwritten lines, and turns up by the Start button, on the Power screen, peeking in on other screens and in the Couchtop Bar. Poke it, or pick it up and drop it somewhere. How often it talks is up to you (Settings › Pals), and it never talks over full-screen games or videos.
-- Closing search, the task switcher, the calendar or the status center with Esc no longer posts a "Something went wrong" notice.
-- The Files toolbar buttons (Details view, Show hidden, Sort) keep working after the first use.
-- The task switcher shortcut is now **Ctrl + Alt + W**. Windows keeps Ctrl + Alt + Tab for itself, so the old one never worked.
+- **Sky Resort** and **Neon City** no longer have buildings in the background: just open sky, clouds and glow.
+- A Pal you pick up on the home screen no longer carries its floor shadow into the air.
 
 ### Which download?
 
