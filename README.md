@@ -504,6 +504,8 @@ Bug reports, especially from real hardware, are hugely helpful. See [CONTRIBUTIN
 
 Couchtop is released under the [MIT License](LICENSE). Third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
-The Dashboard and Media Bar menu styles are original designs inspired by the shapes of mid-2000s console menus. They contain no assets, code or names from any console maker.
+The Dashboard and Media Bar menu styles are original designs, drawn in code for this project, inspired by the shapes of mid-2000s console menus. They contain no assets, icons, fonts, sounds, code or names from any console maker.
 
-Couchtop is an independent project and is not affiliated with, sponsored by, or endorsed by Nintendo, Microsoft or Sony. It contains no Nintendo images, audio, fonts or code; all artwork and sounds are original. "Wii Remote" is a trademark of Nintendo, used here only to describe controller compatibility.
+Screenshots and videos here show the icons of the programs installed on the PC that produced them. Those icons belong to their respective owners and appear only as an incidental part of showing Couchtop running. Windows and the Microsoft Store are trademarks of Microsoft; Steam is a trademark of Valve Corporation; Epic Games is a trademark of Epic Games, Inc.
+
+Couchtop is an independent project and is not affiliated with, sponsored by, or endorsed by Nintendo, Microsoft or Sony. It contains no images, audio, fonts, icons or code from any of them; every shell, icon, animation and sound is original to this project. "Wii Remote" is a trademark of Nintendo, used here only to describe controller compatibility. Full details, including the fonts and libraries Couchtop ships, are in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
