@@ -281,6 +281,7 @@ public sealed class AppHost
         try
         {
             _heartbeatTimer?.Stop();
+            Core.Shell.WindowsTaskbar.Restore();
             SaveLayout(raiseChanged: false);
             Pals.Flush();
             SaveSettings();

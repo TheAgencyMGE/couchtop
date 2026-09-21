@@ -21,6 +21,10 @@ public sealed class UserSettings
 
     // Look & feel
     public string Theme { get; set; } = ThemeCatalog.DefaultId;
+
+    /// <summary>Which home screen the menu uses (see <see cref="MenuStyleCatalog"/>). Everything else is shared.</summary>
+    public string MenuStyle { get; set; } = MenuStyleCatalog.DefaultId;
+
     public bool UseSystemCursor { get; set; }
     public bool ReduceMotion { get; set; }
     public bool Clock24Hour { get; set; }
@@ -45,6 +49,15 @@ public sealed class UserSettings
     public string CouchtopBar { get; set; } = "shell";
 
     public bool BarReservesSpace { get; set; } = true;
+
+    /// <summary>Auto-hide the Explorer taskbar while the Couchtop Bar is shown, so there are not two of them.</summary>
+    public bool AutoHideWindowsTaskbar { get; set; } = true;
+
+    /// <summary>
+    /// Set while Couchtop is the one holding the Explorer taskbar hidden, with the state it had before. If
+    /// Couchtop is killed or crashes, the next start sees this and puts the taskbar back.
+    /// </summary>
+    public int? TaskbarStateBeforeHiding { get; set; }
     public string TaskSwitcherHotkey { get; set; } = DefaultSwitcherHotkey;
     public string CommandPaletteHotkey { get; set; } = "Ctrl+Alt+Space";
 
@@ -85,6 +98,9 @@ public sealed class UserSettings
     public bool RunStartupAppsInShell { get; set; } = true;
     public ShellBootstrapMode ShellBootstrap { get; set; } = ShellBootstrapMode.Resilient;
     public bool WelcomeShown { get; set; }
+
+    /// <summary>Version of the welcome tour this person has seen (0 = never). Lets a new tour be offered once.</summary>
+    public int TourVersion { get; set; }
     public bool DesktopHintShown { get; set; }
 
     /// <summary>Clamps out-of-range values so a hand-edited or damaged file cannot break the UI.</summary>
@@ -98,6 +114,7 @@ public sealed class UserSettings
             .ToDictionary(kv => kv.Key, kv => CustomAudio.Clean(kv.Value)!);
         PointerSpeed = double.IsFinite(PointerSpeed) ? Math.Clamp(PointerSpeed, 0.25, 3.0) : 1.0;
         Theme = ThemeCatalog.Normalize(Theme);
+        MenuStyle = MenuStyleCatalog.Normalize(MenuStyle);
         if (!Enum.IsDefined(ShellBootstrap)) ShellBootstrap = ShellBootstrapMode.Resilient;
         HomeMenuHotkey = string.IsNullOrWhiteSpace(HomeMenuHotkey) ? "Ctrl+Alt+Home" : HomeMenuHotkey.Trim();
         CouchtopBar = CouchtopBar?.Trim().ToLowerInvariant() is "always" or "never" or "shell" ? CouchtopBar!.Trim().ToLowerInvariant() : "shell";

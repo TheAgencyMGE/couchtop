@@ -60,7 +60,7 @@ public sealed class ChannelPreviewView : UserControl, IScreenView, Pals.IPalHost
         stage.Children.Add(bar);
 
         // The Pal waits by the Start button, standing on the bar.
-        if (host.Pals.HasPal && host.Pals.Preferences.ShowOnHome)
+        if (host.Pals.HasPal && host.Pals.Preferences.ShowOnHome && !host.Pals.Suspended)
         {
             _pal = new Pals.PalActor(host, 250, 280)
             {

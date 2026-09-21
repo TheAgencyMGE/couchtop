@@ -11,7 +11,7 @@ using Couchtop.Core.Channels;
 
 namespace Couchtop.App.Views;
 
-public partial class MenuView : UserControl, IScreenView, Pals.IPalHost
+public partial class MenuView : UserControl, IHomeScreen, Pals.IPalHost, IDisposable
 {
     public const double TileW = 372, TileH = 222, GapX = 38, GapY = 28, Left0 = 159, Top0 = 58, PageWidth = 1920;
 
@@ -54,9 +54,9 @@ public partial class MenuView : UserControl, IScreenView, Pals.IPalHost
         _edgeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
         _edgeTimer.Tick += (_, _) => FlipPageWhileDragging();
 
-        host.ChannelsChanged += (_, _) => RebuildPages();
+        host.ChannelsChanged += OnChannelsChanged;
         host.Pals.ProfileChanged += RebuildPages;
-        host.MessagesChanged += (_, _) => UpdateBadge();
+        host.MessagesChanged += OnMessagesChanged;
 
         PrevArrow.Click += (_, _) => GoToPage(_page - 1);
         NextArrow.Click += (_, _) => GoToPage(_page + 1);
@@ -93,10 +93,31 @@ public partial class MenuView : UserControl, IScreenView, Pals.IPalHost
 
     public bool ShowsPal => _pal.ShowsPal;
 
+    private void OnChannelsChanged(object? sender, EventArgs e) => RebuildPages();
+    private void OnMessagesChanged(object? sender, EventArgs e) => UpdateBadge();
+
+    /// <summary>Called when another menu style takes over, so nothing keeps running in the background.</summary>
+    public void Dispose()
+    {
+        _host.ChannelsChanged -= OnChannelsChanged;
+        _host.Pals.ProfileChanged -= RebuildPages;
+        _host.MessagesChanged -= OnMessagesChanged;
+        _clockTimer.Stop();
+        _shineTimer.Stop();
+        _edgeTimer.Stop();
+        StopIdle();
+        _pal.SetActive(false);
+    }
+
     internal void SnapshotPal(double x, Core.Pals.PalGesture gesture, string? line) => _pal.SnapshotPose(x, gesture, line);
 
     public bool PlaysAmbience => true;
     public bool IsEditMode => _editMode;
+    public FrameworkElement Element => this;
+    public string StyleId => Core.Settings.MenuStyleCatalog.Channels;
+
+    /// <summary>Channels, theme or text size changed.</summary>
+    public void Rebuild() => RebuildPages();
 
     public void OnShown() => Focus();
 
@@ -369,41 +390,11 @@ public partial class MenuView : UserControl, IScreenView, Pals.IPalHost
         }
         if (channel is null) return;
 
-        _window.ShowBubble(null);
-        var origin = SlotCenter(slot);
-        switch (channel.Kind)
-        {
-            case ChannelKind.BuiltIn:
-                OpenBuiltIn(channel.BuiltInId!, origin);
-                break;
-            case ChannelKind.Folder when channel.Launch?.Path is { } folder:
-                _window.Navigate(new FilesView(_host, _window, folder), origin);
-                break;
-            default:
-                if (_host.Settings.Current.QuickLaunch) _ = ChannelActions.LaunchAsync(_window, _host, channel);
-                else _window.Navigate(new ChannelPreviewView(_host, _window, channel), origin);
-                break;
-        }
+        HomeActions.Open(_window, _host, HomeItem.For(channel), SlotCenter(slot), () => SetEditMode(true), () => _pal.ChannelOpened());
     }
 
-    public void OpenBuiltIn(string id, Point? origin)
-    {
-        // Remembered for "continue where I left off"; written to disk when Couchtop closes.
-        _host.Settings.Current.LastScreen = id;
-        switch (id)
-        {
-            case BuiltInChannels.Files: _window.Navigate(new FilesView(_host, _window, _host.Settings.Current.RestoreLastScreen ? _host.Settings.Current.LastFolder : null), origin); break;
-            case BuiltInChannels.Photos: _window.Navigate(new PhotosView(_host, _window), origin); break;
-            case BuiltInChannels.Browser: _window.Navigate(new BrowserView(_host, _window), origin); break;
-            case BuiltInChannels.Sports: _window.Navigate(Sports.SportsAccess.CreateEntryView(_host, _window), origin); break;
-            case BuiltInChannels.Settings: _window.Navigate(new SettingsView(_host, _window), origin); break;
-            case BuiltInChannels.Power: _window.Navigate(new PowerView(_host, _window), origin); break;
-            case BuiltInChannels.Pals: _window.Navigate(new Pals.PalStudioView(_host, _window), origin); break;
-            case BuiltInChannels.Customize: SetEditMode(true); break;
-        }
-        if (id != BuiltInChannels.Customize) _pal.ChannelOpened();
-        _host.Pals.ReportBuiltIn(id);
-    }
+    public void OpenBuiltIn(string id, Point? origin) =>
+        HomeActions.OpenBuiltIn(_window, _host, id, origin, () => SetEditMode(true), () => _pal.ChannelOpened());
 
     public void SetEditMode(bool on)
     {

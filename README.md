@@ -24,7 +24,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.6.2-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.7.0-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -74,10 +74,19 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 
 ## Features
 
+**First run**
+- A **welcome tour** for new installs: what Couchtop is, a side-by-side pick of the three shells (choosing one switches the app there and then), what it already found on your PC, what is built in, how to drive it with a mouse, controller or Wii Remote, and how to get back to Windows. Take it again any time from Settings › About.
+
 **The menu**
+- **Three shells**, switched live in Settings › Display with no restart. Each one is a complete look, not a skin: its own colours on every screen, its own flat icon set, its own sounds, its own pointer and its own navigation.
+  - **Channels** — the Couchtop grid: channel tiles, eight themes, the hand pointer, menu music and Pals.
+  - **Dashboard** — graphite and green, angled blade tabs, a row of app tiles, dry mechanical clicks. No themes, no Pals, no music.
+  - **Media Bar** — deep blue, a row of categories crossed by a column of items, thin outlined icons, soft sine blips, a background that shifts with the month and the hour. No themes, no Pals, no music.
+- Your apps, games, files, channels and settings are shared by all three shells; nothing else is.
 - Full-screen 4×3 channel grid with as many pages as you need, page arrows, mouse-wheel and keyboard paging.
 - Glossy tiles with a blue hover glow, a gentle wobble, idle artwork animations and occasional shine sweeps.
 - A tilting hand pointer that leans as you move it, plus a channel-name bubble.
+- With the Couchtop Bar shown, Explorer's taskbar auto-hides so there are not two bars along the bottom, and is restored when the Couchtop Bar goes away (Settings › Desktop).
 - Curved bottom bar with a big clock (blinking colon), the date, a menu button and a **Message Board**.
 - A channel start screen with **Menu** and **Start** buttons, zoom transitions and a launch flash.
 - Original synthesized sound effects, startup jingle and a music-box menu loop. The music plays only while the menu is in front.
@@ -191,7 +200,8 @@ before shell mode can be re-enabled.
 | Point / move | move | arrow keys | left stick | point at sensor bar / D-pad |
 | Select | click | Enter | A | A |
 | Back | right-click / X1 | Esc | B | B or 2 |
-| Change page | arrows / wheel | Page Up / Down | LB / RB | − / + |
+| Change page (Channels) | arrows / wheel | Page Up / Down | LB / RB | − / + |
+| Change blade / category | click a tab or icon | ↑ ↓ (Dashboard), ← → (Media Bar), Page Up / Down | LB / RB | − / + |
 | Quick Menu | — | `Ctrl+Alt+Home` (configurable) | Guide or Back+Start | HOME |
 | Windows desktop | **Desktop** button on the menu | Quick Menu › Windows Desktop | Quick Menu › Windows Desktop | Quick Menu › Windows Desktop |
 | Emergency exit | — | `Ctrl+Alt+Shift+F12` | — | — |
@@ -464,4 +474,6 @@ Bug reports, especially from real hardware, are hugely helpful. See [CONTRIBUTIN
 
 Couchtop is released under the [MIT License](LICENSE). Third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
-Couchtop is an independent project and is not affiliated with, sponsored by, or endorsed by Nintendo. It contains no Nintendo images, audio, fonts or code; all artwork and sounds are original. "Wii Remote" is a trademark of Nintendo, used here only to describe controller compatibility.
+The Dashboard and Media Bar menu styles are original designs inspired by the shapes of mid-2000s console menus. They contain no assets, code or names from any console maker.
+
+Couchtop is an independent project and is not affiliated with, sponsored by, or endorsed by Nintendo, Microsoft or Sony. It contains no Nintendo images, audio, fonts or code; all artwork and sounds are original. "Wii Remote" is a trademark of Nintendo, used here only to describe controller compatibility.

@@ -1,3 +1,5 @@
+using Couchtop.Core.Settings;
+
 namespace Couchtop.App.Services;
 
 public enum SoundEffect
@@ -60,6 +62,10 @@ public static class SoundSynth
 {
     public const int Rate = 44100;
 
+    /// <summary>
+    /// The Couchtop (Channels) sound set: soft bells and a music-box loop. The console shells have their own
+    /// sets in <see cref="CreateShell"/> and no menu music at all.
+    /// </summary>
     public static SoundBank Create(bool includeAmbience = true)
     {
         var bank = new SoundBank();
@@ -76,6 +82,108 @@ public static class SoundSynth
         AddSportsSounds(bank);
         if (includeAmbience) bank.Ambience = Ambience();
         return bank;
+    }
+
+    /// <summary>
+    /// Sounds for a console shell. Dashboard: dry, low, mechanical clicks with a short air-move on section
+    /// changes. Media Bar: clean sine blips and a soft glassy confirm. Neither has menu music.
+    /// </summary>
+    public static SoundBank CreateShell(string menuStyle)
+    {
+        var bank = new SoundBank();
+        var dashboard = menuStyle == MenuStyleCatalog.Dashboard;
+
+        if (dashboard)
+        {
+            bank.Effects[SoundEffect.Hover] = Build(0.06, b => Thump(b, 0, 520, 300, 0.05, 0.16, 90));
+            bank.Effects[SoundEffect.Tick] = Build(0.04, b => Thump(b, 0, 700, 420, 0.03, 0.12, 120));
+            bank.Effects[SoundEffect.Select] = Build(0.2, b =>
+            {
+                Thump(b, 0, 420, 190, 0.09, 0.3, 40);
+                NoiseBurst(b, 0, 0.05, 0.1, 3, 0.25);
+            });
+            bank.Effects[SoundEffect.Back] = Build(0.2, b => Thump(b, 0, 260, 150, 0.1, 0.24, 36));
+            bank.Effects[SoundEffect.Page] = Build(0.32, b =>
+            {
+                NoiseBurst(b, 0, 0.26, 0.2, 11, 0.06);
+                Thump(b, 0.01, 330, 200, 0.1, 0.16, 30);
+            });
+            bank.Effects[SoundEffect.Launch] = Build(0.7, b =>
+            {
+                NoiseBurst(b, 0, 0.5, 0.22, 5, 0.05);
+                Thump(b, 0.02, 300, 120, 0.35, 0.3, 8);
+                Bell(b, 0.05, Note(69), 0.5, 0.05, 7, 0, 0.35);
+            });
+            bank.Effects[SoundEffect.Startup] = Build(1.6, b =>
+            {
+                NoiseBurst(b, 0, 1.2, 0.18, 9, 0.04);
+                Thump(b, 0.05, 220, 70, 1.0, 0.28, 4);
+                Bell(b, 0.25, Note(64), 1.1, 0.045, 4, -0.2, 0.3);
+                Bell(b, 0.45, Note(71), 1.0, 0.04, 4, 0.2, 0.3);
+            });
+            bank.Effects[SoundEffect.Error] = Build(0.3, b => Thump(b, 0, 200, 120, 0.22, 0.28, 12));
+            bank.Effects[SoundEffect.HomeOpen] = Build(0.28, b =>
+            {
+                NoiseBurst(b, 0, 0.22, 0.18, 4, 0.07);
+                Thump(b, 0, 380, 220, 0.12, 0.2, 26);
+            });
+            bank.Effects[SoundEffect.HomeClose] = Build(0.24, b => Thump(b, 0, 300, 160, 0.12, 0.2, 30));
+        }
+        else
+        {
+            bank.Effects[SoundEffect.Hover] = Build(0.09, b => Sine(b, 0, 1480, 0.07, 0.07, 42));
+            bank.Effects[SoundEffect.Tick] = Build(0.07, b => Sine(b, 0, 1180, 0.05, 0.06, 60));
+            bank.Effects[SoundEffect.Select] = Build(0.4, b =>
+            {
+                Sine(b, 0, 1760, 0.3, 0.09, 13);
+                Sine(b, 0.02, 2640, 0.22, 0.035, 18);
+            });
+            bank.Effects[SoundEffect.Back] = Build(0.32, b =>
+            {
+                Sine(b, 0, 1180, 0.26, 0.08, 15);
+                Sine(b, 0.02, 780, 0.24, 0.05, 16);
+            });
+            bank.Effects[SoundEffect.Page] = Build(0.22, b => Sine(b, 0, 980, 0.18, 0.06, 22));
+            bank.Effects[SoundEffect.Launch] = Build(0.9, b =>
+            {
+                Sine(b, 0, Note(76), 0.7, 0.07, 5);
+                Sine(b, 0.08, Note(83), 0.7, 0.05, 5);
+                Sine(b, 0.16, Note(88), 0.6, 0.035, 6);
+            });
+            bank.Effects[SoundEffect.Startup] = Build(2.2, b =>
+            {
+                Sine(b, 0.0, Note(69), 1.8, 0.05, 2.4);
+                Sine(b, 0.35, Note(76), 1.6, 0.04, 2.6);
+                Sine(b, 0.7, Note(81), 1.4, 0.03, 2.8);
+            });
+            bank.Effects[SoundEffect.Error] = Build(0.36, b =>
+            {
+                Sine(b, 0, 520, 0.3, 0.09, 12);
+                Sine(b, 0.1, 390, 0.26, 0.08, 12);
+            });
+            bank.Effects[SoundEffect.HomeOpen] = Glide(680, 1420, 0.16, 0.1);
+            bank.Effects[SoundEffect.HomeClose] = Glide(1320, 620, 0.16, 0.09);
+        }
+
+        AddSportsSounds(bank);
+        return bank;
+    }
+
+    /// <summary>A plain sine with a soft attack and exponential decay: the Media Bar's whole voice.</summary>
+    private static void Sine(float[] buf, double start, double freq, double duration, double amp, double decay)
+    {
+        var s = (int)(start * Rate);
+        var n = (int)(duration * Rate);
+        for (var i = 0; i < n; i++)
+        {
+            var idx = (s + i) * 2;
+            if (idx + 1 >= buf.Length) break;
+            var t = (double)i / Rate;
+            var attack = Math.Min(1, t / 0.004);
+            var v = (float)(Math.Sin(2 * Math.PI * freq * t) * amp * attack * Math.Exp(-t * decay));
+            buf[idx] += v;
+            buf[idx + 1] += v;
+        }
     }
 
     // ---------------------------------------------------------------- Couchtop Sports

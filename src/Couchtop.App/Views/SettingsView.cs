@@ -18,7 +18,11 @@ namespace Couchtop.App.Views;
 
 public sealed class SettingsView : UserControl, IScreenView
 {
-    private static readonly string[] Categories = { "Display", "Desktop", "Sound", "Controls", "Channels", "Pals", "Shell Mode", "Data", "About" };
+    private static readonly string[] AllCategories = { "Display", "Desktop", "Sound", "Controls", "Channels", "Pals", "Shell Mode", "Data", "About" };
+
+    /// <summary>Pals belong to the Channels menu style, so the console shells never offer their settings.</summary>
+    private static string[] Categories =>
+        ConsoleArt.IsConsoleShell() ? AllCategories.Where(c => c != "Pals").ToArray() : AllCategories;
 
     private readonly AppHost _host;
     private readonly MainWindow _window;
@@ -213,8 +217,18 @@ public sealed class SettingsView : UserControl, IScreenView
     private void BuildDisplay()
     {
         Header("Display");
+        var style = MenuStyleCatalog.All.First(m => m.Id == S.MenuStyle);
+        Choice("Menu style", style.Description + ". Each style is its own shell: look, icons, sounds and navigation.",
+            MenuStyleCatalog.All.Select(m => (m.Name, m.Id)).ToList(), () => S.MenuStyle, v => S.MenuStyle = v, () =>
+            {
+                _window.ApplyMenuStyle(S.MenuStyle);
+                Refresh();
+            });
+
         var current = ThemeCatalog.All.First(t => t.Id == S.Theme);
-        Choice("Theme", current.Description + ". Changes colors, shapes, the pointer and scenery.", ThemeCatalog.All.Select(t => (t.Name, t.Id)).ToList(), () => S.Theme, v => S.Theme = v, () =>
+        if (S.MenuStyle != MenuStyleCatalog.Channels)
+            Info("Themes are part of the Channels menu style. The Dashboard and Media Bar have a look of their own.");
+        Choice("Theme", current.Description + ". Changes colors, shapes, the pointer and scenery of the Channels menu.", ThemeCatalog.All.Select(t => (t.Name, t.Id)).ToList(), () => S.Theme, v => S.Theme = v, () =>
         {
             _window.ApplyTheme(S.Theme);
             _host.Pals.ReportTheme(S.Theme);
@@ -239,7 +253,7 @@ public sealed class SettingsView : UserControl, IScreenView
             () =>
             {
                 ViewKit.TextScale = S.TextScale;
-                _window.Menu.RebuildPages();
+                _window.Menu.Rebuild();
                 Refresh();
             });
         Buttons("Windows accessibility", "Narrator, Magnifier, contrast themes and pointer size live in Windows",
@@ -265,6 +279,9 @@ public sealed class SettingsView : UserControl, IScreenView
         Info(_host.IsShellSession
             ? "Couchtop is the desktop for this session: it replaces Explorer's desktop, taskbar and Start menu while Windows keeps running underneath."
             : "Couchtop is in launcher mode, so Explorer's desktop and taskbar are still there. Turn on Shell Mode to make Couchtop the desktop at your next sign-in.");
+
+        Toggle("Hide the Windows taskbar", "While the Couchtop Bar is shown, Explorer's taskbar auto-hides so there are not two",
+            () => S.AutoHideWindowsTaskbar, v => S.AutoHideWindowsTaskbar = v, _window.ApplyTaskbarAutoHide);
 
         Choice("Couchtop Bar", "The bar along the bottom with your open apps, search, the clock and status",
             new[] { ("In shell mode", "shell"), ("Always", "always"), ("Never", "never") },
@@ -707,7 +724,7 @@ public sealed class SettingsView : UserControl, IScreenView
         Header("About");
         Info($"Couchtop {version}\nA playful, console-style desktop for Windows.", "TextBrush", 34);
         Info("Privacy: Couchtop has no telemetry, no accounts and no cloud. Settings and channels stay in your Windows profile. The Web uses Microsoft Edge WebView2, which follows your Windows and Edge privacy settings.");
-        Info("Fonts: M PLUS Rounded 1c (SIL Open Font License 1.1). All artwork, the pointer and every sound are original and made for this project.\nCouchtop is an independent fan project and is not affiliated with or endorsed by Nintendo.");
+        Info("Fonts: M PLUS Rounded 1c (SIL Open Font License 1.1). All artwork, the pointer and every sound are original and made for this project.\nCouchtop is an independent project and is not affiliated with or endorsed by Nintendo, Microsoft or Sony.");
         Info($"{(_host.Install.IsPortable ? "Portable folder" : "Install folder")}: {_host.Install.Directory}\nData folder: {_host.Paths.DataRoot}");
     }
 }

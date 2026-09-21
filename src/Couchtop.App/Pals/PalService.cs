@@ -172,9 +172,32 @@ public sealed class PalService
         if (HasPal) Report(new PalEvent(PalEventKind.Startup));
     }
 
+    /// <summary>
+    /// True while a console shell (Dashboard or Media Bar) is the menu style. Pals are part of the Channels
+    /// menu, so everything about them stops: no reactions, no peek, no bar face, no desktop visits. The Pal
+    /// itself is untouched and comes back with the Channels menu.
+    /// </summary>
+    public bool Suspended { get; private set; }
+
+    public void SetSuspended(bool suspended)
+    {
+        if (Suspended == suspended) return;
+        Suspended = suspended;
+        if (suspended)
+        {
+            DesktopBuddy?.Update();
+            Flush();
+        }
+        else
+        {
+            DesktopBuddy?.Update();
+        }
+        UpdateListening();
+    }
+
     public void Report(PalEvent e)
     {
-        if (!HasPal || _host.Options.IsSnapshot && e.Kind != PalEventKind.ProfileCreated) return;
+        if (Suspended || !HasPal || _host.Options.IsSnapshot && e.Kind != PalEventKind.ProfileCreated) return;
         PalReaction? reaction;
         try
         {
@@ -283,7 +306,7 @@ public sealed class PalService
 
     private void UpdateListening()
     {
-        var want = _started && HasPal && !_host.Options.IsSnapshot;
+        var want = _started && HasPal && !Suspended && !_host.Options.IsSnapshot;
         if (want == _listening) return;
         _listening = want;
         if (want)

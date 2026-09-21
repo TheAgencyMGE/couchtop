@@ -20,7 +20,10 @@ public partial class App : Application
         Log.Info($"Graphics: render tier {tier}{(tier < 2 ? " (software or limited acceleration; ambient animations capped)" : " (hardware accelerated)")}");
 
         var host = AppHost.Create(Program.Options);
-        ThemeManager.Apply(host.Settings.Current.Theme);
+        ThemeManager.ApplyFor(host.Settings.Current.MenuStyle, host.Settings.Current.Theme);
+        // Heals a taskbar left hidden by a run that was killed, and gives the helper somewhere to remember.
+        Core.Shell.WindowsTaskbar.Attach(host.Settings);
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => Core.Shell.WindowsTaskbar.Restore();
         foreach (var issue in host.Settings.LoadIssues.Concat(host.Layout.LoadIssues))
             host.PostMessage("Settings repaired", issue);
 
@@ -40,9 +43,23 @@ public static class ThemeManager
 
     public static event EventHandler? Changed;
 
+    /// <summary>
+    /// Applies the look for a menu style: the Channels menu wears the chosen theme, while the Dashboard and
+    /// Media Bar shells have one fixed look each that covers every screen.
+    /// </summary>
+    public static void ApplyFor(string menuStyle, string theme) => Apply(menuStyle switch
+    {
+        MenuStyleCatalog.Dashboard => "ModeDashboard",
+        MenuStyleCatalog.MediaBar => "ModeMediaBar",
+        _ => theme,
+    });
+
+    /// <summary>The shells are dictionaries too, but they are never offered in the theme list.</summary>
+    private static bool IsShellLook(string id) => id is "ModeDashboard" or "ModeMediaBar";
+
     public static void Apply(string theme)
     {
-        theme = ThemeCatalog.Normalize(theme);
+        theme = IsShellLook(theme) ? theme : ThemeCatalog.Normalize(theme);
         ResourceDictionary replacement;
         try
         {

@@ -25,8 +25,12 @@ public sealed class BrowserView : UserControl, IScreenView, IDisposable
     private WebView2? _web;
     private bool _initializing;
 
-    public BrowserView(AppHost host, MainWindow window)
+    /// <summary>A page to open instead of the home page (used by bookmarks on the Media Bar menu).</summary>
+    private string? _startUrl;
+
+    public BrowserView(AppHost host, MainWindow window, string? startUrl = null)
     {
+        _startUrl = startUrl;
         _host = host;
         _window = window;
 
@@ -121,7 +125,15 @@ public sealed class BrowserView : UserControl, IScreenView, IDisposable
                 var source = core.Source ?? "";
                 _address.Text = source.StartsWith("data:", StringComparison.OrdinalIgnoreCase) || source == "about:blank" ? "" : source;
             };
-            GoHomePage();
+            if (_startUrl is { Length: > 0 } start)
+            {
+                _startUrl = null;
+                Go(start);
+            }
+            else
+            {
+                GoHomePage();
+            }
         }
         catch (Exception ex)
         {

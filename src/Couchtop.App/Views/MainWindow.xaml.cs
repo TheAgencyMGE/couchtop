@@ -18,6 +18,7 @@ using Couchtop.Core.Native;
 using Couchtop.Core.Platform;
 using Couchtop.Core.Safety;
 using Couchtop.Core.Settings;
+using Couchtop.Core.Shell;
 
 namespace Couchtop.App.Views;
 
@@ -68,9 +69,9 @@ public partial class MainWindow : Window
         Pointer.RenderTransform = new TransformGroup { Children = { PointerScale, PointerRotate } };
         RegisterClassHandlers();
 
-        Menu = new MenuView(host, this);
-        ViewLayer.Children.Add(Menu);
-        _stack.Add(Menu);
+        Menu = CreateHomeScreen(host.Settings.Current.MenuStyle);
+        ViewLayer.Children.Add(Menu.Element);
+        _stack.Add(Menu.Element);
 
         // The Pal's corner peek sits above every screen but below dialogs and the pointer.
         _palPeek = new Pals.PalPeek(host);
@@ -130,7 +131,8 @@ public partial class MainWindow : Window
         ApplyCursorMode();
     }
 
-    public MenuView Menu { get; }
+    /// <summary>The home screen for the chosen menu style. Swapped live by <see cref="ApplyMenuStyle"/>.</summary>
+    public IHomeScreen Menu { get; private set; }
     public bool EmergencyHotkeyRegistered { get; private set; }
     public bool HomeHotkeyRegistered { get; private set; }
     public Func<bool>? EmergencyHotkeyInterceptor { get; set; }
@@ -192,6 +194,7 @@ public partial class MainWindow : Window
         if (wanted == (_bar is not null))
         {
             _bar?.Reposition();
+            ApplyTaskbarAutoHide();
             return;
         }
         if (wanted)
@@ -206,6 +209,20 @@ public partial class MainWindow : Window
             _bar?.Close();
             _bar = null;
         }
+        ApplyTaskbarAutoHide();
+    }
+
+    /// <summary>
+    /// With the Couchtop Bar on screen there is no need for a second taskbar underneath it, so Explorer's is
+    /// set to auto-hide while ours is up, and put back exactly as it was when ours goes away. As the Windows
+    /// shell there is no Explorer taskbar, so nothing happens.
+    /// </summary>
+    public void ApplyTaskbarAutoHide()
+    {
+        if (_host.Options.IsSnapshot) return;
+        var wanted = _bar is not null && _host.Settings.Current.AutoHideWindowsTaskbar && !_host.IsShellSession && !_host.IsExiting;
+        if (wanted) WindowsTaskbar.Hide();
+        else WindowsTaskbar.Restore();
     }
 
     /// <summary>Opens the command palette (search everything) over whatever is on screen.</summary>
@@ -300,6 +317,7 @@ public partial class MainWindow : Window
         _host.RefreshChannelsInBackground();
         // The Pal starts with Couchtop, not with the menu, so it can head out onto the desktop even when
         // Couchtop opens behind other windows.
+        _host.Pals.SetSuspended(ConsoleArt.IsConsoleShell(_host));
         Dispatcher.BeginInvoke(() => _host.Pals.Start(this), DispatcherPriority.ApplicationIdle);
         if (_host.Options.SmokeTestSeconds > 0) ScheduleSmokeTestExit();
         if (_host.Settings.Current.ShowStartupSplash && !Anim.Reduced) PlaySplash();
@@ -378,18 +396,23 @@ public partial class MainWindow : Window
         AfterIntro();
     }
 
-    private async void AfterIntro()
+    private void AfterIntro()
     {
         UpdateActivity();
-        Menu.Focus();
+        Menu.Element.Focus();
         RestoreLastScreen();
-        if (_host.Settings.Current.WelcomeShown) return;
-        _host.Settings.Current.WelcomeShown = true;
-        _host.SaveSettings();
-        await ShowDialogAsync(
-            "Welcome to Couchtop!\n\nPoint at a channel and click to start it. Press " + _host.Settings.Current.HomeMenuHotkey +
-            " at any time (or Guide / Home on a controller) for the Quick Menu.\n\nIf anything ever goes wrong, Ctrl + Alt + Shift + F12 takes you straight back to the normal Windows desktop.",
-            "OK");
+        if (_host.Options.IsSnapshot) return;
+        // New installs get the tour, and everyone gets it once more when it gains something worth seeing.
+        if (_host.Settings.Current.TourVersion >= WelcomeView.CurrentVersion) return;
+        Dispatcher.BeginInvoke(ShowTour, DispatcherPriority.Background);
+    }
+
+    /// <summary>Opens the welcome tour over the menu.</summary>
+    public void ShowTour()
+    {
+        if (CurrentView is WelcomeView) return;
+        GoHome();
+        Navigate(new WelcomeView(_host, this));
     }
 
     /// <summary>
@@ -409,8 +432,8 @@ public partial class MainWindow : Window
     private void UpdateActivity()
     {
         var active = IsActive && WindowState != WindowState.Minimized && !_sessionLocked && !_splashActive && !_host.IsExiting;
-        Menu.SetActive(active && CurrentView == Menu);
-        _host.Audio.SetAmbience(active && CurrentView is IScreenView { PlaysAmbience: true });
+        Menu.SetActive(active && CurrentView == Menu.Element);
+        _host.Audio.SetAmbience(active && !ConsoleArt.IsConsoleShell(_host) && CurrentView is IScreenView { PlaysAmbience: true });
         SetDecorRunning(active && !Anim.Reduced);
     }
 
@@ -428,8 +451,8 @@ public partial class MainWindow : Window
     public void ApplyTheme(string theme)
     {
         SetDecorRunning(false);
-        ThemeManager.Apply(theme);
-        Menu.RebuildPages();
+        ThemeManager.ApplyFor(_host.Settings.Current.MenuStyle, theme);
+        Menu.Rebuild();
         RebuildBackdrops();
         // The scenery template is re-created on the next layout pass; start its animations after that.
         Dispatcher.BeginInvoke(UpdateActivity, DispatcherPriority.Loaded);
@@ -459,6 +482,7 @@ public partial class MainWindow : Window
         }
         foreach (var b in _backdrops) b.Close();
         _backdrops.Clear();
+        WindowsTaskbar.Restore();
     }
 
     private void OnSessionEnding(object? sender, SessionEndingCancelEventArgs e)
@@ -680,7 +704,8 @@ public partial class MainWindow : Window
 
     public void ApplyCursorMode()
     {
-        _useSystemCursor = _host.Settings.Current.UseSystemCursor || (_stack.Count > 0 && CurrentView is IScreenView { WantsSystemCursor: true });
+        _useSystemCursor = _host.Settings.Current.UseSystemCursor || ConsoleArt.IsConsoleShell(_host) ||
+                           (_stack.Count > 0 && CurrentView is IScreenView { WantsSystemCursor: true });
         Cursor = _useSystemCursor ? null : Cursors.None;
         UpdatePointerVisibility();
     }
@@ -735,6 +760,8 @@ public partial class MainWindow : Window
     /// <summary>Shows the channel-name speech bubble near the pointer, or above <paramref name="anchor"/> for keyboard focus.</summary>
     public void ShowBubble(string? text, Point? anchor = null)
     {
+        // The pointer bubble belongs to the Channels menu; the shells name things on screen instead.
+        if (ConsoleArt.IsConsoleShell(_host)) text = null;
         if (string.IsNullOrEmpty(text))
         {
             Bubble.Visibility = Visibility.Collapsed;
@@ -924,9 +951,9 @@ public partial class MainWindow : Window
             (current as IScreenView)?.OnHidden();
             _host.Audio.Play(SoundEffect.Back);
             AnimateOut(current, remove: true, enlarge: false, null);
-            Menu.Visibility = Visibility.Visible;
-            AnimateIn(Menu, null, fromSmall: false);
-            AfterViewChanged(Menu);
+            Menu.Element.Visibility = Visibility.Visible;
+            AnimateIn(Menu.Element, null, fromSmall: false);
+            AfterViewChanged(Menu.Element);
         }
         else if (_stack.Count > 2)
         {
@@ -945,12 +972,69 @@ public partial class MainWindow : Window
             ViewLayer.Children.Remove(view);
             (view as IDisposable)?.Dispose();
         }
-        Menu.BeginAnimation(OpacityProperty, null);
-        Menu.Opacity = 1;
-        Menu.RenderTransform = Transform.Identity;
-        Menu.IsHitTestVisible = true;
-        Menu.Visibility = Visibility.Visible;
-        AfterViewChanged(Menu);
+        ShowHomeScreen();
+    }
+
+    /// <summary>Puts the home screen back on screen, reset from any transition it was left in.</summary>
+    private void ShowHomeScreen()
+    {
+        var element = Menu.Element;
+        element.BeginAnimation(OpacityProperty, null);
+        element.Opacity = 1;
+        element.RenderTransform = Transform.Identity;
+        element.IsHitTestVisible = true;
+        element.Visibility = Visibility.Visible;
+        AfterViewChanged(element);
+    }
+
+    private IHomeScreen CreateHomeScreen(string styleId) => MenuStyleCatalog.Normalize(styleId) switch
+    {
+        MenuStyleCatalog.Dashboard => new DashboardView(_host, this),
+        MenuStyleCatalog.MediaBar => new MediaBarView(_host, this),
+        _ => new MenuView(_host, this),
+    };
+
+    /// <summary>
+    /// Switches the home screen between menu styles without restarting: channels, settings, open screens and
+    /// everything else stay as they are, only the menu in front of them is replaced.
+    /// </summary>
+    public void ApplyMenuStyle(string styleId)
+    {
+        styleId = MenuStyleCatalog.Normalize(styleId);
+        if (Menu.StyleId == styleId) return;
+
+        ShowBubble(null);
+        _host.Settings.Current.MenuStyle = styleId;
+        ThemeManager.ApplyFor(styleId, _host.Settings.Current.Theme);
+        _host.Audio.SetShellSounds(styleId);
+        var old = Menu;
+        var wasInFront = CurrentView == old.Element;
+        var next = CreateHomeScreen(styleId);
+
+        Menu = next;
+        _stack[0] = next.Element;
+        ViewLayer.Children.Insert(Math.Max(0, ViewLayer.Children.IndexOf(old.Element)), next.Element);
+        next.Element.Visibility = wasInFront ? Visibility.Visible : Visibility.Hidden;
+        next.Element.IsHitTestVisible = wasInFront;
+
+        old.SetActive(false);
+        (old as IDisposable)?.Dispose();
+        ViewLayer.Children.Remove(old.Element);
+
+        if (wasInFront)
+        {
+            ShowHomeScreen();
+            Anim.To(next.Element, OpacityProperty, 1, 280, Anim.EaseOut, from: 0);
+            next.PlayIntro();
+        }
+        // Pals are part of the Channels menu; the console shells show nothing of them.
+        _palPeek.Hide();
+        _host.Pals.SetSuspended(ConsoleArt.IsConsoleShell(_host));
+        ApplyCursorMode();
+        RebuildBackdrops();
+        _bar?.RefreshForMenuStyle();
+        UpdateActivity();
+        Log.Info("Menu style: " + styleId);
     }
 
     private readonly Pals.PalPeek _palPeek;
@@ -958,7 +1042,7 @@ public partial class MainWindow : Window
     private void AfterViewChanged(FrameworkElement view)
     {
         // A screen with its own Pal doesn't need the corner one too.
-        if (view is Pals.IPalHost { ShowsPal: true }) _palPeek.Hide();
+        if (ConsoleArt.IsConsoleShell(_host) || view is Pals.IPalHost { ShowsPal: true }) _palPeek.Hide();
         ApplyCursorMode();
         (view as IScreenView)?.OnShown();
         UpdateActivity();
@@ -1094,6 +1178,20 @@ public partial class MainWindow : Window
             {
                 await Task.Delay(2500);
                 await SavePalClipsAsync(dir);
+                _host.Exit(0);
+                return;
+            }
+            if (Environment.GetEnvironmentVariable("COUCHTOP_SNAPSHOT_ONLY") == "tour")
+            {
+                await Task.Delay(2500);
+                await SaveTourSnapshotsAsync(dir);
+                _host.Exit(0);
+                return;
+            }
+            if (Environment.GetEnvironmentVariable("COUCHTOP_SNAPSHOT_ONLY") == "menus")
+            {
+                await Task.Delay(2500);
+                await SaveMenuStyleSnapshotsAsync(dir);
                 _host.Exit(0);
                 return;
             }
@@ -1255,6 +1353,85 @@ public partial class MainWindow : Window
             Log.Error("Snapshot rendering failed", ex);
         }
         _host.Exit(0);
+    }
+
+    /// <summary>Renders every step of the welcome tour, in each shell the tour can be read in.</summary>
+    private async Task SaveTourSnapshotsAsync(string dir)
+    {
+        foreach (var style in new[] { Core.Settings.MenuStyleCatalog.Channels, Core.Settings.MenuStyleCatalog.Dashboard })
+        {
+            ApplyMenuStyle(style);
+            await Task.Delay(900);
+            var tour = new WelcomeView(_host, this);
+            Navigate(tour);
+            await Task.Delay(900);
+            for (var step = 0; step < 7; step++)
+            {
+                tour.SnapshotStep(step);
+                await Task.Delay(700);
+                Save(dir, $"tour-{style}-{step + 1}");
+            }
+            GoHome();
+            await Task.Delay(400);
+        }
+    }
+
+    /// <summary>Renders every menu style across the screens it touches, for reviewing the shells side by side.</summary>
+    private async Task SaveMenuStyleSnapshotsAsync(string dir)
+    {
+        var app = _host.Layout.Layout.Channels.FirstOrDefault(c => c.Kind != ChannelKind.BuiltIn);
+        foreach (var style in Core.Settings.MenuStyleCatalog.All)
+        {
+            ApplyMenuStyle(style.Id);
+            await Task.Delay(1500);
+            Save(dir, $"style-{style.Id}-1-home");
+
+            switch (Menu)
+            {
+                case DashboardView dashboard:
+                    dashboard.SnapshotSelect(2, 1);
+                    break;
+                case MediaBarView bar:
+                    bar.SnapshotSelect(2, 2);
+                    break;
+                default:
+                    Menu.SnapshotHover(5);
+                    break;
+            }
+            await Task.Delay(1100);
+            Save(dir, $"style-{style.Id}-2-home");
+
+            if (app is not null)
+            {
+                Navigate(new ChannelPreviewView(_host, this, app));
+                await Task.Delay(1500);
+                Save(dir, $"style-{style.Id}-3-start");
+                GoHome();
+                await Task.Delay(500);
+            }
+
+            Navigate(new SettingsView(_host, this));
+            await Task.Delay(1200);
+            Save(dir, $"style-{style.Id}-4-settings");
+            GoHome();
+            await Task.Delay(400);
+
+            Navigate(new FilesView(_host, this));
+            await Task.Delay(2000);
+            Save(dir, $"style-{style.Id}-5-files");
+            GoHome();
+            await Task.Delay(400);
+
+            Navigate(new PowerView(_host, this));
+            await Task.Delay(1000);
+            Save(dir, $"style-{style.Id}-6-power");
+            GoHome();
+            await Task.Delay(400);
+
+            await HomeMenuWindow.RenderSnapshotAsync(_host, this, Path.Combine(dir, $"style-{style.Id}-7-quick.png"));
+        }
+        ApplyMenuStyle(_host.Settings.Current.MenuStyle);
+        await Task.Delay(300);
     }
 
     /// <summary>
@@ -1477,6 +1654,36 @@ public partial class MainWindow : Window
         });
         Clip("kai-stretch", kai, 3, (v, i, _) => { if (i == 0) { v.Animator!.Play(Core.Pals.PalGesture.Stretch, Core.Pals.PalMood.Happy); v.Animator.Talk(1.8); } });
 
+        // Extra reactions for the second batch of Shorts ("x-" so they can be rendered on their own).
+        void React(string name, Core.Pals.PalProfile p, Core.Pals.PalGesture gesture, Core.Pals.PalMood mood, double seconds, double talk = 1.6) =>
+            Clip(name, p, seconds, (v, i, _) =>
+            {
+                if (i != 0) return;
+                v.Animator!.RestingMood = mood;
+                v.Animator.Play(gesture, mood);
+                if (talk > 0) v.Animator.Talk(talk);
+            });
+        React("x-pip-shake", pip, Core.Pals.PalGesture.ShakeHead, Core.Pals.PalMood.Surprised, 2.4);
+        React("x-pip-shrug", pip, Core.Pals.PalGesture.Shrug, Core.Pals.PalMood.Cheeky, 2.4);
+        React("x-pip-point", pip, Core.Pals.PalGesture.Point, Core.Pals.PalMood.Cheeky, 2.4);
+        React("x-pip-bow", pip, Core.Pals.PalGesture.Bow, Core.Pals.PalMood.Happy, 2.6);
+        React("x-pip-thumbs", pip, Core.Pals.PalGesture.ThumbsUp, Core.Pals.PalMood.Happy, 2.4);
+        React("x-pip-look", pip, Core.Pals.PalGesture.LookAround, Core.Pals.PalMood.Excited, 3.0, 2.0);
+        React("x-pip-jump", pip, Core.Pals.PalGesture.Jump, Core.Pals.PalMood.Excited, 1.4, 0);
+        React("x-pip-surprised", pip, Core.Pals.PalGesture.Surprised, Core.Pals.PalMood.Surprised, 2.0);
+        React("x-kai-shrug", kai, Core.Pals.PalGesture.Shrug, Core.Pals.PalMood.Cheeky, 2.4);
+        React("x-momo-laugh", momo, Core.Pals.PalGesture.Laugh, Core.Pals.PalMood.Cheeky, 2.4);
+        Clip("x-kai-sit", kai, 3, (v, i, _) => { if (i == 0) v.Animator!.Base = Pals.AvatarBase.Sit; });
+        var extraMoves = new[] { Core.Pals.PalGesture.Dance, Core.Pals.PalGesture.Wave, Core.Pals.PalGesture.Clap, Core.Pals.PalGesture.Cheer, Core.Pals.PalGesture.Spin, Core.Pals.PalGesture.ThumbsUp };
+        for (var k = 0; k < extraMoves.Length && Wanted("x-lineup"); k++)
+        {
+            var move = extraMoves[k];
+            Pals.PalClipExporter.Render(dir, $"x-lineup-{k + 6}", Core.Pals.PalProfile.Random(140 + k * 7), 360, 480, full, 2, (v, i, _) =>
+            {
+                if (i == 0) v.Animator!.Play(move, Core.Pals.PalMood.Excited);
+            });
+        }
+
         // Close-up for the hook: Momo winking and chatting.
         if (Wanted("momo-face")) Pals.PalClipExporter.Render(dir, "momo-face", momo, 720, 720, Pals.AvatarFraming.Face, 3, (v, i, _) =>
         {
@@ -1546,10 +1753,10 @@ public partial class MainWindow : Window
         }.Normalize();
         _host.Pals.SaveProfile(pip);
         await Task.Delay(1500);
-        Menu.SnapshotPal(650, Core.Pals.PalGesture.Wave, "Hi! I'm Pip. So this is Couchtop? It's lovely in here!");
+        ((MenuView)Menu).SnapshotPal(650, Core.Pals.PalGesture.Wave, "Hi! I'm Pip. So this is Couchtop? It's lovely in here!");
         await Task.Delay(600);
         Save(dir, "pals-home");
-        Menu.SnapshotPal(1290, Core.Pals.PalGesture.None, null);
+        ((MenuView)Menu).SnapshotPal(1290, Core.Pals.PalGesture.None, null);
         await Task.Delay(400);
         Save(dir, "pals-home-right");
 

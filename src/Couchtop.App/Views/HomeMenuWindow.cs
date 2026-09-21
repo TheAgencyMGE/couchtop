@@ -215,7 +215,10 @@ public sealed class HomeMenuWindow : Window
         var input = _host.Input;
         var pads = input?.ConnectedControllers ?? 0;
         var battery = pads > 0 ? InputService.BatteryLevel(0) : null;
-        _controllers.Text = $"Controllers: {pads}{(battery is { } b ? $" (battery {new string('▮', b + 1)}{new string('▯', 3 - b)})" : "")}    Wii Remote: {(input?.WiimoteConnected == true ? "connected" : "—")}";
+        // The remote is named only when one is connected, so a console shell never advertises another console.
+        var remote = input?.WiimoteConnected == true ? "    Wii Remote: connected"
+            : ConsoleArt.IsConsoleShell() ? "" : "    Wii Remote: —";
+        _controllers.Text = $"Controllers: {pads}{(battery is { } b ? $" (battery {new string('▮', b + 1)}{new string('▯', 3 - b)})" : "")}{remote}";
 
         if (!_snapshot)
         {

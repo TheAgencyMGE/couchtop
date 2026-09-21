@@ -118,6 +118,7 @@ public sealed class CouchtopBar : Window
             menu.IsOpen = true;
         };
         right.Children.Add(_palButton);
+        RefreshForMenuStyle();
         UpdatePal();
         _host.Pals.ProfileChanged += UpdatePal;
         _host.Pals.Reacted += OnPalReacted;
@@ -191,6 +192,10 @@ public sealed class CouchtopBar : Window
     }
 
     /// <summary>Puts the bar along the bottom of the Couchtop monitor and reserves that strip.</summary>
+    /// <summary>The Pal button belongs to the Channels menu; the console shells hide it.</summary>
+    public void RefreshForMenuStyle() =>
+        _palButton.Visibility = ConsoleArt.IsConsoleShell(_host) ? Visibility.Collapsed : Visibility.Visible;
+
     public void Reposition()
     {
         if (_closing || _hwnd == IntPtr.Zero) return;
@@ -441,7 +446,7 @@ public sealed class CouchtopBar : Window
 
     private void UpdatePal()
     {
-        if (_host.Pals.Profile is not { } profile)
+        if (_host.Pals.Suspended || _host.Pals.Profile is not { } profile)
         {
             _palButton.Visibility = Visibility.Collapsed;
             return;
@@ -453,7 +458,7 @@ public sealed class CouchtopBar : Window
 
     private void OnPalReacted(Core.Pals.PalReaction reaction, Pals.PalStage stage)
     {
-        if (stage != Pals.PalStage.Bar || _closing || !IsVisible || reaction.Text is null) return;
+        if (_host.Pals.Suspended || stage != Pals.PalStage.Bar || _closing || !IsVisible || reaction.Text is null) return;
         _palBubble ??= new Pals.PalBarBubble(_host);
         // Anchor the bubble's corner just above the Pal button, in screen units.
         var corner = _palButton.PointToScreen(new Point(_palButton.ActualWidth + 40, 0));

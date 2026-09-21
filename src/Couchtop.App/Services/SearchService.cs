@@ -172,6 +172,8 @@ public sealed class SearchService
         };
         foreach (var (title, subtitle, run) in actions)
         {
+            // Pals belong to the Channels menu style, so a console shell never offers their commands.
+            if (_host.Pals.Suspended && title.Contains("Pal", StringComparison.Ordinal)) continue;
             var score = Fuzzy.ScoreAny(query, title, subtitle);
             if (score < 0) continue;
             yield return new PaletteItem(SearchKind.Action, title, subtitle, score, run);

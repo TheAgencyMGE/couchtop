@@ -43,7 +43,8 @@ public sealed class AudioService : IDisposable
     {
         try
         {
-            var bank = SoundSynth.Create();
+            var style = _settings.MenuStyle;
+            var bank = style == MenuStyleCatalog.Channels ? SoundSynth.Create() : SoundSynth.CreateShell(style);
             lock (_gate) _bank = bank;
         }
         catch (Exception ex)
@@ -52,6 +53,26 @@ public sealed class AudioService : IDisposable
         }
         LoadCustomAudio();
         if (_ambienceWanted) SetAmbience(true);
+    });
+
+    /// <summary>
+    /// Rebuilds the sound set for a menu style. Each console shell has its own sounds, and no menu music;
+    /// the Channels menu keeps Couchtop's bells and music box.
+    /// </summary>
+    public Task SetShellSounds(string menuStyle) => Task.Run(() =>
+    {
+        try
+        {
+            var bank = menuStyle == MenuStyleCatalog.Channels ? SoundSynth.Create() : SoundSynth.CreateShell(menuStyle);
+            lock (_gate) _bank = bank;
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Sound synthesis failed", ex);
+            return;
+        }
+        LoadCustomAudio();
+        SetAmbience(menuStyle == MenuStyleCatalog.Channels && _ambienceWanted);
     });
 
     /// <summary>Re-reads the custom music and sounds from settings (after the user changed them).</summary>

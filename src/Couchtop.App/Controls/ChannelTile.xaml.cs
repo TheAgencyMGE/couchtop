@@ -141,8 +141,18 @@ public partial class ChannelTile : UserControl
 /// <summary>Builds tile artwork for any channel: built-in vector art, Steam/custom banners, or an icon card.</summary>
 public static class ChannelArtFactory
 {
-    public static FrameworkElement Build(Channel channel, AppHost host, bool large)
+    /// <summary>True when this channel's artwork already contains its name (the built-in channel art does).</summary>
+    public static bool HasOwnTitle(Channel channel) =>
+        !Views.ConsoleArt.IsConsoleShell() &&
+        channel is { Kind: ChannelKind.BuiltIn, BuiltInId: not null } &&
+        Application.Current?.TryFindResource("Art." + channel.BuiltInId) is DataTemplate;
+
+    public static FrameworkElement Build(Channel channel, AppHost host, bool large, bool withTitle = true)
     {
+        // The console shells never use the illustrated channel art: apps show their own icon on a flat plate.
+        if (Views.ConsoleArt.IsConsoleShell(host))
+            return Views.ConsoleArt.Card(channel, host, large, Views.ConsoleArt.StyleFor(host.Settings.Current.MenuStyle));
+
         // The Pals tile shows the user's own Pal, unless a theme brings its own artwork.
         if (channel is { Kind: ChannelKind.BuiltIn, BuiltInId: BuiltInChannels.Pals } && Application.Current.TryFindResource("Art.pals") is not DataTemplate)
             return Pals.PalTileArt.Build(host);
@@ -215,7 +225,8 @@ public static class ChannelArtFactory
         title.SetResourceReference(TextBlock.ForegroundProperty, "TileTextBrush");
 
         root.Children.Add(iconHost);
-        root.Children.Add(title);
+        if (withTitle) root.Children.Add(title);
+        else iconHost.Margin = new Thickness(0);
 
         if (bannerPath is not null)
         {

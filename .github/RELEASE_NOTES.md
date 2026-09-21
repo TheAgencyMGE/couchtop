@@ -2,8 +2,14 @@
 
 ### New in this version
 
-- **Pals can now come out onto your desktop**, as intended for 0.6. Right-click your Pal and choose *Take me to the desktop* (or Settings › Pals › Visit the desktop). It walks along the taskbar, climbs onto your app windows, rides along when you drag one, and complains when you close the one it's standing on. Drag it anywhere; everything around it clicks through to your apps, and it hides for full-screen games and videos. Off until you turn it on.
-- A Pal no longer stays asleep when Couchtop starts behind other windows.
+- **Three shells, switched live in Settings › Display.** Couchtop now comes in three complete looks, not skins: **Channels** (the original grid, with themes, the hand pointer, menu music and Pals), **Dashboard** (graphite and green, angled blade tabs, a row of app tiles, dry mechanical clicks) and **Media Bar** (deep blue, a row of categories crossed by a column of items, thin outlined icons, soft blips, and a background that shifts with the month and dims at night). Each restyles every screen — Settings, Files, Power, the start screen, dialogs, the Quick Menu and the Couchtop Bar — draws your apps with their real Windows icons on flat plates, and has its own sounds. Your apps, games, files and settings are shared by all three; switching takes effect immediately with no restart. Both new designs are original: no console assets or names are used.
+- **A welcome tour for new installs.** Seven steps covering what Couchtop is and what it doesn't touch, a side-by-side pick of the three shells (choosing one applies it there and then), how many of your apps and games it found, the built-in screens, the controls for mouse, keyboard, controller and Wii Remote, and the ways back to Windows. Replay it any time from Settings › About › Take the tour.
+- **The Windows taskbar gets out of the way.** With the Couchtop Bar on screen, Explorer's taskbar auto-hides so there aren't two bars along the bottom, and it's put back exactly as you had it afterwards. Settings › Desktop turns it off.
+
+### Fixed
+
+- **Dashboard:** hovering no longer runs the row away to the end. A hover now only counts when the pointer has actually moved, and pointer moves leave the row where it is, scrolling only when the selection would run off an edge. The Media Bar had the same runaway down its column.
+- Pals no longer appear anywhere in the Dashboard and Media Bar shells — they're part of the Channels style.
 
 ### Which download?
 

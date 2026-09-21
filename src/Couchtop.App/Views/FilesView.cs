@@ -94,7 +94,7 @@ public sealed class FilesView : UserControl, IScreenView
         Content = ViewKit.Scaffold("Files", startPath ?? "This PC", body, window.ReturnToMenu, out _subtitle,
             ViewKit.Pill("Split", ToggleSplit, 150),
             ViewKit.Pill("Open in Explorer", OpenInExplorer, 300),
-            ViewKit.Pill("Add as Channel", AddAsChannel, 280));
+            ViewKit.Pill(ConsoleArt.IsConsoleShell() ? "Add to Home" : "Add as Channel", AddAsChannel, 280));
 
         PreviewKeyDown += OnKeyDown;
     }

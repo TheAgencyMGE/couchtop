@@ -2,6 +2,21 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.7.0-beta.1] - 2026-09-20
+
+### Fixed
+
+- **Dashboard: hovering no longer runs the row away to the end.** Moving the pointer onto a tile scrolled the row, which slid the next tile under the still pointer and selected that one too, all the way to the end in one direction. A hover now only counts when the pointer has actually moved, and pointer moves leave the row where it is, scrolling only when the selection would run off an edge. Keyboard and controller moves still bring the selection to the front of the row. The Media Bar had the same runaway down its column and is fixed the same way.
+- **Pals no longer turn up in the console shells.** They were still appearing on the app start screen, the Power screen, in search results and as bar bubbles. Pals are part of the Channels menu style, and the Dashboard and Media Bar now have none of them anywhere.
+
+### Added
+
+- **The Windows taskbar gets out of the way.** With the Couchtop Bar on screen, Explorer's taskbar is set to auto-hide so there are not two bars along the bottom, and it is put back exactly as you had it when the Couchtop Bar goes away or Couchtop closes. If your taskbar already auto-hides, nothing is touched. Settings › Desktop › *Hide the Windows taskbar* turns it off.
+
+- **A welcome tour.** New installs are met with a seven-step tour instead of a one-line dialog: what Couchtop is and what it does not touch, a side-by-side pick of the three shells with a small preview of each (choosing one applies it immediately, and the tour restyles itself around you), how many of your apps and games it found, the built-in screens, the controls for mouse, keyboard, controller and Wii Remote, and the ways back to Windows including the emergency exit. It follows the current shell, works with a controller, and can be replayed from Settings › About › Take the tour. Everyone sees it once after updating, since the shells are new.
+
+- **Three shells.** Settings › Display › *Menu style* switches Couchtop between **Channels** (the original grid), **Dashboard** (graphite and green, angled blade tabs, a row of app tiles) and **Media Bar** (deep blue, a row of categories crossed by a column of items). Each is a complete shell rather than a skin: it restyles every screen (Settings, Files, Power, the start screen, dialogs, the Quick Menu and the Couchtop Bar), draws apps with their real Windows icons on flat plates instead of illustrated channel art, uses its own geometric marks for Couchtop's own screens, has its own sound set, and uses the normal Windows pointer. The Dashboard and Media Bar have no themes, no menu music, no hand pointer, no channel-name bubble and no Pals anywhere — those belong to the Channels style. The Media Bar's background shifts with the month and dims at night. Your apps, games, files and settings are shared by all three; switching is instant and needs no restart. Both new designs are original: no console assets or names are used.
+
 ## [0.6.2-beta.1] - 2026-09-18
 
 ### Fixed

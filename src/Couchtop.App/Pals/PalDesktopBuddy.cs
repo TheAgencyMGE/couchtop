@@ -71,8 +71,9 @@ public sealed class PalDesktopBuddy
     {
         var prefs = _host.Pals.Preferences;
         var couchtopInFront = _main.IsActive && _main.WindowState != WindowState.Minimized;
-        var want = prefs.DesktopVisits && _host.Pals.HasPal && !couchtopInFront && !_host.Desktop.ForegroundIsFullScreen && !_host.IsExiting;
-        SetListening(prefs.DesktopVisits && _host.Pals.HasPal && !_host.IsExiting);
+        var allowed = prefs.DesktopVisits && _host.Pals.HasPal && !_host.Pals.Suspended && !_host.IsExiting;
+        var want = allowed && !couchtopInFront && !_host.Desktop.ForegroundIsFullScreen;
+        SetListening(allowed);
         if (want == _showing) return;
         if (want) Show();
         else Hide();
