@@ -6,14 +6,15 @@
 
 **Turn your Windows PC into a couch console.**
 
-A playful full-screen channel menu for Windows, with an optional (and very carefully guarded) shell mode.
+A full-screen, controller-friendly front end for Windows that comes in three shells — a channel grid, a blade
+dashboard and a media bar — with an optional (and very carefully guarded) shell mode.
 
 [![CI](https://github.com/TheAgencyMGE/couchtop/actions/workflows/ci.yml/badge.svg)](https://github.com/TheAgencyMGE/couchtop/actions/workflows/ci.yml)
 [![Pre-release](https://img.shields.io/github/v/release/TheAgencyMGE/couchtop?include_prereleases&label=beta&color=35B4E5)](https://github.com/TheAgencyMGE/couchtop/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6)](#requirements)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[**Download the beta**](https://github.com/TheAgencyMGE/couchtop/releases) · [**Watch the trailer**](https://theagencymge.github.io/couchtop/) · [Screenshots](#screenshots) · [Recovery](#recovery-getting-back-to-explorer)
+[**Download the beta**](https://github.com/TheAgencyMGE/couchtop/releases) · [**Watch the trailer**](https://theagencymge.github.io/couchtop/) · [The three shells](#the-three-shells) · [Screenshots](#screenshots) · [Recovery](#recovery-getting-back-to-explorer)
 
 <a href="https://theagencymge.github.io/couchtop/">
   <img src="docs/media/couchtop-trailer.gif" width="860" alt="Couchtop trailer preview. Click to watch the full trailer with sound." />
@@ -31,6 +32,7 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 
 ## Contents
 
+- [The three shells](#the-three-shells)
 - [Screenshots](#screenshots)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -51,7 +53,33 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 
 ---
 
+## The three shells
+
+Couchtop ships as three complete shells. A shell is not a skin: each one has its own look on **every** screen,
+its own icons, its own sounds, its own pointer and its own way of moving around. Switch between them live in
+**Settings › Display › Menu style** — no restart, and your apps, games, files and settings come with you.
+
+| | | |
+|---|---|---|
+| ![Channels shell](docs/screenshots/01-menu.png) | ![Dashboard shell](docs/screenshots/20-dashboard-home.png) | ![Media Bar shell](docs/screenshots/24-mediabar-home.png) |
+| **Channels** | **Dashboard** | **Media Bar** |
+| Pages of glossy tiles, a tilting hand pointer, eight themes, menu music and [Pals](#features). | Graphite and green, angled blade tabs, a row of app tiles, a player card and dry mechanical clicks. | Deep blue, a row of categories crossed by a column of items, thin outlined icons and soft blips. |
+
+Apps show their real Windows icons in the Dashboard and Media Bar; Couchtop's own screens get a flat geometric
+mark drawn for each shell. Themes, the hand pointer, menu music and Pals belong to the Channels shell alone.
+Both new designs are original — no console assets, artwork or names are used.
+
+| | |
+|---|---|
+| ![Dashboard system blade](docs/screenshots/21-dashboard-system.png) **Dashboard**: blades group your apps, games, media and system | ![Dashboard settings](docs/screenshots/22-dashboard-settings.png) **Dashboard**: every screen follows the shell |
+| ![Media Bar system](docs/screenshots/25-mediabar-system.png) **Media Bar**: categories crossed by items | ![Media Bar files](docs/screenshots/26-mediabar-files.png) **Media Bar**: the file manager in shell colours |
+| ![Welcome tour](docs/screenshots/28-welcome-tour.png) **Welcome tour**: pick a shell on first run | ![Media Bar Quick Menu](docs/screenshots/27-mediabar-quick.png) **Quick Menu** in the Media Bar shell |
+
+---
+
 ## Screenshots
+
+The Channels shell, in its default theme.
 
 | | |
 |---|---|
@@ -62,13 +90,15 @@ A playful full-screen channel menu for Windows, with an optional (and very caref
 | ![Power](docs/screenshots/09-power.png) **Power** channel | ![Dialog](docs/screenshots/10-dialog.png) Console-style dialogs |
 | ![Files](docs/screenshots/07-files.png) **Files** channel | ![Photos](docs/screenshots/08-photos.png) **Photos** channel |
 
-### Themes
+### Themes (Channels shell)
 
 | | |
 |---|---|
 | ![Sky Resort theme](docs/screenshots/13-theme-sky-resort.png) **Sky Resort**: glass, sky, sea and bubbles | ![Neon City theme](docs/screenshots/14-theme-neon-city.png) **Neon City**: black steel and neon HUD |
 | ![Midnight theme](docs/screenshots/15-theme-midnight.png) **Midnight**: sleek and dark | ![Sakura theme](docs/screenshots/16-theme-sakura.png) **Sakura**: blossoms and falling petals |
 | ![Sunset theme](docs/screenshots/17-theme-sunset.png) **Sunset**: golden hour over the water | ![Night theme](docs/screenshots/12-night.png) **Night**: the dim classic |
+
+The Dashboard and Media Bar do not use themes: each has one fixed look of its own.
 
 ---
 
