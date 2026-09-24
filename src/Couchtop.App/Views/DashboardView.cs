@@ -13,52 +13,46 @@ using Couchtop.Core.Channels;
 namespace Couchtop.App.Views;
 
 /// <summary>
-/// The Dashboard home screen: angled blade tabs across the top and a horizontal row of square tiles, the shape
-/// mid-2000s console dashboards used. It is only a presentation of the shared channel layout — the same channels,
-/// the same screens, the same settings as the Channels menu, reached by moving along a row instead of a grid.
-/// All artwork is Couchtop's own.
+/// The Dashboard home screen: a rail of plain lowercase tabs over a mosaic of flat tiles in two rows, the shape
+/// late-2000s console dashboards settled on. Square corners, no gloss, one bright green for Couchtop's own
+/// entries, and the section either side peeking in from the edge of the screen. All artwork is drawn in code.
 /// </summary>
 public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
 {
-    private const double TileSize = 272, TileGap = 26, StripLeft = 190, StripTop = 430, RowY = StripTop + TileSize / 2;
+    // One tile unit; a hero tile is two units square, a wide tile two units across.
+    private const double Unit = 228, Gap = 14, MosaicLeft = 150, MosaicTop = 268;
+    private const double RowHeight = Unit * 2 + Gap;
 
-    private static readonly Color Accent = Color.FromRgb(0x7B, 0xC6, 0x18);
-
-    /// <summary>One colour per blade, in the era's style: a bright signature green with cooler neighbours.</summary>
-    private static readonly Dictionary<string, Color> BladeColors = new()
-    {
-        [HomeCategories.System] = Color.FromRgb(0x8C, 0x9B, 0xA5),
-        [HomeCategories.Media] = Color.FromRgb(0xE0, 0x8A, 0x2E),
-        [HomeCategories.Apps] = Color.FromRgb(0x2E, 0x9E, 0xC8),
-        [HomeCategories.Games] = Accent,
-        [HomeCategories.Web] = Color.FromRgb(0x4F, 0x8F, 0xE0),
-        [HomeCategories.Pals] = Color.FromRgb(0xB6, 0x6C, 0xD6),
-    };
+    private static readonly Color Accent = Color.FromRgb(0x6C, 0xB4, 0x2C);
+    private static readonly Color AccentBright = Color.FromRgb(0x8C, 0xD4, 0x3C);
 
     private readonly AppHost _host;
     private readonly MainWindow _window;
     private readonly Grid _stage = new() { Width = 1920, Height = 1080 };
-    private readonly StackPanel _bladeRail = new() { Orientation = Orientation.Horizontal, Margin = new Thickness(150, 186, 0, 0), VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
-    private readonly Canvas _stripHost = new() { ClipToBounds = true, Width = 1920, Height = 360, Margin = new Thickness(0, StripTop - 30, 0, 0), VerticalAlignment = VerticalAlignment.Top };
-    private readonly Canvas _strip = new();
-    private readonly TranslateTransform _stripShift = new();
-    private readonly TranslateTransform _detailShift = new();
-    private readonly StackPanel _detail = new() { Margin = new Thickness(150, 780, 700, 0), VerticalAlignment = VerticalAlignment.Top };
-    private readonly TextBlock _clock, _dateText, _bladeTitle, _itemTitle, _itemSubtitle, _cardName, _cardLine;
-    private readonly Border _avatarHost;
-    private readonly Rectangle _sheen;
+    private readonly StackPanel _tabRail = new() { Orientation = Orientation.Horizontal, Margin = new Thickness(150, 96, 0, 0), VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
+    private readonly Canvas _mosaicHost = new() { ClipToBounds = true, Width = 1920, Height = RowHeight + 40, Margin = new Thickness(0, MosaicTop - 20, 0, 0), VerticalAlignment = VerticalAlignment.Top };
+    private readonly Canvas _mosaic = new();
+    private readonly TranslateTransform _mosaicShift = new();
+    private readonly Border _edgeLeft, _edgeRight;
+    private readonly TextBlock _edgeLeftText, _edgeRightText;
+    private readonly TextBlock _clock, _itemTitle, _itemSubtitle, _profileLine;
     private readonly DispatcherTimer _clockTimer;
 
     private readonly List<HomeCategory> _categories = new();
-    private readonly List<Border> _bladeTabs = new();
+    private readonly List<TextBlock> _tabs = new();
     private readonly List<DashboardTile> _tiles = new();
-    private int _blade;
+    private readonly List<TileSlot> _slots = new();
+    private int _tab;
     private int _index;
-    private double _stripTarget;
+    private double _mosaicTarget;
+    private double _mosaicWidth;
     private Point _pointerAt = new(-1, -1);
     private bool _active;
     private bool _editMode;
     private DateTime _lastWheel;
+
+    /// <summary>Where a tile sits in the mosaic, and which row it is on for up/down moves.</summary>
+    private readonly record struct TileSlot(double X, double Y, double Width, double Height, int Row);
 
     public DashboardView(AppHost host, MainWindow window)
     {
@@ -68,50 +62,52 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
         FocusVisualStyle = null;
         Background = Brushes.Transparent;
 
-        _stage.Children.Add(Background_());
-        _sheen = Sheen();
-        _stage.Children.Add(_sheen);
+        _stage.Children.Add(Backdrop());
 
-        // Player card. No avatar: that is the Channels menu's Pal, and this shell has nothing to do with it.
-        _avatarHost = new Border { Width = 116, Height = 116, ClipToBounds = true, Background = HomeArt.Frozen(Color.FromRgb(0x18, 0x1D, 0x1F)), BorderThickness = new Thickness(2), BorderBrush = HomeArt.Frozen(Color.FromArgb(0x55, 0x7B, 0xC6, 0x18)) };
-        _avatarHost.Child = ConsoleArt.Mark("M 10,10 H 36 V 36 H 10 Z M 44,10 H 70 V 36 H 44 Z M 10,44 H 36 V 70 H 10 Z M 44,44 H 70 V 70 H 44 Z", 56, HomeArt.Frozen(Accent), 5);
-        _cardName = HomeArt.Label("Couchtop", 40, FontWeights.ExtraBold, Brushes.White);
-        _cardLine = HomeArt.Label("", 24, FontWeights.SemiBold, HomeArt.Frozen(Color.FromRgb(0x9A, 0xB0, 0x9E)));
-        var cardText = new StackPanel { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(20, 0, 0, 0) };
-        cardText.Children.Add(_cardName);
-        cardText.Children.Add(_cardLine);
-        var card = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(150, 46, 0, 0), VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
-        card.Children.Add(_avatarHost);
-        card.Children.Add(cardText);
-        _stage.Children.Add(card);
+        // The sections either side, peeking in from the edges the way these dashboards hinted at their neighbours.
+        (_edgeLeft, _edgeLeftText) = EdgePanel(left: true);
+        (_edgeRight, _edgeRightText) = EdgePanel(left: false);
+        _stage.Children.Add(_edgeLeft);
+        _stage.Children.Add(_edgeRight);
 
-        _clock = HomeArt.Label("", 62, FontWeights.Light, Brushes.White);
-        _clock.HorizontalAlignment = HorizontalAlignment.Right;
-        _dateText = HomeArt.Label("", 26, FontWeights.SemiBold, HomeArt.Frozen(Color.FromRgb(0x9A, 0xB0, 0x9E)));
-        _dateText.HorizontalAlignment = HorizontalAlignment.Right;
-        var clockStack = new StackPanel { Margin = new Thickness(0, 52, 150, 0), VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Right };
-        clockStack.Children.Add(_clock);
-        clockStack.Children.Add(_dateText);
-        _stage.Children.Add(clockStack);
+        _stage.Children.Add(_tabRail);
 
-        _stage.Children.Add(_bladeRail);
+        _mosaic.RenderTransform = _mosaicShift;
+        _mosaicHost.Children.Add(_mosaic);
+        _stage.Children.Add(_mosaicHost);
 
-        _bladeTitle = HomeArt.Label("", 34, FontWeights.ExtraBold, HomeArt.Frozen(Accent));
-        _bladeTitle.Margin = new Thickness(152, 322, 0, 0);
-        _bladeTitle.VerticalAlignment = VerticalAlignment.Top;
-        _bladeTitle.HorizontalAlignment = HorizontalAlignment.Left;
-        _stage.Children.Add(_bladeTitle);
+        _itemTitle = HomeArt.Label("", 32, FontWeights.SemiBold, HomeArt.Frozen(Color.FromRgb(0xE4, 0xE9, 0xE5)));
+        _itemSubtitle = HomeArt.Label("", 23, FontWeights.Normal, HomeArt.Frozen(Color.FromRgb(0x7E, 0x86, 0x80)));
+        var detail = new StackPanel { Margin = new Thickness(MosaicLeft, MosaicTop + RowHeight + 46, 600, 0), VerticalAlignment = VerticalAlignment.Top };
+        detail.Children.Add(_itemTitle);
+        detail.Children.Add(_itemSubtitle);
+        _stage.Children.Add(detail);
 
-        _strip.RenderTransform = _stripShift;
-        _stripHost.Children.Add(_strip);
-        _stage.Children.Add(_stripHost);
-
-        _itemTitle = HomeArt.Label("", 62, FontWeights.ExtraBold, Brushes.White);
-        _itemSubtitle = HomeArt.Label("", 30, FontWeights.SemiBold, HomeArt.Frozen(Color.FromRgb(0x9A, 0xB0, 0x9E)));
-        _detail.Children.Add(_itemTitle);
-        _detail.Children.Add(_itemSubtitle);
-        _detail.RenderTransform = _detailShift;
-        _stage.Children.Add(_detail);
+        // Top right: the clock, and a small plate standing in for a profile picture.
+        _clock = HomeArt.Label("", 34, FontWeights.Normal, HomeArt.Frozen(Color.FromRgb(0xC8, 0xD0, 0xCA)));
+        _clock.VerticalAlignment = VerticalAlignment.Center;
+        _profileLine = HomeArt.Label("", 22, FontWeights.Normal, HomeArt.Frozen(Color.FromRgb(0x90, 0x98, 0x94)));
+        _profileLine.VerticalAlignment = VerticalAlignment.Center;
+        var profilePlate = new Border
+        {
+            Width = 54,
+            Height = 54,
+            Margin = new Thickness(22, 0, 0, 0),
+            Background = HomeArt.Frozen(Accent),
+            Child = ConsoleArt.Mark("M 10,10 H 36 V 36 H 10 Z M 44,10 H 70 V 36 H 44 Z M 10,44 H 36 V 70 H 10 Z M 44,44 H 70 V 70 H 44 Z", 28, Brushes.White, 6),
+        };
+        var topRight = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 92, 150, 0),
+        };
+        topRight.Children.Add(_profileLine);
+        topRight.Children.Add(new Border { Width = 2, Height = 30, Margin = new Thickness(22, 0, 22, 0), Background = HomeArt.Frozen(Color.FromArgb(0x40, 0xFF, 0xFF, 0xFF)), VerticalAlignment = VerticalAlignment.Center });
+        topRight.Children.Add(_clock);
+        topRight.Children.Add(profilePlate);
+        _stage.Children.Add(topRight);
 
         _stage.Children.Add(Hints());
 
@@ -130,59 +126,44 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
 
     // ---------------------------------------------------------------- chrome
 
-    private static UIElement Background_()
+    /// <summary>Near-black, with one soft green wash in the corner and a vignette. Nothing moves.</summary>
+    private static UIElement Backdrop()
     {
         var grid = new Grid();
-        var back = new LinearGradientBrush(Color.FromRgb(0x10, 0x16, 0x12), Color.FromRgb(0x04, 0x06, 0x08), 90);
+        var back = new LinearGradientBrush(Color.FromRgb(0x12, 0x14, 0x12), Color.FromRgb(0x05, 0x06, 0x05), 90);
         back.Freeze();
         grid.Children.Add(new Rectangle { Fill = back });
         grid.Children.Add(new Ellipse
         {
-            Width = 1700,
-            Height = 1100,
-            Margin = new Thickness(-500, -420, 0, 0),
+            Width = 1900,
+            Height = 1200,
+            Margin = new Thickness(-600, -560, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
-            Fill = HomeArt.Glow(Accent, 0.16),
-        });
-        grid.Children.Add(new Ellipse
-        {
-            Width = 1500,
-            Height = 900,
-            Margin = new Thickness(0, 0, -400, -360),
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Fill = HomeArt.Glow(Color.FromRgb(0x2E, 0x9E, 0xC8), 0.12),
+            Fill = HomeArt.Glow(Accent, 0.1),
         });
         return grid;
     }
 
-    /// <summary>The slow band of light that drifts across these dashboards. Only runs while the menu is in front.</summary>
-    private static Rectangle Sheen()
+    /// <summary>A dim panel at the very edge carrying the neighbouring section's name.</summary>
+    private static (Border Panel, TextBlock Label) EdgePanel(bool left)
     {
-        var brush = new LinearGradientBrush
+        var label = HomeArt.Label("", 30, FontWeights.SemiBold, HomeArt.Frozen(Color.FromArgb(0x88, 0xFF, 0xFF, 0xFF)));
+        label.HorizontalAlignment = HorizontalAlignment.Center;
+        label.VerticalAlignment = VerticalAlignment.Center;
+        label.LayoutTransform = new RotateTransform(left ? -90 : 90);
+
+        var panel = new Border
         {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(1, 0),
-            GradientStops =
-            {
-                new GradientStop(Color.FromArgb(0, 255, 255, 255), 0),
-                new GradientStop(Color.FromArgb(16, 255, 255, 255), 0.5),
-                new GradientStop(Color.FromArgb(0, 255, 255, 255), 1),
-            },
-        };
-        brush.Freeze();
-        return new Rectangle
-        {
-            Width = 900,
-            Height = 1600,
-            Fill = brush,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = 74,
+            Height = RowHeight,
+            Margin = left ? new Thickness(0, MosaicTop, 0, 0) : new Thickness(0, MosaicTop, 0, 0),
+            HorizontalAlignment = left ? HorizontalAlignment.Left : HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(-900, -260, 0, 0),
-            IsHitTestVisible = false,
-            RenderTransform = new TransformGroup { Children = { new SkewTransform(-18, 0), new TranslateTransform() } },
+            Background = HomeArt.Frozen(Color.FromArgb(0x1E, 0xFF, 0xFF, 0xFF)),
+            Child = label,
         };
+        return (panel, label);
     }
 
     private UIElement Hints()
@@ -192,21 +173,37 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(150, 0, 0, 70),
+            Margin = new Thickness(150, 0, 0, 64),
         };
-        foreach (var (key, label) in new[] { ("Enter", "Open"), ("← →", "Move"), ("↑ ↓", "Blades"), ("Home", "Quick Menu") })
+
+        // The A button, drawn rather than borrowed: a green disc with a letter in it.
+        var a = new Grid { Width = 42, Height = 42, Margin = new Thickness(0, 0, 14, 0) };
+        a.Children.Add(new Ellipse { Fill = HomeArt.Frozen(Accent) });
+        var letter = HomeArt.Label("A", 24, FontWeights.Bold, Brushes.White);
+        letter.HorizontalAlignment = HorizontalAlignment.Center;
+        letter.VerticalAlignment = VerticalAlignment.Center;
+        a.Children.Add(letter);
+        panel.Children.Add(a);
+
+        var select = HomeArt.Label("Select", 26, FontWeights.Normal, HomeArt.Frozen(Color.FromRgb(0xD0, 0xD8, 0xD2)));
+        select.VerticalAlignment = VerticalAlignment.Center;
+        select.Margin = new Thickness(0, 0, 44, 0);
+        panel.Children.Add(select);
+
+        foreach (var (key, label) in new[] { ("LB / RB", "Sections"), ("Home", "Quick Menu") })
         {
             var chip = new Border
             {
-                CornerRadius = new CornerRadius(8),
-                Background = HomeArt.Frozen(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
-                Padding = new Thickness(14, 4, 14, 6),
+                Background = HomeArt.Frozen(Color.FromArgb(0x28, 0xFF, 0xFF, 0xFF)),
+                Padding = new Thickness(12, 3, 12, 5),
                 Margin = new Thickness(0, 0, 12, 0),
-                Child = HomeArt.Label(key, 22, FontWeights.Bold, Brushes.White),
+                VerticalAlignment = VerticalAlignment.Center,
+                Child = HomeArt.Label(key, 22, FontWeights.SemiBold, Brushes.White),
             };
             panel.Children.Add(chip);
-            var text = HomeArt.Label(label, 22, FontWeights.SemiBold, HomeArt.Frozen(Color.FromRgb(0x8C, 0x9B, 0xA5)));
-            text.Margin = new Thickness(0, 4, 34, 0);
+            var text = HomeArt.Label(label, 22, FontWeights.Normal, HomeArt.Frozen(Color.FromRgb(0x84, 0x8C, 0x86)));
+            text.Margin = new Thickness(0, 0, 40, 0);
+            text.VerticalAlignment = VerticalAlignment.Center;
             panel.Children.Add(text);
         }
         return panel;
@@ -216,169 +213,182 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
 
     public void Rebuild()
     {
-        var previous = SelectedItem();
+        var previous = SelectedItem()?.Title;
         _categories.Clear();
         _categories.AddRange(HomeCategories.Build(_host.Layout.Layout, _host.Settings.Current.Bookmarks, includePals: false));
         if (_categories.Count == 0) _categories.Add(new HomeCategory(HomeCategories.System, "System", new[] { new HomeItem(HomeItemKind.Desktop, "Windows Desktop") }));
 
-        _blade = Math.Clamp(_blade, 0, _categories.Count - 1);
-        BuildBlades();
-        // Keep the same item selected across a rebuild where possible (channels changing, theme switching).
-        var keepIndex = previous is null ? _index : _categories[_blade].Items.ToList().FindIndex(i => i.Title == previous.Title);
-        BuildStrip(keepIndex < 0 ? _index : keepIndex, animate: false);
-        UpdateCard();
+        _tab = Math.Clamp(_tab, 0, _categories.Count - 1);
+        BuildTabs();
+        var keep = previous is null ? _index : _categories[_tab].Items.ToList().FindIndex(i => i.Title == previous);
+        BuildMosaic(keep < 0 ? _index : keep, animate: false);
+        UpdateProfile();
     }
 
-    private void BuildBlades()
+    private void BuildTabs()
     {
-        _bladeRail.Children.Clear();
-        _bladeTabs.Clear();
+        _tabRail.Children.Clear();
+        _tabs.Clear();
         for (var i = 0; i < _categories.Count; i++)
         {
             var index = i;
-            var category = _categories[i];
-            var color = BladeColors.TryGetValue(category.Id, out var c) ? c : Accent;
-            var label = HomeArt.Label(category.Title.ToUpperInvariant(), 27, FontWeights.Bold, Brushes.White);
-            label.RenderTransform = new SkewTransform(12, 0); // undo the tab's skew so the text stays upright
-            var tab = new Border
-            {
-                Padding = new Thickness(34, 10, 34, 12),
-                Margin = new Thickness(0, 0, 10, 0),
-                CornerRadius = new CornerRadius(4),
-                Background = HomeArt.Frozen(Color.FromArgb(0x26, 0xFF, 0xFF, 0xFF)),
-                BorderThickness = new Thickness(0, 0, 0, 5),
-                BorderBrush = HomeArt.Frozen(Color.FromArgb(0x00, c.R, c.G, c.B)),
-                RenderTransform = new SkewTransform(-12, 0),
-                Cursor = Cursors.Arrow,
-                Child = label,
-                Tag = color,
-            };
+            // Lowercase, plain text, no plate: the rail is type and nothing else.
+            var tab = HomeArt.Label(_categories[i].Title.ToLowerInvariant(), 44, FontWeights.Normal, Brushes.White);
+            tab.Margin = new Thickness(0, 0, 44, 0);
+            tab.Cursor = Cursors.Arrow;
             tab.MouseLeftButtonDown += (_, e) =>
             {
                 e.Handled = true;
-                GoToBlade(index);
+                GoToTab(index);
             };
             tab.MouseEnter += (_, _) =>
             {
-                if (index != _blade) _host.Audio.Play(SoundEffect.Hover);
+                if (index != _tab && PointerMoved()) _host.Audio.Play(SoundEffect.Hover);
             };
-            _bladeTabs.Add(tab);
-            _bladeRail.Children.Add(tab);
+            _tabs.Add(tab);
+            _tabRail.Children.Add(tab);
         }
-        PaintBlades();
+        PaintTabs();
     }
 
-    private void PaintBlades()
+    private void PaintTabs()
     {
-        for (var i = 0; i < _bladeTabs.Count; i++)
+        for (var i = 0; i < _tabs.Count; i++)
         {
-            var selected = i == _blade;
-            var color = (Color)_bladeTabs[i].Tag;
-            _bladeTabs[i].Background = HomeArt.Frozen(selected
-                ? Color.FromArgb(0xE8, color.R, color.G, color.B)
-                : Color.FromArgb(0x24, 0xFF, 0xFF, 0xFF));
-            _bladeTabs[i].BorderBrush = HomeArt.Frozen(selected ? Colors.White : Color.FromArgb(0, 0, 0, 0));
-            if (_bladeTabs[i].Child is TextBlock text)
-            {
-                text.Foreground = selected ? HomeArt.Frozen(Color.FromRgb(0x0B, 0x10, 0x0B)) : Brushes.White;
-                text.Opacity = selected ? 1 : 0.75;
-            }
+            var selected = i == _tab;
+            _tabs[i].FontSize = selected ? 50 : 42;
+            _tabs[i].FontWeight = selected ? FontWeights.SemiBold : FontWeights.Normal;
+            _tabs[i].Foreground = selected ? Brushes.White : HomeArt.Frozen(Color.FromRgb(0x77, 0x7F, 0x79));
         }
         if (_categories.Count > 0)
         {
-            var category = _categories[_blade];
-            _bladeTitle.Text = $"{category.Items.Count} {(category.Items.Count == 1 ? "item" : "items")}";
-            _bladeTitle.Foreground = HomeArt.Frozen(BladeColors.TryGetValue(category.Id, out var c) ? c : Accent);
+            _edgeLeftText.Text = _tab > 0 ? _categories[_tab - 1].Title.ToLowerInvariant() : "";
+            _edgeRightText.Text = _tab < _categories.Count - 1 ? _categories[_tab + 1].Title.ToLowerInvariant() : "";
+            _edgeLeft.Visibility = _tab > 0 ? Visibility.Visible : Visibility.Hidden;
+            _edgeRight.Visibility = _tab < _categories.Count - 1 ? Visibility.Visible : Visibility.Hidden;
         }
     }
 
-    private void BuildStrip(int index, bool animate)
+    /// <summary>
+    /// Lays the section's items out as a mosaic: a two-unit hero to open with, then columns of stacked tiles
+    /// with a pair of wide ones every so often, so the wall of tiles is never a plain grid.
+    /// </summary>
+    private void BuildMosaic(int index, bool animate)
     {
         foreach (var tile in _tiles) tile.Dispose();
         _tiles.Clear();
-        _strip.Children.Clear();
+        _slots.Clear();
+        _mosaic.Children.Clear();
 
-        var items = _categories[_blade].Items;
-        for (var i = 0; i < items.Count; i++)
+        var items = _categories[_tab].Items;
+        var x = 0.0;
+        var column = 0;
+        var i = 0;
+        while (i < items.Count)
         {
-            var slot = i;
-            var tile = new DashboardTile(items[i], _host, TileSize, BladeColors.TryGetValue(_categories[_blade].Id, out var c) ? c : Accent);
-            Canvas.SetLeft(tile, i * (TileSize + TileGap));
-            Canvas.SetTop(tile, 30);
-            tile.MouseEnter += (_, _) => HoverTile(slot);
+            var remaining = items.Count - i;
+            if (i == 0)
+            {
+                _slots.Add(new TileSlot(x, 0, Unit * 2 + Gap, RowHeight, 0));
+                x += Unit * 2 + Gap * 2;
+            }
+            else if (column % 4 == 3 && remaining >= 2)
+            {
+                // A pair of wide tiles, stacked.
+                _slots.Add(new TileSlot(x, 0, Unit * 2 + Gap, Unit, 0));
+                _slots.Add(new TileSlot(x, Unit + Gap, Unit * 2 + Gap, Unit, 1));
+                x += Unit * 2 + Gap * 2;
+            }
+            else if (remaining >= 2)
+            {
+                _slots.Add(new TileSlot(x, 0, Unit, Unit, 0));
+                _slots.Add(new TileSlot(x, Unit + Gap, Unit, Unit, 1));
+                x += Unit + Gap;
+            }
+            else
+            {
+                _slots.Add(new TileSlot(x, 0, Unit, Unit, 0));
+                x += Unit + Gap;
+            }
+            i = _slots.Count;
+            column++;
+        }
+        _mosaicWidth = x;
+
+        for (var s = 0; s < items.Count && s < _slots.Count; s++)
+        {
+            var slot = _slots[s];
+            var at = s;
+            var tile = new DashboardTile(items[s], _host, slot.Width, slot.Height, Accent, AccentBright);
+            Canvas.SetLeft(tile, slot.X);
+            Canvas.SetTop(tile, slot.Y);
+            tile.MouseEnter += (_, _) => HoverTile(at);
             tile.MouseLeftButtonDown += (_, e) =>
             {
                 e.Handled = true;
                 Focus();
-                if (slot == _index) Activate();
-                else Select(slot, fromPointer: true);
+                if (at == _index) Activate();
+                else Select(at, fromPointer: true);
             };
-            _strip.Children.Add(tile);
+            _mosaic.Children.Add(tile);
             _tiles.Add(tile);
         }
 
-        _index = Math.Clamp(index, 0, Math.Max(0, items.Count - 1));
-        for (var i = 0; i < _tiles.Count; i++) _tiles[i].SetSelected(i == _index, animate);
+        _index = Math.Clamp(index, 0, Math.Max(0, _tiles.Count - 1));
+        for (var t = 0; t < _tiles.Count; t++) _tiles[t].SetSelected(t == _index, false);
         UpdateDetail();
-        ShiftStrip(animate);
-        if (animate)
+        CenterOnSelection(animate);
+        if (animate && !Anim.Reduced)
         {
-            // Blade change: the row slides in from the right, the way these dashboards moved between sections.
-            HomeArt.Fade(_strip, 1, 220);
-            _strip.Opacity = 0.2;
-            Anim.To(_detailShift, TranslateTransform.XProperty, 0, 300, Anim.EaseOut, from: 70);
-            HomeArt.Fade(_detail, 1, 260);
+            _mosaic.Opacity = 0.25;
+            HomeArt.Fade(_mosaic, 1, 240);
         }
     }
 
-    /// <summary>Tiles fade out as they reach the edges of the screen, so the row never ends in a hard cut.</summary>
-    private void UpdateEdgeFade(bool animate)
+    private void SetMosaicTarget(double target, bool animate)
     {
-        for (var i = 0; i < _tiles.Count; i++)
+        // A wall that fits on screen is centred and never scrolls; a longer one stops at its ends.
+        if (_mosaicWidth <= 1920 - MosaicLeft * 2)
         {
-            var center = _stripTarget + i * (TileSize + TileGap) + TileSize / 2;
-            var fade = Math.Clamp((center - 30) / 280, 0, 1) * Math.Clamp((1890 - center) / 300, 0, 1);
-            _tiles[i].SetFade(fade, animate);
+            _mosaicTarget = (1920 - _mosaicWidth) / 2;
         }
-    }
-
-    private void SetStripTarget(double target, bool animate)
-    {
-        _stripTarget = target;
-        UpdateEdgeFade(animate);
-        if (animate && !Anim.Reduced) Anim.To(_stripShift, TranslateTransform.XProperty, target, 330, Anim.EaseOut);
         else
         {
-            _stripShift.BeginAnimation(TranslateTransform.XProperty, null);
-            _stripShift.X = target;
+            var min = 1920 - MosaicLeft - _mosaicWidth;
+            _mosaicTarget = Math.Clamp(target, min, MosaicLeft);
+        }
+        if (animate && !Anim.Reduced) Anim.To(_mosaicShift, TranslateTransform.XProperty, _mosaicTarget, 320, Anim.EaseOut);
+        else
+        {
+            _mosaicShift.BeginAnimation(TranslateTransform.XProperty, null);
+            _mosaicShift.X = _mosaicTarget;
         }
     }
 
-    /// <summary>Keyboard and controller moves bring the selection to the front of the row.</summary>
-    private void ShiftStrip(bool animate) => SetStripTarget(StripLeft - _index * (TileSize + TileGap), animate);
+    /// <summary>Keyboard and controller moves bring the selection towards the left of the wall.</summary>
+    private void CenterOnSelection(bool animate)
+    {
+        if (_slots.Count == 0) return;
+        SetMosaicTarget(MosaicLeft - _slots[Math.Min(_index, _slots.Count - 1)].X, animate);
+    }
 
-    /// <summary>
-    /// Pointer moves leave the row where it is and only scroll when the selection would run off an edge, so
-    /// hovering never drags the whole row along under a still pointer.
-    /// </summary>
+    /// <summary>Pointer moves leave the wall alone until the selection would run off an edge.</summary>
     private void KeepSelectionVisible(bool animate)
     {
-        const double margin = 150;
-        var left = _stripTarget + _index * (TileSize + TileGap);
-        var right = left + TileSize;
-        var target = _stripTarget;
+        if (_slots.Count == 0) return;
+        const double margin = 120;
+        var slot = _slots[Math.Min(_index, _slots.Count - 1)];
+        var left = _mosaicTarget + slot.X;
+        var right = left + slot.Width;
+        var target = _mosaicTarget;
         if (left < margin) target += margin - left;
         else if (right > 1920 - margin) target -= right - (1920 - margin);
-        if (Math.Abs(target - _stripTarget) < 0.5)
-        {
-            UpdateEdgeFade(animate);
-            return;
-        }
-        SetStripTarget(target, animate);
+        if (Math.Abs(target - _mosaicTarget) < 0.5) return;
+        SetMosaicTarget(target, animate);
     }
 
     private HomeItem? SelectedItem() =>
-        _categories.Count > 0 && _index >= 0 && _index < _categories[_blade].Items.Count ? _categories[_blade].Items[_index] : null;
+        _categories.Count > 0 && _index >= 0 && _index < _categories[_tab].Items.Count ? _categories[_tab].Items[_index] : null;
 
     private void UpdateDetail()
     {
@@ -387,10 +397,10 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
         _itemSubtitle.Text = item?.Subtitle ?? "";
     }
 
-    private void UpdateCard()
+    private void UpdateProfile()
     {
         var apps = _categories.SelectMany(c => c.Items).Count(i => i.Channel is not null);
-        _cardLine.Text = $"{apps} {(apps == 1 ? "item" : "items")} · {_categories.Count} blades";
+        _profileLine.Text = $"Couchtop · {apps} {(apps == 1 ? "item" : "items")}";
     }
 
     private void OnChannelsChanged(object? sender, EventArgs e) => Rebuild();
@@ -399,9 +409,8 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
 
     private void Select(int index, bool fromPointer)
     {
-        var items = _categories[_blade].Items;
-        if (items.Count == 0) return;
-        index = Math.Clamp(index, 0, items.Count - 1);
+        if (_tiles.Count == 0) return;
+        index = Math.Clamp(index, 0, _tiles.Count - 1);
         if (index == _index) return;
         _tiles[_index].SetSelected(false, true);
         _index = index;
@@ -409,31 +418,49 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
         _host.Audio.Play(SoundEffect.Hover);
         UpdateDetail();
         if (fromPointer) KeepSelectionVisible(true);
-        else ShiftStrip(true);
+        else CenterOnSelection(true);
     }
 
-    /// <summary>
-    /// A tile the pointer moved onto. Selecting scrolls the row, which slides the next tile under a pointer
-    /// that has not moved and would otherwise run away to the end of the row, so a hover only counts when the
-    /// pointer is somewhere new since the last one.
-    /// </summary>
-    private void HoverTile(int slot)
+    /// <summary>True when the pointer is somewhere new since the last hover, so a moving wall cannot select.</summary>
+    private bool PointerMoved()
     {
         var at = Mouse.GetPosition(this);
-        if (Math.Abs(at.X - _pointerAt.X) < 3 && Math.Abs(at.Y - _pointerAt.Y) < 3) return;
+        if (Math.Abs(at.X - _pointerAt.X) < 3 && Math.Abs(at.Y - _pointerAt.Y) < 3) return false;
         _pointerAt = at;
+        return true;
+    }
+
+    private void HoverTile(int slot)
+    {
+        if (!PointerMoved()) return;
         Select(slot, fromPointer: true);
     }
 
-    private void GoToBlade(int blade)
+    /// <summary>Up and down move between the two rows of the same column, as the mosaic implies.</summary>
+    private void MoveRow(int direction)
+    {
+        if (_slots.Count == 0) return;
+        var current = _slots[_index];
+        var wanted = current.Row + direction;
+        for (var i = 0; i < _slots.Count; i++)
+        {
+            if (Math.Abs(_slots[i].X - current.X) > 1 || _slots[i].Row != wanted) continue;
+            Select(i, fromPointer: false);
+            return;
+        }
+        // A column with nothing above or below: move sections instead, so the stick is never dead.
+        GoToTab(_tab + direction);
+    }
+
+    private void GoToTab(int tab)
     {
         if (_categories.Count == 0) return;
-        blade = Math.Clamp(blade, 0, _categories.Count - 1);
-        if (blade == _blade) return;
-        _blade = blade;
+        tab = Math.Clamp(tab, 0, _categories.Count - 1);
+        if (tab == _tab) return;
+        _tab = tab;
         _host.Audio.Play(SoundEffect.Page);
-        PaintBlades();
-        BuildStrip(0, animate: true);
+        PaintTabs();
+        BuildMosaic(0, animate: true);
     }
 
     private void Activate()
@@ -451,7 +478,8 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
     private Point TileCenter(int index)
     {
         if (index < 0 || index >= _tiles.Count) return new Point(_window.ActualWidth / 2, _window.ActualHeight / 2);
-        return _tiles[index].TranslatePoint(new Point(TileSize / 2, TileSize / 2), _window.RootGrid);
+        var slot = _slots[index];
+        return _tiles[index].TranslatePoint(new Point(slot.Width / 2, slot.Height / 2), _window.RootGrid);
     }
 
     public bool HandleKey(KeyEventArgs e)
@@ -460,11 +488,11 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
         {
             case Key.Left: Select(_index - 1, false); return true;
             case Key.Right: Select(_index + 1, false); return true;
-            case Key.Up: GoToBlade(_blade - 1); return true;
-            case Key.Down: GoToBlade(_blade + 1); return true;
-            case Key.PageUp: GoToBlade(_blade - 1); return true;
-            case Key.PageDown: GoToBlade(_blade + 1); return true;
-            case Key.Home: GoToBlade(0); return true;
+            case Key.Up: MoveRow(-1); return true;
+            case Key.Down: MoveRow(1); return true;
+            case Key.PageUp: GoToTab(_tab - 1); return true;
+            case Key.PageDown: GoToTab(_tab + 1); return true;
+            case Key.Home: GoToTab(0); return true;
             case Key.Enter or Key.Space: Activate(); return true;
             case Key.F5:
                 _host.RefreshChannelsInBackground();
@@ -516,31 +544,14 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
         if (_active == active) return;
         _active = active;
         _clockTimer.Interval = TimeSpan.FromSeconds(active ? 1 : 15);
-        if (active)
-        {
-            StartSheen();
-        }
-        else
-        {
-            _sheen.RenderTransform.BeginAnimation(TranslateTransform.XProperty, null);
-        }
         UpdateClock();
-    }
-
-    private void StartSheen()
-    {
-        if (Anim.Reduced || Anim.LowPowerGraphics) return;
-        var shift = ((TransformGroup)_sheen.RenderTransform).Children[1];
-        var drift = new DoubleAnimation(0, 3100, TimeSpan.FromSeconds(24)) { RepeatBehavior = RepeatBehavior.Forever };
-        shift.BeginAnimation(TranslateTransform.XProperty, drift);
     }
 
     public void PlayIntro()
     {
         if (Anim.Reduced) return;
-        for (var i = 0; i < _tiles.Count && i < 10; i++) _tiles[i].PopIn(60 + i * 45);
-        Anim.To(_bladeRail, OpacityProperty, 1, 420, Anim.EaseOut, from: 0);
-        Anim.To(_detailShift, TranslateTransform.XProperty, 0, 460, Anim.EaseOut, from: 60);
+        for (var i = 0; i < _tiles.Count && i < 12; i++) _tiles[i].PopIn(50 + i * 38);
+        Anim.To(_tabRail, OpacityProperty, 1, 420, Anim.EaseOut, from: 0);
     }
 
     /// <summary>
@@ -560,23 +571,23 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
 
     public Point SlotCenter(int slot)
     {
-        var items = _categories.Count > 0 ? _categories[_blade].Items : Array.Empty<HomeItem>();
+        var items = _categories.Count > 0 ? _categories[_tab].Items : Array.Empty<HomeItem>();
         for (var i = 0; i < items.Count; i++)
             if (items[i].Slot == slot) return TileCenter(i);
         return TileCenter(_index);
     }
 
-    /// <summary>Snapshot rendering: pick a blade and an item directly.</summary>
-    internal void SnapshotSelect(int blade, int index)
+    /// <summary>Snapshot rendering: pick a section and a tile directly.</summary>
+    internal void SnapshotSelect(int tab, int index)
     {
-        GoToBlade(blade);
+        GoToTab(tab);
         Select(index, fromPointer: false);
     }
 
     public void SnapshotHover(int slot)
     {
         if (slot < 0) return;
-        var items = _categories[_blade].Items;
+        var items = _categories[_tab].Items;
         for (var i = 0; i < items.Count; i++)
         {
             if (items[i].Slot != slot) continue;
@@ -592,88 +603,79 @@ public sealed class DashboardView : UserControl, IHomeScreen, IDisposable
         _clock.Text = _host.Settings.Current.Clock24Hour
             ? now.ToString("HH:mm", CultureInfo.CurrentCulture)
             : now.ToString("h:mm tt", CultureInfo.CurrentCulture);
-        _dateText.Text = now.ToString("dddd d MMMM", CultureInfo.CurrentCulture);
     }
 }
 
-/// <summary>One square tile on the Dashboard row.</summary>
+/// <summary>
+/// One flat tile on the Dashboard wall: square corners, the artwork filling it, and the name on a strip along
+/// the bottom. Selection is a white outline, the way these dashboards marked the tile you were on.
+/// </summary>
 internal sealed class DashboardTile : Grid, IDisposable
 {
-    private readonly Border _ring;
     private readonly Border _plate;
+    private readonly Border _outline;
+    private readonly Border _caption;
     private readonly TextBlock _label;
     private readonly ScaleTransform _scale = new(1, 1);
-    private readonly TranslateTransform _lift = new();
     private bool _selected;
 
-    public DashboardTile(HomeItem item, AppHost host, double size, Color accent)
+    public DashboardTile(HomeItem item, AppHost host, double width, double height, Color accent, Color accentBright)
     {
-        Width = size;
-        Height = size + 46;
+        Width = width;
+        Height = height;
         RenderTransformOrigin = new Point(0.5, 0.5);
-        RenderTransform = new TransformGroup { Children = { _scale, _lift } };
+        RenderTransform = _scale;
         Background = Brushes.Transparent;
 
         _plate = new Border
         {
-            Width = size,
-            Height = size,
-            VerticalAlignment = VerticalAlignment.Top,
+            Width = width,
+            Height = height,
             ClipToBounds = true,
-            Background = HomeArt.Frozen(Color.FromRgb(0x17, 0x1D, 0x1A)),
-            Child = ConsoleArt.DashboardTileArt(item, host, size, accent),
+            Child = ConsoleArt.DashboardTileArt(item, host, width, height, accent),
         };
-        _ring = new Border
+
+        _label = HomeArt.Label(item.Title, height > 200 ? 26 : 22, FontWeights.SemiBold, Brushes.White);
+        _label.Margin = new Thickness(16, 0, 12, 0);
+        _label.VerticalAlignment = VerticalAlignment.Center;
+        _label.MaxWidth = width - 24;
+        _caption = new Border
         {
-            Width = size + 12,
-            Height = size + 12,
-            Margin = new Thickness(-6, -6, -6, 0),
-            VerticalAlignment = VerticalAlignment.Top,
+            Height = height > 200 ? 52 : 44,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Background = HomeArt.Frozen(Color.FromArgb(0xC4, 0x00, 0x00, 0x00)),
+            Child = _label,
+        };
+
+        _outline = new Border
+        {
             BorderThickness = new Thickness(4),
-            BorderBrush = HomeArt.Frozen(accent),
+            BorderBrush = HomeArt.Frozen(Colors.White),
             Opacity = 0,
             IsHitTestVisible = false,
-            Effect = new System.Windows.Media.Effects.DropShadowEffect { Color = accent, BlurRadius = 34, ShadowDepth = 0, Opacity = 0.8 },
         };
-        _label = HomeArt.Label(item.Title, 24, FontWeights.Bold, Brushes.White, 0.72);
-        _label.VerticalAlignment = VerticalAlignment.Bottom;
-        _label.HorizontalAlignment = HorizontalAlignment.Center;
-        _label.MaxWidth = size;
 
         Children.Add(_plate);
-        Children.Add(_ring);
-        Children.Add(_label);
+        Children.Add(_caption);
+        Children.Add(_outline);
     }
 
     public void SetSelected(bool on, bool animate)
     {
         if (_selected == on) return;
         _selected = on;
-        var ms = animate ? 220 : 1;
-        Anim.To(_scale, ScaleTransform.ScaleXProperty, on ? 1.09 : 1, ms, Anim.Springy);
-        Anim.To(_scale, ScaleTransform.ScaleYProperty, on ? 1.09 : 1, ms, Anim.Springy);
-        Anim.To(_lift, TranslateTransform.YProperty, on ? -12 : 0, ms, Anim.EaseOut);
-        Anim.To(_ring, OpacityProperty, on ? 1 : 0, animate ? 180 : 1);
-        Anim.To(_label, OpacityProperty, on ? 1 : 0.72, animate ? 180 : 1);
+        var ms = animate ? 160 : 1;
+        Anim.To(_scale, ScaleTransform.ScaleXProperty, on ? 1.035 : 1, ms, Anim.EaseOut);
+        Anim.To(_scale, ScaleTransform.ScaleYProperty, on ? 1.035 : 1, ms, Anim.EaseOut);
+        Anim.To(_outline, OpacityProperty, on ? 1 : 0, ms);
+        Anim.To(_caption, OpacityProperty, on ? 1 : 0.85, ms);
         Panel.SetZIndex(this, on ? 2 : 0);
-    }
-
-    /// <summary>How visible this tile is; the row fades out towards the edges of the screen.</summary>
-    public void SetFade(double opacity, bool animate)
-    {
-        if (animate && !Anim.Reduced) Anim.To(this, OpacityProperty, opacity, 220, Anim.EaseOut);
-        else
-        {
-            BeginAnimation(OpacityProperty, null);
-            Opacity = opacity;
-        }
-        IsHitTestVisible = opacity > 0.05;
     }
 
     public void PopIn(double delayMs)
     {
-        BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(240)) { BeginTime = TimeSpan.FromMilliseconds(delayMs), FillBehavior = FillBehavior.Stop });
-        var grow = new DoubleAnimation(0.8, _selected ? 1.09 : 1, TimeSpan.FromMilliseconds(380)) { BeginTime = TimeSpan.FromMilliseconds(delayMs), EasingFunction = Anim.Springy, FillBehavior = FillBehavior.Stop };
+        BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200)) { BeginTime = TimeSpan.FromMilliseconds(delayMs), FillBehavior = FillBehavior.Stop });
+        var grow = new DoubleAnimation(0.9, _selected ? 1.035 : 1, TimeSpan.FromMilliseconds(320)) { BeginTime = TimeSpan.FromMilliseconds(delayMs), EasingFunction = Anim.EaseOut, FillBehavior = FillBehavior.Stop };
         _scale.BeginAnimation(ScaleTransform.ScaleXProperty, grow);
         _scale.BeginAnimation(ScaleTransform.ScaleYProperty, grow);
     }

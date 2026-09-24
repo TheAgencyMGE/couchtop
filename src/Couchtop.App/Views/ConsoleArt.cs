@@ -74,37 +74,47 @@ public static class ConsoleArt
     // ---------------------------------------------------------------- tiles and icons
 
     /// <summary>
-    /// A Dashboard tile: a flat plate with the app's real icon, or Couchtop's mark for its own screens.
-    /// Square corners, no gloss, no gradient card.
+    /// A Dashboard tile. Couchtop's own entries get a solid green plate with a white mark, the way these
+    /// dashboards coloured their own tiles; apps get a dark plate with their real Windows icon. Any size, so
+    /// the same code draws the hero, the wide tiles and the small ones.
     /// </summary>
-    public static FrameworkElement DashboardTileArt(HomeItem item, AppHost host, double size, Color accent)
+    public static FrameworkElement DashboardTileArt(HomeItem item, AppHost host, double width, double height, Color accent)
     {
-        var plate = new Grid { Width = size, Height = size, Background = Frozen(Color.FromRgb(0x1C, 0x20, 0x22)), ClipToBounds = true };
-
-        // A thin colour bar along the bottom, the way these dashboards marked each section.
-        plate.Children.Add(new Rectangle
-        {
-            Height = 6,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Fill = Frozen(accent),
-        });
-
+        var shortest = Math.Min(width, height);
         var mark = MarkFor(item);
         if (mark.Length > 0)
         {
-            plate.Children.Add(Mark(mark, size * 0.46, Brushes.White, 5));
+            // A Couchtop screen: solid colour, white mark, nothing else.
+            var plate = new Grid { Width = width, Height = height, Background = Frozen(accent), ClipToBounds = true };
+            plate.Children.Add(new Rectangle
+            {
+                Fill = new LinearGradientBrush(Color.FromArgb(0x22, 0xFF, 0xFF, 0xFF), Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF), 90),
+            });
+            var glyph = Mark(mark, shortest * 0.4, Brushes.White, shortest > 300 ? 6 : 5);
+            glyph.Margin = new Thickness(0, 0, 0, shortest * 0.12);
+            plate.Children.Add(glyph);
             return plate;
         }
 
-        if (item.Channel is not { } channel) return plate;
+        var card = new Grid { Width = width, Height = height, Background = Frozen(Color.FromRgb(0x1B, 0x1F, 0x1C)), ClipToBounds = true };
+        if (item.Channel is not { } channel) return card;
 
-        var icon = new Image { Width = size * 0.56, Height = size * 0.56, Stretch = Stretch.Uniform, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        var icon = new Image
+        {
+            Width = shortest * 0.46,
+            Height = shortest * 0.46,
+            Stretch = Stretch.Uniform,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 0, shortest * 0.1),
+        };
         RenderOptions.SetBitmapScalingMode(icon, BitmapScalingMode.HighQuality);
-        var initial = Initial(channel, size * 0.34);
-        plate.Children.Add(initial);
-        plate.Children.Add(icon);
-        _ = LoadIconAsync(host, channel, icon, initial, plate, tintPlate: true);
-        return plate;
+        var initial = Initial(channel, shortest * 0.3);
+        initial.Margin = new Thickness(0, 0, 0, shortest * 0.1);
+        card.Children.Add(initial);
+        card.Children.Add(icon);
+        _ = LoadIconAsync(host, channel, icon, initial, card, tintPlate: true);
+        return card;
     }
 
     /// <summary>
@@ -144,7 +154,7 @@ public static class ConsoleArt
         var size = large ? 320.0 : 120.0;
 
         var content = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-        content.Children.Add(style == ConsoleStyle.MediaBar ? MediaBarIconArt(item, host, size) : DashboardTileArt(item, host, size, Color.FromRgb(0x7B, 0xC6, 0x18)));
+        content.Children.Add(style == ConsoleStyle.MediaBar ? MediaBarIconArt(item, host, size) : DashboardTileArt(item, host, size, size, Color.FromRgb(0x6C, 0xB4, 0x2C)));
         if (large)
         {
             var title = new TextBlock

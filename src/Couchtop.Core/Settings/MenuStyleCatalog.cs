@@ -12,7 +12,7 @@ public static class MenuStyleCatalog
     /// <summary>The original Couchtop grid of channel tiles.</summary>
     public const string Channels = "channels";
 
-    /// <summary>Blade tabs with a row of square tiles, in the style of mid-2000s green console dashboards.</summary>
+    /// <summary>A rail of sections over a mosaic of flat tiles, in the style of late-2000s console dashboards.</summary>
     public const string Dashboard = "dashboard";
 
     /// <summary>A cross of categories and items, in the style of late-2000s media-bar consoles.</summary>
@@ -23,7 +23,7 @@ public static class MenuStyleCatalog
     public static IReadOnlyList<MenuStyleInfo> All { get; } = new MenuStyleInfo[]
     {
         new(Channels, "Channels", "The Couchtop grid: pages of channel tiles, themes, the hand pointer and Pals"),
-        new(Dashboard, "Dashboard", "A green blade shell: graphite panels, app icons and dry clicks, 2005 style"),
+        new(Dashboard, "Dashboard", "A green tile shell: lowercase sections, a mosaic of flat tiles, dry clicks"),
         new(MediaBar, "Media Bar", "A blue cross shell: thin icons on a bar, sine blips and a quiet background, 2006 style"),
     };
 

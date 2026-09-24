@@ -25,7 +25,7 @@ dashboard and a media bar — with an optional (and very carefully guarded) shel
 </div>
 
 > [!WARNING]
-> **Couchtop is a very early beta (`0.7.0-beta.1`).** Expect rough edges and breaking changes.
+> **Couchtop is a very early beta (`0.7.1-beta.1`).** Expect rough edges and breaking changes.
 > Launcher mode is safe to try on any PC. **Only try shell mode inside a virtual machine** until it has been tested on more hardware.
 
 ---
@@ -63,7 +63,7 @@ its own icons, its own sounds, its own pointer and its own way of moving around.
 |---|---|---|
 | ![Channels shell](docs/screenshots/01-menu.png) | ![Dashboard shell](docs/screenshots/20-dashboard-home.png) | ![Media Bar shell](docs/screenshots/24-mediabar-home.png) |
 | **Channels** | **Dashboard** | **Media Bar** |
-| Pages of glossy tiles, a tilting hand pointer, eight themes, menu music and [Pals](#features). | Graphite and green, angled blade tabs, a row of app tiles, a player card and dry mechanical clicks. | Deep blue, a row of categories crossed by a column of items, thin outlined icons and soft blips. |
+| Pages of glossy tiles, a tilting hand pointer, eight themes, menu music and [Pals](#features). | Near-black and green, a rail of lowercase sections over a mosaic of flat tiles, and dry mechanical clicks. | Deep blue, a row of categories crossed by a column of items, thin outlined icons and soft blips. |
 
 Apps show their real Windows icons in the Dashboard and Media Bar; Couchtop's own screens get a flat geometric
 mark drawn for each shell. Themes, the hand pointer, menu music and Pals belong to the Channels shell alone.
@@ -71,7 +71,7 @@ Both new designs are original — no console assets, artwork or names are used.
 
 | | |
 |---|---|
-| ![Dashboard system blade](docs/screenshots/21-dashboard-system.png) **Dashboard**: blades group your apps, games, media and system | ![Dashboard settings](docs/screenshots/22-dashboard-settings.png) **Dashboard**: every screen follows the shell |
+| ![Dashboard sections](docs/screenshots/21-dashboard-system.png) **Dashboard**: sections group your apps, games, media and system | ![Dashboard settings](docs/screenshots/22-dashboard-settings.png) **Dashboard**: every screen follows the shell |
 | ![Media Bar system](docs/screenshots/25-mediabar-system.png) **Media Bar**: categories crossed by items | ![Media Bar files](docs/screenshots/26-mediabar-files.png) **Media Bar**: the file manager in shell colours |
 | ![Welcome tour](docs/screenshots/28-welcome-tour.png) **Welcome tour**: pick a shell on first run | ![Media Bar Quick Menu](docs/screenshots/27-mediabar-quick.png) **Quick Menu** in the Media Bar shell |
 

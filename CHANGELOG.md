@@ -2,6 +2,12 @@
 
 All notable changes to Couchtop are documented here. Versions stay on `0.x` until the first stable release.
 
+## [0.7.1-beta.1] - 2026-09-24
+
+### Changed
+
+- **The Dashboard shell now looks like the dashboards it is named after.** The angled blade tabs are gone, replaced by a rail of plain lowercase section names where the one you are on is simply bigger and brighter. The single row of equal tiles is now a mosaic: a two-by-two tile to open each section, then columns of stacked tiles with a pair of wide ones every fourth column, so the wall is never a plain grid. Tiles are flat and square-cornered with the name on a strip along the bottom, Couchtop's own screens get solid green tiles with a white mark, apps keep their real Windows icon on a dark plate, and the selected tile is marked with a white outline. The sections either side peek in from the edges of the screen, there is a green "A Select" hint along the bottom, and up and down now move between the two rows of a column.
+
 ## [0.7.0-beta.1] - 2026-09-20
 
 ### Fixed
