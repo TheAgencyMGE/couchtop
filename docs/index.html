@@ -76,6 +76,29 @@
     .shots img { width: 100%; border-radius: 16px; box-shadow: 0 0 0 3px var(--border), 0 14px 30px rgba(40, 80, 110, 0.16); display: block; }
     footer { text-align: center; color: var(--subtle); font-size: 13px; margin-top: 56px; line-height: 1.6; }
     footer a { color: var(--accent-deep); }
+
+    /* Support card: the page's panel, ring and pill button, one step quieter than the download CTA. */
+    .support {
+      margin: 64px 0 0; padding: 30px 34px; border-radius: 26px; background: var(--panel);
+      box-shadow: 0 0 0 3px var(--border), 0 18px 40px rgba(40, 80, 110, 0.14);
+      display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
+    }
+    .support svg { flex: 0 0 auto; color: var(--accent); }
+    .support-text { flex: 1 1 320px; min-width: 0; }
+    .support-text h3 { margin: 0 0 6px; font-size: 22px; font-weight: 800; color: var(--text); }
+    .support-text p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--subtle); }
+    .button.support-button {
+      flex: 0 0 auto; color: var(--accent-deep); background: var(--panel);
+      box-shadow: 0 0 0 3px var(--accent), 0 8px 18px rgba(53, 180, 229, 0.18);
+    }
+    .button.support-button:hover, .button.support-button:focus-visible {
+      box-shadow: 0 0 0 3px var(--accent), 0 0 0 8px rgba(79, 208, 255, 0.35);
+    }
+    @media (max-width: 560px) {
+      .support { padding: 26px 22px; gap: 18px; text-align: center; justify-content: center; }
+      .support-text { flex-basis: 100%; }
+      .button.support-button { width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -120,8 +143,21 @@
       <img src="screenshots/06-safety-test.png" alt="Shell Safety Test" loading="lazy" />
     </div>
 
+    <section class="support">
+      <svg width="46" height="46" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M8 18h26v13a9 9 0 0 1-9 9H17a9 9 0 0 1-9-9V18Z" />
+        <path d="M34 22h4a5 5 0 0 1 0 10h-4" />
+        <path d="M15 11c0-2 2-2 2-4M23 11c0-2 2-2 2-4M31 11c0-2 2-2 2-4" />
+      </svg>
+      <div class="support-text">
+        <h3>Support Couchtop</h3>
+        <p>Couchtop is an independent project, free and open source, built in the open. If you like where it is going, you can buy me a coffee — it goes straight into the next build.</p>
+      </div>
+      <a class="button support-button" href="https://ko-fi.com/theagencymge" target="_blank" rel="noopener">Support on Ko-fi →</a>
+    </section>
+
     <footer>
-      Free and open source under the MIT License.<br />
+      Free and open source under the MIT License. <a href="https://ko-fi.com/theagencymge" target="_blank" rel="noopener">Support on Ko-fi</a>.<br />
       Couchtop is an independent project and is not affiliated with or endorsed by Nintendo, Microsoft or Sony. Every shell, icon and sound is original. "Wii Remote" is a trademark of Nintendo, mentioned only to describe controller compatibility.
     </footer>
   </main>

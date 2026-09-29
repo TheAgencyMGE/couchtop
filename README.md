@@ -13,6 +13,7 @@ dashboard and a media bar — with an optional (and very carefully guarded) shel
 [![Pre-release](https://img.shields.io/github/v/release/TheAgencyMGE/couchtop?include_prereleases&label=beta&color=35B4E5)](https://github.com/TheAgencyMGE/couchtop/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6)](#requirements)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-FF5E5B)](https://ko-fi.com/theagencymge)
 
 [**Download the beta**](https://github.com/TheAgencyMGE/couchtop/releases) · [**Watch the trailer**](https://theagencymge.github.io/couchtop/) · [The three shells](#the-three-shells) · [Screenshots](#screenshots) · [Recovery](#recovery-getting-back-to-explorer)
 
@@ -49,6 +50,7 @@ dashboard and a media bar — with an optional (and very carefully guarded) shel
 - [Privacy](#privacy)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Support](#support)
 - [License and trademarks](#license-and-trademarks)
 
 ---
@@ -499,6 +501,16 @@ Measured with `--smoke-test 30` on a 16-thread desktop, Debug build, 1920×1080,
 ## Contributing
 
 Bug reports, especially from real hardware, are hugely helpful. See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and ground rules, and [SECURITY.md](SECURITY.md) for reporting vulnerabilities. Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
+
+## Support
+
+Couchtop is an independent project, free and open source, built in the open. If you like where it is going, you
+can [buy me a coffee on Ko-fi](https://ko-fi.com/theagencymge) — it goes straight into the next build.
+
+Not in a position to chip in? Starring the repo, filing a good bug report or telling someone about Couchtop
+helps just as much.
+
+---
 
 ## License and trademarks
 
